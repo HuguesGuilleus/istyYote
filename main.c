@@ -1,23 +1,11 @@
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
+// Projet Yoté -- IATIC 3 ISTY
+// See the authors in AUTHOR.md
 
 int main(int argc, char const *argv[]) {
-	printf("Hello World\n");
+	initDisplay();
+	initBoard();
 
-	SDL_Init(SDL_INIT_VIDEO);
-
-	SDL_Surface *bg = SDL_SetVideoMode(500, 500, 32, SDL_HWSURFACE);
-	if (bg == NULL) {
-		printf("Error launch SDL\n");
-		printf("%s\n", SDL_GetError());
-		return 1;
-	}
-
+	displayBoard();
 	sleep(1);
 
 	SDL_Quit();
