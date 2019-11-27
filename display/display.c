@@ -79,3 +79,14 @@ void displaySquare(SDL_Surface* square, int x, int y) {
 		y: y*50,
 	});
 }
+
+void displayMenu() {
+	displayTitle();
+
+}
+
+void displayTitle() {
+	SDL_surface* titleSprite = SQL_LoadBMP("media/title.bmp");
+	fatal(pieceBlack, "load titleSprite");
+
+}
