@@ -54,6 +54,12 @@ void displayBoard(bool flip) {
 	for ( x = 0; x < 6; x++) {
 		for(y=0;y<5;y++) {
 			displaySquare(squareBg, x, y);
+			switch (board[x][y].status) {
+				// TODO: use the color format from the background
+				case SELECTED:   displayStatus(0x00FF00, x, y); break;
+				case ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
+				case CAPTURE:    displayStatus(0xFF0000, x, y); break;
+			}
 			switch (board[x][y].color) {
 				case EMPTY:
 					break;
@@ -71,11 +77,22 @@ void displayBoard(bool flip) {
 	}
 }
 
+// Dessin un fond différent selon le fond
+void displayStatus(Uint32 color, int x, int y) {
+	int r = SDL_FillRect(bg, &(SDL_Rect){
+		x: x*50,
+		y: y*50,
+		w: 50,
+		h: 50,
+	}, color);
+	fatal(!r, "displayStatus()");
+}
+
 // x and y is the coord of a square
 void displaySquare(SDL_Surface* square, int x, int y) {
-	// TODO: what in the return of SDL_BlitSurface ? error?
-	SDL_BlitSurface(square, NULL, bg, &(SDL_Rect){
+	int r = SDL_BlitSurface(square, NULL, bg, &(SDL_Rect){
 		x: x*50,
 		y: y*50,
 	});
+	fatal(!r, "displaySquare()");
 }
