@@ -18,6 +18,8 @@ SDL_Surface* pieceWhite = NULL ;
 // Initilise la SDL et charge les images
 void initDisplay() {
 	SDL_Init(SDL_INIT_VIDEO);
+	SDL_WM_SetCaption("ISTY - Yoté", NULL);
+
 	bg = SDL_SetVideoMode(500, 500, 32, SDL_HWSURFACE);
 	fatal(bg, "launch SDL");
 
@@ -80,13 +82,34 @@ void displaySquare(SDL_Surface* square, int x, int y) {
 	});
 }
 
-void displayMenu() {
-	displayTitle();
-
-}
 
 void displayTitle() {
-	SDL_surface* titleSprite = SQL_LoadBMP("media/title.bmp");
-	fatal(pieceBlack, "load titleSprite");
+	SDL_Surface* titleSprite = SDL_LoadBMP("media/title.bmp");
+	fatal(titleSprite, "load titleSprite");
+
+	SDL_BlitSurface(titleSprite, NULL, bg, &(SDL_Rect){0,0});
+
+	SDL_Flip(bg);
+}
+
+void displayMove(typeColor color, SQL_Square start, SQL_Square end) {
+	/*
+	int x,y ;
+	for ( x = 0; x < 6; x++) {
+		for(y=0;y<5;y++) {
+			displaySquare(squareBg, x, y);
+			switch (board[x][y].color) {
+				case EMPTY:
+					break;
+				case WHITE:
+					displaySquare(pieceWhite, x, y);
+					break;
+				case BLACK:
+					displaySquare(pieceBlack, x, y);
+					break;
+			}
+		}
+	}
+	*/
 
 }

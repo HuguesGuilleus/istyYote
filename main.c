@@ -5,7 +5,8 @@ int main(int argc, char const *argv[]) {
 	initDisplay();
 	initBoard();
 
-	displayBoard();
+	//displayBoard();
+	displayTitle();
 	sleep(1);
 
 	SDL_Quit();
