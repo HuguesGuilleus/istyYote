@@ -9,6 +9,7 @@ void initBoard() {
 	for ( x = 0; x < 6; x++) {
 		for(y=0;y<5;y++) {
 			board[x][y].color = EMPTY ;
+			board[x][y].status = DEFAULT ;
 		}
 	}
 
@@ -18,5 +19,14 @@ void initBoard() {
 	};
 	board[2][1] = (square){
 		color: WHITE,
+		status: ACCESSIBLE,
+	};
+	board[1][2] = (square){
+		color: BLACK,
+		status: CAPTURE,
+	};
+	board[2][2] = (square){
+		color: WHITE,
+		status: SELECTED,
 	};
 }
