@@ -34,34 +34,34 @@ void display() {
 void displayBoard(bool flip) {
 	int x,y ;
 
-	SDL_Surface* squareBg = SDL_LoadBMP("media/squareBg.bmp");
-	fatal(squareBg, "load squareBg");
+	SDL_Surface* tile = SDL_LoadBMP("media/tile.bmp");
+	fatal(tile, "load tile");
 	
-	SDL_Surface* pieceBlack = SDL_LoadBMP("media/pieceBlack.bmp");
-	fatal(pieceBlack, "load pieceBlack");
-	SDL_SetColorKey(pieceBlack,SDL_SRCCOLORKEY, SDL_MapRGB(pieceBlack->format,255,0,255));
+	SDL_Surface* human = SDL_LoadBMP("media/human.bmp");
+	fatal(human, "load human");
+	SDL_SetColorKey(human, SDL_SRCCOLORKEY, SDL_MapRGB(human->format,255,0,255));
 
-	SDL_Surface* pieceWhite = SDL_LoadBMP("media/pieceWhite.bmp");
-	fatal(pieceWhite, "Error load pieceWhite");
-	SDL_SetColorKey(pieceWhite,SDL_SRCCOLORKEY, SDL_MapRGB(pieceWhite->format,255,0,255));
+	SDL_Surface* orc = SDL_LoadBMP("media/orc.bmp");
+	fatal(orc, "Error load orc");
+	SDL_SetColorKey(orc, SDL_SRCCOLORKEY, SDL_MapRGB(orc->format,255,0,255));
 
 	for ( x = 0; x < 6; x++) {
-		for(y=0;y<5;y++) {
-			displaySquare(squareBg, x, y);
-			switch (board[x][y].status) {
+		for(y = 0; y < 5; y++) {
+			displaySquare(tile, x, y);
+			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background
 				case SELECTED:   displayStatus(0x00FF00, x, y); break;
 				case ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
 				case CAPTURE:    displayStatus(0xFF0000, x, y); break;
-			}
+			} */
 			switch (board[x][y].color) {
 				case EMPTY:
 					break;
 				case WHITE:
-					displaySquare(pieceWhite, x, y);
+					displaySquare(orc, x, y);
 					break;
 				case BLACK:
-					displaySquare(pieceBlack, x, y);
+					displaySquare(human, x, y);
 					break;
 			}
 		}
@@ -74,10 +74,10 @@ void displayBoard(bool flip) {
 // Dessin un fond différent selon le fond
 void displayStatus(Uint32 color, int x, int y) {
 	int r = SDL_FillRect(bg, &(SDL_Rect){
-		x: x*50,
-		y: y*50,
-		w: 50,
-		h: 50,
+		x: x*LARGEUR_CASE,
+		y: y*HAUTEUR_CASE,
+		w: LARGEUR_CASE,
+		h: HAUTEUR_CASE,
 	}, color);
 	fatal(!r, "displayStatus()");
 }
@@ -85,8 +85,8 @@ void displayStatus(Uint32 color, int x, int y) {
 // x and y is the coord of a square
 void displaySquare(SDL_Surface* square, int x, int y) {
 	int r = SDL_BlitSurface(square, NULL, bg, &(SDL_Rect){
-		x: x*50,
-		y: y*50,
+		x: x*LARGEUR_CASE,
+		y: y*HAUTEUR_CASE,
 	});
 	fatal(!r, "displaySquare()");
 }

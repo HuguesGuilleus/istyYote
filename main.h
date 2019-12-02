@@ -18,12 +18,14 @@
 	#define TRUE (1)
 	#define FALSE (0)
 
-
 	#define LARGEUR 6
 	#define HAUTEUR 5
 
-	#define LARGEUR_FENETRE 500
-	#define HAUTEUR_FENETRE 500
+	#define LARGEUR_FENETRE 600
+	#define HAUTEUR_FENETRE 600
+
+	#define LARGEUR_CASE 70
+	#define HAUTEUR_CASE LARGEUR_CASE
 
 	// Coordonées d'une case du plateau (board).
 	typedef struct {
