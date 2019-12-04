@@ -12,6 +12,12 @@
 	#include <SDL_ttf.h>
 	#include <unistd.h>
 
+	//suggestion 
+	#define TAILLE_CASE 70
+	#define RESERVE 3
+	#define PLATEAU 4
+	#define JOUEUR1 1
+	#define JOUEUR2 2
 
 	// Type booléen
 	typedef int bool;
@@ -21,11 +27,14 @@
 	#define LARGEUR 6
 	#define HAUTEUR 5
 
-	#define LARGEUR_FENETRE 600
-	#define HAUTEUR_FENETRE 600
+	#define LARGEUR_FENETRE 980 //600
+	#define HAUTEUR_FENETRE 700//600
 
 	#define LARGEUR_CASE 70
 	#define HAUTEUR_CASE LARGEUR_CASE
+
+
+
 
 	// Coordonées d'une case du plateau (board).
 	typedef struct {

@@ -14,6 +14,20 @@ void partie(void) {
 	gamerPrint(gamer);
 
 	display();
+	
+
+
+
+	//recuepe l'action de jeu a effectuer
+	int action;
+	coord CordPion;
+	action=ActionJoueur(JOUEUR1,&depart);
+	//action : placement
+	if (action==RESERVE){
+		CordPion=placement(JOUEUR1);
+	}
+
+
 
 	while (TRUE) {
 		SDL_WaitEvent(&event);
@@ -48,8 +62,9 @@ bool clickOnPiece(SDL_Event *click, coord * c, typeColor gamer) {
 	}
 }
 
+
 // Converti les coordondées d'un clic en coordonées du tableau.
-// Si le clic n'est pas dans le tableau, return FALSE.
+// Si le clic n'est pas dans le plateau, retourne FALSE.
 bool clickToCoord(SDL_Event * click, coord * c) {
 	int x = click->button.x;
 	int y = click->button.y;
@@ -92,4 +107,110 @@ void gamerPrint(typeColor gamer) {
 // Change de couleur de joueur entre blanc et noir.
 void gamerSwitch(typeColor * gamer) {
 	* gamer = *gamer == WHITE ? BLACK : WHITE ;
+}
+
+
+
+
+
+
+
+
+
+//Détermine si le joueur veut placer un pion ou déplacer un pion en fonction du premier clic
+//Retourne l'action
+int ActionJoueur(typeColor joueur,coord *c){
+	int Clic1;
+	int continuer=1;
+	SDL_Event event;
+	while (continuer)
+	{
+    	SDL_WaitEvent(&event);
+		switch(event.type)
+		{
+			case SDL_QUIT:
+				continuer=0;
+				printf("fini");
+				break;
+			case SDL_MOUSEBUTTONUP:
+			
+				//On regarde si le clic 1 est dans le plateau ou la reserve
+				Clic1= verifClic1(event.button.x,event.button.y,joueur);
+				if (Clic1==RESERVE){
+					//renvoie l'action a faire qui est : placement d'un pion
+					return RESERVE;
+				}
+				else if(Clic1==PLATEAU){
+					//renvoie l'action a faire qui est : deplacement ou capture
+					//TO DO : attribuer la coordonner en fonction de la valeur de event.button.x et event.button.y
+					return PLATEAU;
+				}
+		}
+	}
+}
+
+//on verifie que le clic est autoriser
+//renvoie l'action qui sera effectuer au clic2 ( placement ou deplacement/capture)
+int verifClic1 (int x, int y, typeColor joueur){
+ 
+	if(joueur==JOUEUR1){
+		//reserve du joueur 1
+		if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+			printf("reserve J1\n");
+			return RESERVE;
+		}
+	}
+	if(joueur==JOUEUR2){
+		//reserve du joueur 1
+		if((x>11*TAILLE_CASE)&&(x<13*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(x<9*TAILLE_CASE)){
+			printf("reserve J2\n");
+			return RESERVE;
+		}
+	}
+	else if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE][y/TAILLE_CASE].color==joueur)){
+		printf("plateau\n");
+		return PLATEAU;
+	}
+
+}
+
+bool verifClic2Placement(int x, int y)
+{
+	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].color==EMPTY)){
+		return TRUE;
+	}
+	else{
+		return FALSE;	 
+	}
+}
+
+
+coord placement(typeColor joueur)
+{
+	coord c;
+	bool Clic2;
+	int continuer=1;
+
+	SDL_Event event;
+	while (continuer)
+	{
+    	SDL_WaitEvent(&event);
+		switch(event.type)
+		{
+			case SDL_QUIT:
+				continuer=0;
+				printf("fini");
+				break;
+			case SDL_MOUSEBUTTONUP:
+				
+				//On regarde si le clic 1 est dans le plateau ou la reserve
+				Clic2= verifClic2Placement(event.button.x,event.button.y);
+				if(Clic2==TRUE){
+					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4));
+					// renvoie les coordonner de la case ou le pion doit etre placer
+					return c;
+				}
+		}
+	}
+	return c;
 }

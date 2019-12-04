@@ -13,4 +13,9 @@
 	void gamerPrint(typeColor gamer);
 	void gamerSwitch(typeColor * gamer);
 
+	int ActionJoueur(typeColor joueur,coord *c);
+	int verifClic1 (int x, int y, typeColor joueur);
+	coord placement(typeColor joueur);
+	bool verifClic2Placement(int x, int y);
+
 #endif
