@@ -206,7 +206,7 @@ coord placement(typeColor joueur)
 				//On regarde si le clic 1 est dans le plateau ou la reserve
 				Clic2= verifClic2Placement(event.button.x,event.button.y);
 				if(Clic2==TRUE){
-					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4));
+					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4);
 					// renvoie les coordonner de la case ou le pion doit etre placer
 					return c;
 				}
