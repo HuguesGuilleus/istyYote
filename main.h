@@ -59,7 +59,7 @@
 
 	// une case du plateau
 	typedef struct {
-		typeColor color;
+		raceJoueur race;
 		typeStatus status ;
 	} square;
 

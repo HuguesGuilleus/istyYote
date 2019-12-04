@@ -34,27 +34,27 @@ void display() {
 void displayBoard(bool flip) {
 	int x,y ;
 
-	SDL_Surface* case = SDL_LoadBMP("media/spriteCase.bmp");
-	fatal(case, "load case");
+	SDL_Surface* spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
+	fatal(spriteCase, "load spriteCase");
 
-	SDL_Surface* demon = SDL_LoadBMP("media/demon.bmp");
+	SDL_Surface* demon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
 	fatal(demon, "load demon");
 	SDL_SetColorKey(demon, SDL_SRCCOLORKEY, SDL_MapRGB(demon->format,255,0,255));
 
-	SDL_Surface* orc = SDL_LoadBMP("media/orc.bmp");
+	SDL_Surface* orc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
 	fatal(orc, "Error load orc");
 	SDL_SetColorKey(orc, SDL_SRCCOLORKEY, SDL_MapRGB(orc->format,255,0,255));
 
 	for ( x = 0; x < 6; x++) {
 		for(y = 0; y < 5; y++) {
-			displaySquare(case, x, y);
+			displaySquare(spriteCase, x, y);
 			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background
-				case SELECTED:   displayStatus(0x00FF00, x, y); break;
-				case ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
-				case CAPTURE:    displayStatus(0xFF0000, x, y); break;
+				spriteCase SELECTED:   displayStatus(0x00FF00, x, y); break;
+				spriteCase ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
+				spriteCase CAPTURE:    displayStatus(0xFF0000, x, y); break;
 			} */
-			switch (board[x][y].color) {
+			switch (board[x][y].race) {
 				case VIDE:
 					break;
 				case ORC:
@@ -93,7 +93,7 @@ void displaySquare(SDL_Surface* square, int x, int y) {
 
 
 void displayTitle() {
-	SDL_Surface* spriteTitre = SDL_LoadBMP("media/title.bmp");
+	SDL_Surface* spriteTitre = SDL_LoadBMP("media/sprites/spriteTitre.bmp");
 	fatal(spriteTitre, "load titleSprite");
 
 	SDL_BlitSurface(spriteTitre, NULL, fenetre, &(SDL_Rect){0,0});
@@ -104,11 +104,11 @@ void displayTitle() {
 
 // Affiche les boutons du menu du jeu
 void displayMenuButtons() {
-	SDL_Surface* boutonPVP = SDL_LoadBMP("media/boutons/boutonPVP.bmp");
-	SDL_Surface* boutonIA = SDL_LoadBMP("media/boutons/boutonIA.bmp");
-	SDL_Surface* boutonRegles = SDL_LoadBMP("media/boutons/boutonRegles.bmp");
-	SDL_Surface* boutonResultats = SDL_LoadBMP("media/boutons/boutonResultats.bmp");
-	SDL_Surface* boutonQuitter = SDL_LoadBMP("media/boutons/boutonQuitter.bmp");
+	SDL_Surface* boutonPVP = SDL_LoadBMP("media/sprites/boutons/boutonPVP.bmp");
+	SDL_Surface* boutonIA = SDL_LoadBMP("media/sprites/boutons/boutonIA.bmp");
+	SDL_Surface* boutonRegles = SDL_LoadBMP("media/sprites/boutons/boutonRegles.bmp");
+	SDL_Surface* boutonResultats = SDL_LoadBMP("media/sprites/boutons/boutonResultats.bmp");
+	SDL_Surface* boutonQuitter = SDL_LoadBMP("media/sprites/boutons/boutonQuitter.bmp");
 
 	SDL_BlitSurface(boutonPVP, NULL, fenetre, &(SDL_Rect){50, 200});
 	SDL_BlitSurface(boutonIA, NULL, fenetre, &(SDL_Rect){260, 200});
@@ -166,6 +166,7 @@ void displayScores(char* scores) {
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){(LARGEUR_FENETRE - texte->w)/2, 30});
 	TTF_CloseFont(police);
 
+	// La police est ouverte une seconde fois car on l'ouvre avec une taille différente
 	police = TTF_OpenFont("media/LifeCraft.ttf", 20);
 	const char* separateurs = "\n|";
 	char* ligne = strtok(scores, separateurs);

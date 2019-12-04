@@ -5,17 +5,17 @@
 
 
 	void partie(void);
-	bool clickOnPiece(SDL_Event *click, coord * c, typeColor gamer);
+	bool clickOnPiece(SDL_Event *click, coord * c, raceJoueur gamer);
 	bool clickToCoord(SDL_Event * click, coord * c);
 	void printfCoord(coord * c);
 
-	void gamerRand(typeColor * gamer);
-	void gamerPrint(typeColor gamer);
-	void gamerSwitch(typeColor * gamer);
+	void gamerRand(raceJoueur * gamer);
+	void gamerPrint(raceJoueur gamer);
+	void gamerSwitch(raceJoueur * gamer);
 
-	int ActionJoueur(typeColor joueur,coord *c);
-	int verifClic1 (int x, int y, typeColor joueur);
-	coord placement(typeColor joueur);
+	int ActionJoueur(raceJoueur joueur,coord *c);
+	int verifClic1 (int x, int y, raceJoueur joueur);
+	coord placement(raceJoueur joueur);
 	bool verifClic2Placement(int x, int y);
 
 #endif
