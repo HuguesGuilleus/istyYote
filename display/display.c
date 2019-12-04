@@ -36,7 +36,7 @@ void displayBoard(bool flip) {
 
 	SDL_Surface* tile = SDL_LoadBMP("media/tile.bmp");
 	fatal(tile, "load tile");
-	
+
 	SDL_Surface* human = SDL_LoadBMP("media/human.bmp");
 	fatal(human, "load human");
 	SDL_SetColorKey(human, SDL_SRCCOLORKEY, SDL_MapRGB(human->format,255,0,255));
@@ -126,7 +126,7 @@ void displayRules(char* regles) {
 	// Initialisation de SDL_ttf
 	TTF_Init();
 	TTF_Font* police = TTF_OpenFont("media/LifeCraft.ttf", 30);
-	
+
 	SDL_Surface* texte = NULL;
 
 	char* separateur = "_";
@@ -148,13 +148,13 @@ void displayRules(char* regles) {
 }
 
 
-// Affiche les derniers scores
+// Affiche les derniers scores 
 void displayScores(char* scores) {
 	// Coordonnées x dans la fenêtre
 	int i = 150;
 	// Coordonnées y dans la fenêtre
 	int j = 100;
-	// Compteur 
+	// Compteur
 	int k = 0;
 
 	TTF_Init();
