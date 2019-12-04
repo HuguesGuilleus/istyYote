@@ -4,15 +4,15 @@
 #include "display.h"
 
 // La surface de la fenêtre.
-SDL_Surface *bg = NULL ;
+SDL_Surface *fenetre = NULL ;
 
 // Initilise la SDL et charge les images
 void initDisplay() {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption("ISTY - Yoté", NULL);
 
-	bg = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_HWSURFACE);
-	fatal(bg, "launch SDL");
+	fenetre = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_HWSURFACE);
+	fatal(fenetre, "launch SDL");
 }
 
 // Fatal if pt is NULL, print the message and the log of SDL
@@ -26,7 +26,7 @@ void fatal(void* pt, char ms[]) {
 // Affiche tout
 void display() {
 	displayBoard(FALSE);
-	SDL_Flip(bg);
+	SDL_Flip(fenetre);
 }
 
 // Affiche que le plateau, si flip est vrai, alors
@@ -34,12 +34,12 @@ void display() {
 void displayBoard(bool flip) {
 	int x,y ;
 
-	SDL_Surface* tile = SDL_LoadBMP("media/tile.bmp");
-	fatal(tile, "load tile");
+	SDL_Surface* case = SDL_LoadBMP("media/spriteCase.bmp");
+	fatal(case, "load case");
 
-	SDL_Surface* human = SDL_LoadBMP("media/human.bmp");
-	fatal(human, "load human");
-	SDL_SetColorKey(human, SDL_SRCCOLORKEY, SDL_MapRGB(human->format,255,0,255));
+	SDL_Surface* demon = SDL_LoadBMP("media/demon.bmp");
+	fatal(demon, "load demon");
+	SDL_SetColorKey(demon, SDL_SRCCOLORKEY, SDL_MapRGB(demon->format,255,0,255));
 
 	SDL_Surface* orc = SDL_LoadBMP("media/orc.bmp");
 	fatal(orc, "Error load orc");
@@ -47,7 +47,7 @@ void displayBoard(bool flip) {
 
 	for ( x = 0; x < 6; x++) {
 		for(y = 0; y < 5; y++) {
-			displaySquare(tile, x, y);
+			displaySquare(case, x, y);
 			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background
 				case SELECTED:   displayStatus(0x00FF00, x, y); break;
@@ -55,27 +55,27 @@ void displayBoard(bool flip) {
 				case CAPTURE:    displayStatus(0xFF0000, x, y); break;
 			} */
 			switch (board[x][y].color) {
-				case EMPTY:
+				case VIDE:
 					break;
-				case WHITE:
+				case ORC:
 					displaySquare(orc, x, y);
 					break;
-				case BLACK:
-					displaySquare(human, x, y);
+				case DEMON:
+					displaySquare(demon, x, y);
 					break;
 			}
 		}
 	}
 	if (flip) {
-		SDL_Flip(bg);
+		SDL_Flip(fenetre);
 	}
 }
 
 // Dessin un fond différent selon le fond
 void displayStatus(Uint32 color, int x, int y) {
-	int r = SDL_FillRect(bg, &(SDL_Rect){
-		x: x*LARGEUR_CASE,
-		y: y*HAUTEUR_CASE,
+	int r = SDL_FillRect(fenetre, &(SDL_Rect){
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE,
 		w: LARGEUR_CASE,
 		h: HAUTEUR_CASE,
 	}, color);
@@ -84,7 +84,7 @@ void displayStatus(Uint32 color, int x, int y) {
 
 // x and y is the coord of a square
 void displaySquare(SDL_Surface* square, int x, int y) {
-	int r = SDL_BlitSurface(square, NULL, bg, &(SDL_Rect){
+	int r = SDL_BlitSurface(square, NULL, fenetre, &(SDL_Rect){
 		x: x*LARGEUR_CASE,
 		y: y*HAUTEUR_CASE,
 	});
@@ -96,9 +96,9 @@ void displayTitle() {
 	SDL_Surface* spriteTitre = SDL_LoadBMP("media/title.bmp");
 	fatal(spriteTitre, "load titleSprite");
 
-	SDL_BlitSurface(spriteTitre, NULL, bg, &(SDL_Rect){0,0});
+	SDL_BlitSurface(spriteTitre, NULL, fenetre, &(SDL_Rect){0,0});
 
-	SDL_Flip(bg);
+	SDL_Flip(fenetre);
 }
 
 
@@ -110,13 +110,13 @@ void displayMenuButtons() {
 	SDL_Surface* boutonResultats = SDL_LoadBMP("media/boutons/boutonResultats.bmp");
 	SDL_Surface* boutonQuitter = SDL_LoadBMP("media/boutons/boutonQuitter.bmp");
 
-	SDL_BlitSurface(boutonPVP, NULL, bg, &(SDL_Rect){50, 200});
-	SDL_BlitSurface(boutonIA, NULL, bg, &(SDL_Rect){260, 200});
-	SDL_BlitSurface(boutonRegles, NULL, bg, &(SDL_Rect){50, 280});
-	SDL_BlitSurface(boutonResultats, NULL, bg, &(SDL_Rect){260, 280});
-	SDL_BlitSurface(boutonQuitter, NULL, bg, &(SDL_Rect){50, 360});
+	SDL_BlitSurface(boutonPVP, NULL, fenetre, &(SDL_Rect){50, 200});
+	SDL_BlitSurface(boutonIA, NULL, fenetre, &(SDL_Rect){260, 200});
+	SDL_BlitSurface(boutonRegles, NULL, fenetre, &(SDL_Rect){50, 280});
+	SDL_BlitSurface(boutonResultats, NULL, fenetre, &(SDL_Rect){260, 280});
+	SDL_BlitSurface(boutonQuitter, NULL, fenetre, &(SDL_Rect){50, 360});
 
-	SDL_Flip(bg);
+	SDL_Flip(fenetre);
 }
 
 // Affiche les règles du jeu
@@ -135,12 +135,12 @@ void displayRules(char* regles) {
 
 	while (ligne != NULL) {
 		texte = TTF_RenderUTF8_Shaded(police, ligne, (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-		SDL_BlitSurface(texte, NULL, bg, &(SDL_Rect){0, i});
+		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){0, i});
 		i += 30;
 		ligne = strtok(NULL, separateur);
 	}
 
-	SDL_Flip(bg);
+	SDL_Flip(fenetre);
 
 	// Clotûre de la police et de SDL_ttf
 	TTF_CloseFont(police);
@@ -148,7 +148,7 @@ void displayRules(char* regles) {
 }
 
 
-// Affiche les derniers scores 
+// Affiche les derniers scores
 void displayScores(char* scores) {
 	// Coordonnées x dans la fenêtre
 	int i = 150;
@@ -163,7 +163,7 @@ void displayScores(char* scores) {
 
 	police = TTF_OpenFont("media/LifeCraft.ttf", 25);
 	texte = TTF_RenderUTF8_Shaded(police, "REGLES DU JEU", (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-	SDL_BlitSurface(texte, NULL, bg, &(SDL_Rect){(LARGEUR_FENETRE - texte->w)/2, 30});
+	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){(LARGEUR_FENETRE - texte->w)/2, 30});
 	TTF_CloseFont(police);
 
 	police = TTF_OpenFont("media/LifeCraft.ttf", 20);
@@ -172,7 +172,7 @@ void displayScores(char* scores) {
 
 	while (ligne != NULL) {
 		texte = TTF_RenderUTF8_Shaded(police, ligne, (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-		SDL_BlitSurface(texte, NULL, bg, &(SDL_Rect){i, j});
+		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){i, j});
 		k++;
 
 		// Si k % 2 = 0 alors on est en train d'écrire le score du premier joueur d'une partie
@@ -188,7 +188,7 @@ void displayScores(char* scores) {
 		ligne = strtok(NULL, separateurs);
 	}
 
-	SDL_Flip(bg);
+	SDL_Flip(fenetre);
 
 	TTF_CloseFont(police);
 	TTF_Quit();

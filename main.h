@@ -12,7 +12,7 @@
 	#include <SDL_ttf.h>
 	#include <unistd.h>
 
-	//suggestion 
+	//suggestion
 	#define TAILLE_CASE 70
 	#define RESERVE 3
 	#define PLATEAU 4
@@ -42,12 +42,12 @@
 		int y;
 	} coord;
 
-	// La couleur d'un pion
+	// La race d'un pion
 	typedef enum {
-		EMPTY,
-		BLACK,
-		WHITE,
-	} typeColor;
+		VIDE,
+		ORC,
+		DEMON,
+	} raceJoueur;
 
 	// L'état d'une case:
 	typedef enum {
