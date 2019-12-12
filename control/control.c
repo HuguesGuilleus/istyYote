@@ -9,7 +9,8 @@ void partie(void) {
 	coord depart = {} ;
 	raceJoueur gamer ;
 
-	gamerRand(&gamer);
+	//gamerRand(&gamer);
+	
 	printf("Couleur premier joueur: ");
 	gamerPrint(gamer);
 
@@ -18,16 +19,43 @@ void partie(void) {
 
 
 
-	//recuepe l'action de jeu a effectuer
-	int action;
-	coord CordPion;
-	action=ActionJoueur(JOUEUR1,&depart);
-	//action : placement
-	if (action==RESERVE){
-		CordPion=placement(JOUEUR1);
+
+	int joueur=ORC;
+	int continuer=1;
+	while(continuer==1){ 
+		//recuepere l'action de jeu a effectuer
+		int action;
+		coord CordPion;
+
+		printf("joueur:%d \n",joueur);
+
+		action=ActionJoueur(joueur,&depart,&continuer);
+		printf("continuer =%d\n",continuer);
+
+		//action : placement
+		if (action==RESERVE){
+			CordPion=placement(joueur);
+		}
+
+
+		if(joueur==ORC){
+			joueur=DEMON;
+		}
+		else{
+			joueur=ORC;
+		}
+
+		affiche_plateau();
+		printf("a l'autre\n");
+
 	}
+	printf("finiiii\n");
+	return;
 
 
+	display();
+	affiche_plateau();
+	printf("c'est cool\n");
 
 	while (TRUE) {
 		SDL_WaitEvent(&event);
@@ -85,7 +113,7 @@ void printCoord(coord * c) {
 	} else {
 		printf("(%d,%d)\n", c->x, c->y);
 	}
-}
+}	
 
 
 /* GAMER SECTION */
@@ -113,22 +141,23 @@ void gamerSwitch(raceJoueur * gamer) {
 
 //Détermine si le joueur veut placer un pion ou déplacer un pion en fonction du premier clic
 //Retourne l'action
-int ActionJoueur(raceJoueur joueur,coord *c){
+int ActionJoueur(raceJoueur joueur,coord *c,int *continuer){
 	int Clic1;
-	int continuer=1;
 	SDL_Event event;
-	while (continuer)
+	printf(" atoi %d\n",joueur);
+	while (*continuer)
 	{
     	SDL_WaitEvent(&event);
 		switch(event.type)
 		{
 			case SDL_QUIT:
-				continuer=0;
+				*continuer=0;
 				printf("fini");
 				break;
 			case SDL_MOUSEBUTTONUP:
 
 				//On regarde si le clic 1 est dans le plateau ou la reserve
+				printf(" atoi %d\n",joueur);
 				Clic1= verifClic1(event.button.x,event.button.y,joueur);
 				if (Clic1==RESERVE){
 					//renvoie l'action a faire qui est : placement d'un pion
@@ -147,16 +176,17 @@ int ActionJoueur(raceJoueur joueur,coord *c){
 //renvoie l'action qui sera effectuer au clic2 ( placement ou deplacement/capture)
 int verifClic1 (int x, int y, raceJoueur joueur){
 
-	if(joueur==JOUEUR1){
+	if(joueur==ORC){
 		//reserve du joueur 1
 		if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
 			printf("reserve J1\n");
 			return RESERVE;
 		}
 	}
-	if(joueur==JOUEUR2){
+	else if(joueur==DEMON){
 		//reserve du joueur 1
-		if((x>11*TAILLE_CASE)&&(x<13*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(x<9*TAILLE_CASE)){
+		printf(" ta reserve demon\n");
+		if((x>11*TAILLE_CASE)&&(x<13*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
 			printf("reserve J2\n");
 			return RESERVE;
 		}
@@ -201,10 +231,57 @@ coord placement(raceJoueur joueur)
 				Clic2= verifClic2Placement(event.button.x,event.button.y);
 				if(Clic2==TRUE){
 					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4);
-					// renvoie les coordonner de la case ou le pion doit etre placer
+					c.x=event.button.x;
+					c.y=event.button.y;
+					
+					board[c.x/TAILLE_CASE-4][c.y/TAILLE_CASE-4].race=joueur;
 					return c;
 				}
 		}
 	}
 	return c;
+}
+
+coord deplacement(raceJoueur joueur)
+{
+	coord c;
+	bool Clic2;
+	int continuer=1;
+
+	SDL_Event event;
+	while (continuer)
+	{
+    	SDL_WaitEvent(&event);
+		switch(event.type)
+		{
+			case SDL_QUIT:
+				continuer=0;
+				printf("fini");
+				break;
+			case SDL_MOUSEBUTTONUP:
+
+				//On regarde si le clic 1 est dans le plateau ou la reserve
+				Clic2= verifClic2Placement(event.button.x,event.button.y);
+				if(Clic2==TRUE){
+					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4);
+					c.x=event.button.x;
+					c.y=event.button.y;
+					
+					board[c.x/TAILLE_CASE-4][c.y/TAILLE_CASE-4].race=joueur;
+					return c;
+				}
+		}
+	}
+	return c;
+}
+
+void affiche_plateau(){
+	int i,j;
+	for(i=0;i<5;i++){
+		for(j=0;j<6;j++){
+			printf(" %d ",board[j][i].race);
+		}
+		printf("\n");
+	}
+	printf("finiiii\n");
 }

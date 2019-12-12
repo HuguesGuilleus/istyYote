@@ -73,8 +73,8 @@ void displayBoard(bool flip) {
 	fatal(orc, "Error load orc");
 	SDL_SetColorKey(orc, SDL_SRCCOLORKEY, SDL_MapRGB(orc->format,255,0,255));
 
-	for ( x = 4; x < 11; x++) {
-		for(y = 4; y < 10; y++) {
+	for ( x = 4; x < 10; x++) {
+		for(y = 4; y < 9; y++) {
 			displaySquare(spriteCase, x, y);
 			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background

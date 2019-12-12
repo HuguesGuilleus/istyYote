@@ -13,7 +13,7 @@
 	void gamerPrint(raceJoueur gamer);
 	void gamerSwitch(raceJoueur * gamer);
 
-	int ActionJoueur(raceJoueur joueur,coord *c);
+	int ActionJoueur(raceJoueur joueur,coord *c,int *continuer);
 	int verifClic1 (int x, int y, raceJoueur joueur);
 	coord placement(raceJoueur joueur);
 	bool verifClic2Placement(int x, int y);
