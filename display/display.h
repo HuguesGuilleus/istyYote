@@ -10,5 +10,6 @@
 	void display();
 	void displayBoard(bool flip);
 	void displayPawn(SDL_Surface* square, int x, int y);
-
+	void displayTile(int x, int y);
+	
 #endif

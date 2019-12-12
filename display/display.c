@@ -77,10 +77,7 @@ void displayBoard(bool flip) {
 				spriteCase ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
 				spriteCase CAPTURE:    displayStatus(0xFF0000, x, y); break;
 			} */
-			SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
-				x: x * LARGEUR_CASE,
-				y: y * HAUTEUR_CASE,
-			});
+			displayTile(x, y);
 		}
 	}
 	if (flip) {
@@ -108,6 +105,12 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 	fatal(!r, "displayPawn()");
 }
 
+void displayTile(int x, int y) {
+	SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE
+	});
+}
 
 void displayTitle() {
 	SDL_Surface* spriteTitre = SDL_LoadBMP("media/sprites/spriteTitre.bmp");
