@@ -96,7 +96,8 @@ void displayStatus(Uint32 color, int x, int y) {
 	fatal(!r, "displayStatus()");
 }
 
-// x et y sont les coordonnées pour le dessin du pion
+/* Dessine un pion sur le plateau de jeu
+	x et y sont les coordonnées du pion */
 void displayPawn(SDL_Surface* sprite, int x, int y) {
 	int r = SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){
 		x: x * LARGEUR_CASE,
@@ -105,6 +106,8 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 	fatal(!r, "displayPawn()");
 }
 
+/* Dessine une case sur le plateau de jeu
+	x et y sont les coordonnées de la case */
 void displayTile(int x, int y) {
 	SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
 		x: x * LARGEUR_CASE,
