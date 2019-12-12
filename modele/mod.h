@@ -3,6 +3,6 @@
 
 	#include "../main.h"
 
-	void plateauInit();
+	void initBoard();
 
 #endif

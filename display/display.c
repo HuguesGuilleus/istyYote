@@ -4,15 +4,43 @@
 #include "display.h"
 
 // La surface de la fenêtre.
-SDL_Surface *fenetre = NULL ;
+SDL_Surface *fenetre = NULL, *texte = NULL, *rectangle = NULL ;
+
+SDL_Rect position;
+
+TTF_Font *police = NULL;
+SDL_Color couleurNoire = {0, 0, 0};
+
 
 // Initilise la SDL et charge les images
 void initDisplay() {
+	
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_WM_SetCaption("ISTY - Yoté", NULL);
+	TTF_Init();
+	
+fenetre = SDL_SetVideoMode(1040, 880, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+SDL_WM_SetCaption("ISTY - Yoté", NULL);
 
-	fenetre = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_HWSURFACE);
+/* Chargement de la police */
+    police = TTF_OpenFont("angelina.TTF", 65);
+    /* Écriture du texte dans la SDL_Surface texte en mode Blended (optimal) */
+    texte = TTF_RenderText_Blended(police, "JEU DE YOTE", couleurNoire);
+
+// Allocation de la surface
+    rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 1028, 180, 32, 0, 0, 0, 0);
+    SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
+
+    position.x = 5; // Les coordonnées de la surface seront (0, 0)
+    position.y = 5;
+    // Remplissage de la surface avec du blanc
+    SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
+    SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
+
+        position.x = 350;
+        position.y = 70;
+        SDL_BlitSurface(texte, NULL, fenetre, &position); /* Blit du texte */
 	fatal(fenetre, "launch SDL");
+
 }
 
 // Fatal if pt is NULL, print the message and the log of SDL
@@ -45,8 +73,8 @@ void displayBoard(bool flip) {
 	fatal(orc, "Error load orc");
 	SDL_SetColorKey(orc, SDL_SRCCOLORKEY, SDL_MapRGB(orc->format,255,0,255));
 
-	for ( x = 4; x < 10; x++) {
-		for(y = 4; y < 9; y++) {
+	for ( x = 4; x < 11; x++) {
+		for(y = 4; y < 10; y++) {
 			displaySquare(spriteCase, x, y);
 			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background
