@@ -9,6 +9,6 @@
 	void fatal(void* pt, char ms[]);
 	void display();
 	void displayBoard(bool flip);
-	void displaySquare(SDL_Surface* square, int x, int y);
+	void displayPawn(SDL_Surface* square, int x, int y);
 
 #endif

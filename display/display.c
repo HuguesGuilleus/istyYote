@@ -18,29 +18,30 @@ void initDisplay() {
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
 	
-fenetre = SDL_SetVideoMode(1040, 880, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-SDL_WM_SetCaption("ISTY - Yoté", NULL);
+	fenetre = SDL_SetVideoMode(1040, 880, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+	SDL_WM_SetCaption("ISTY - Yoté", NULL);
 
-/* Chargement de la police */
-    police = TTF_OpenFont("angelina.TTF", 65);
-    /* Écriture du texte dans la SDL_Surface texte en mode Blended (optimal) */
-    texte = TTF_RenderText_Blended(police, "JEU DE YOTE", couleurNoire);
+	/* Chargement de la police */
+	police = TTF_OpenFont("angelina.TTF", 65);
+	/* Écriture du texte dans la SDL_Surface texte en mode Blended (optimal) */
+	texte = TTF_RenderText_Blended(police, "JEU DE YOTE", couleurNoire);
 
-// Allocation de la surface
-    rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 1028, 180, 32, 0, 0, 0, 0);
-    SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
+	// Allocation de la surface
+	rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 1028, 180, 32, 0, 0, 0, 0);
+	SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
 
-    position.x = 5; // Les coordonnées de la surface seront (0, 0)
-    position.y = 5;
-    // Remplissage de la surface avec du blanc
-    SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
-    SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
+	position.x = 5; // Les coordonnées de la surface seront (0, 0)
+	position.y = 5;
+	// Remplissage de la surface avec du blanc
+	SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
+	SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
 
-        position.x = 350;
-        position.y = 70;
-        SDL_BlitSurface(texte, NULL, fenetre, &position); /* Blit du texte */
+	position.x = 350;
+	position.y = 70;
+	SDL_BlitSurface(texte, NULL, fenetre, &position); /* Blit du texte */
+	
+
 	fatal(fenetre, "launch SDL");
-
 }
 
 // Fatal if pt is NULL, print the message and the log of SDL
@@ -53,6 +54,13 @@ void fatal(void* pt, char ms[]) {
 
 // Affiche tout
 void display() {
+	sprites.spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
+	sprites.spriteDemon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
+	sprites.spriteOrc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
+	
+	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
+	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
+
 	displayBoard(FALSE);
 	SDL_Flip(fenetre);
 }
@@ -61,37 +69,18 @@ void display() {
 // le plateau est affiché.
 void displayBoard(bool flip) {
 	int x,y ;
-
-	SDL_Surface* spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
-	fatal(spriteCase, "load spriteCase");
-
-	SDL_Surface* demon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
-	fatal(demon, "load demon");
-	SDL_SetColorKey(demon, SDL_SRCCOLORKEY, SDL_MapRGB(demon->format,255,0,255));
-
-	SDL_Surface* orc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
-	fatal(orc, "Error load orc");
-	SDL_SetColorKey(orc, SDL_SRCCOLORKEY, SDL_MapRGB(orc->format,255,0,255));
-
 	for ( x = 4; x < 10; x++) {
 		for(y = 4; y < 9; y++) {
-			displaySquare(spriteCase, x, y);
 			/* switch (board[x][y].status) {
 				// TODO: use the color format from the background
 				spriteCase SELECTED:   displayStatus(0x00FF00, x, y); break;
 				spriteCase ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
 				spriteCase CAPTURE:    displayStatus(0xFF0000, x, y); break;
 			} */
-			switch (board[x][y].race) {
-				case VIDE:
-					break;
-				case ORC:
-					displaySquare(orc, x, y);
-					break;
-				case DEMON:
-					displaySquare(demon, x, y);
-					break;
-			}
+			SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
+				x: x * LARGEUR_CASE,
+				y: y * HAUTEUR_CASE,
+			});
 		}
 	}
 	if (flip) {
@@ -110,13 +99,13 @@ void displayStatus(Uint32 color, int x, int y) {
 	fatal(!r, "displayStatus()");
 }
 
-// x and y is the coord of a square
-void displaySquare(SDL_Surface* square, int x, int y) {
-	int r = SDL_BlitSurface(square, NULL, fenetre, &(SDL_Rect){
-		x: x*LARGEUR_CASE,
-		y: y*HAUTEUR_CASE,
+// x et y sont les coordonnées pour le dessin du pion
+void displayPawn(SDL_Surface* sprite, int x, int y) {
+	int r = SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE,
 	});
-	fatal(!r, "displaySquare()");
+	fatal(!r, "displayPawn()");
 }
 
 

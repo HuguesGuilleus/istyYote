@@ -16,9 +16,6 @@ void partie(void) {
 
 	display();
 
-
-
-
 	coord c1 = {};
 	int joueur=ORC;
 	int continuer=1;

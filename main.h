@@ -30,10 +30,8 @@
 	#define LARGEUR_FENETRE 980 //600
 	#define HAUTEUR_FENETRE 700//600
 
-	#define LARGEUR_CASE 70
+	#define LARGEUR_CASE 80
 	#define HAUTEUR_CASE LARGEUR_CASE
-
-
 
 
 	// Coordonées d'une case du plateau (board).
@@ -63,10 +61,20 @@
 		typeStatus status ;
 	} square;
 
+	// Sprites
+	typedef struct {
+		SDL_Surface* spriteCase;
+		SDL_Surface* spriteDemon;
+		SDL_Surface* spriteOrc;
+	} Sprites;
+
 	// Le plateau, accès avec plateau[x][y] avec l'origine en haut à gauche
 	// comme en SDL, SVG, canvas
 	square board[LARGEUR][HAUTEUR] ;
 
+	// Déclaration de la variable globale permettant d'utiliser les sprites
+	Sprites sprites;
+	
 	#include "display/display.h"
 	#include "modele/mod.h"
 
