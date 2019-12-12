@@ -17,5 +17,7 @@
 	int verifClic1 (int x, int y, raceJoueur joueur);
 	coord placement(raceJoueur joueur);
 	bool verifClic2Placement(int x, int y);
+	coord deplacement(raceJoueur joueur,coord c1);
+	bool verifClic2Deplacement(int x,int y,coord c1);
 
 #endif
