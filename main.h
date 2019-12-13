@@ -66,6 +66,8 @@
 		SDL_Surface* spriteCase;
 		SDL_Surface* spriteDemon;
 		SDL_Surface* spriteOrc;
+		SDL_Surface* spritefond;
+		SDL_Surface* spritenuage;
 	} Sprites;
 
 	// Le plateau, accès avec plateau[x][y] avec l'origine en haut à gauche
