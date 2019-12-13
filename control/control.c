@@ -33,6 +33,7 @@ void partie(void) {
 		if (action==RESERVE){
 			printf("placement\n");
 			CordPion=placement(joueur);
+			displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
 		}
 		else if(action==PLATEAU){
 			printf(" deplacement\n");
@@ -167,8 +168,6 @@ int ActionJoueur(raceJoueur joueur,coord *c,int *continuer){
 				}
 				else if(Clic1==PLATEAU){
 					//renvoie l'action a faire qui est : deplacement ou capture
-					//TO DO : attribuer la coordonner en fonction de la valeur de event.button.x et event.button.y
-					printf("ahah plateau !\n");
 					c->x=event.button.x;
 					c->y=event.button.y;
 					return PLATEAU;
@@ -180,8 +179,8 @@ int ActionJoueur(raceJoueur joueur,coord *c,int *continuer){
 //on verifie que le clic est autoriser
 //renvoie l'action qui sera effectuer au clic2 ( placement ou deplacement/capture)
 int verifClic1 (int x, int y, raceJoueur joueur){
-	printf("\n\n\n%d %d\n",x/TAILLE_CASE-4,y/TAILLE_CASE-4);
-	printf("tableua = %d   joeur == %d \n",board[x/TAILLE_CASE-4][y/TAILLE_CASE-4].race,joueur);
+	printf("\n\n\n%d %d\n",x/TAILLE_CASE-5,y/TAILLE_CASE-4);
+	printf("tableua = %d   joeur == %d \n",board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race,joueur);
 	if(joueur==ORC){
 		//reserve du joueur orc
 		if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
@@ -191,13 +190,13 @@ int verifClic1 (int x, int y, raceJoueur joueur){
 	}
 	else if(joueur==DEMON){
 		//reserve du joueur demon
-		if((x>11*TAILLE_CASE)&&(x<13*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+		if((x>13*TAILLE_CASE)&&(x<15*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
 			printf("reserve J2\n");
 			return RESERVE;
 		}
 	}
 	
-	if((board[x/TAILLE_CASE-4][y/TAILLE_CASE-4].race)==joueur){
+	if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race)==joueur){
 		printf("plateau\n");
 		return PLATEAU;
 	}
@@ -207,7 +206,7 @@ int verifClic1 (int x, int y, raceJoueur joueur){
 
 bool verifClic2Placement(int x, int y)
 {
-	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
+	if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
 		return TRUE;
 	}
 	else{
@@ -237,11 +236,11 @@ coord placement(raceJoueur joueur)
 				//On regarde si le clic 2 est bien dans le plateau
 				Clic2= verifClic2Placement(event.button.x,event.button.y);
 				if(Clic2==TRUE){
-					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4);
+					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-5,(event.button.y/TAILLE_CASE)-4);
 					c.x=event.button.x;
 					c.y=event.button.y;
 					
-					board[c.x/TAILLE_CASE-4][c.y/TAILLE_CASE-4].race=joueur;
+					board[c.x/TAILLE_CASE-5][c.y/TAILLE_CASE-4].race=joueur;
 					return c;
 				}
 		}
@@ -251,9 +250,9 @@ coord placement(raceJoueur joueur)
 
 bool verifClic2Deplacement(int x,int y,coord c1){
 	
-	int arriveX = x/TAILLE_CASE-4;
+	int arriveX = x/TAILLE_CASE-5;
 	int arriveY = y/TAILLE_CASE-4;
-	int departX=  c1.x/TAILLE_CASE-4;
+	int departX=  c1.x/TAILLE_CASE-5;
 	int departY= c1.y/TAILLE_CASE-4;
 	printf("verifions que tu peux allez ici :    %d %d\n",arriveX,arriveY);
 	printf("tu etais ici :    %d %d\n", departX, departY);
@@ -290,11 +289,11 @@ coord deplacement(raceJoueur joueur,coord c1)
 				printf("tu dois te deplace\n");
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1);
 				if(Clic2==TRUE){
-					printf("je deplace le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-4,(event.button.y/TAILLE_CASE)-4);
+					printf("je deplace le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-5,(event.button.y/TAILLE_CASE)-4);
 					c2.x=event.button.x;
 					c2.y=event.button.y;
-					board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-4].race=VIDE;
-					board[c2.x/TAILLE_CASE-4][c2.y/TAILLE_CASE-4].race=joueur;
+					board[c1.x/TAILLE_CASE-5][c1.y/TAILLE_CASE-4].race=VIDE;
+					board[c2.x/TAILLE_CASE-5][c2.y/TAILLE_CASE-4].race=joueur;
 					return c2;
 				}
 		}
@@ -304,11 +303,12 @@ coord deplacement(raceJoueur joueur,coord c1)
 
 void affiche_plateau(){
 	int i,j;
+	printf("\n");
 	for(i=0;i<5;i++){
 		for(j=0;j<6;j++){
 			printf(" %d ",board[j][i].race);
 		}
 		printf("\n");
 	}
-	printf("finiiii\n");
+printf("\n");
 }

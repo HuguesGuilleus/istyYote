@@ -118,6 +118,7 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 		y: y * HAUTEUR_CASE,
 	});
 	fatal(!r, "displayPawn()");
+	SDL_Flip(fenetre);
 }
 
 /* Dessine une case sur le plateau de jeu
