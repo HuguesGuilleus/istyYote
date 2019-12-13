@@ -7,6 +7,21 @@ OPT_COMPILATION="-Wall -fdiagnostics-color=always `sdl-config --cflags`"
 OPT_ASSEMBLAGE="`sdl-config --libs` -lSDL_ttf"
 
 clear
+if [[ $# -ge 1 ]]; then
+	case $1 in
+		"clean" )
+			echo "clean"
+			rm -rf _obj
+			exit 0 ;;
+		"rebuild" )
+			rm -rf _obj ;;
+		*)
+			echo "Commande inconnue $1" >&2
+			exit 1 ;;
+	esac
+fi
+
+
 mkdir -p _obj/
 
 fail=false
