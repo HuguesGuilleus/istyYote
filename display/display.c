@@ -4,31 +4,24 @@
 #include "display.h"
 
 // La surface de la fenêtre.
-SDL_Surface * fenetre = NULL ;
+SDL_Surface *fenetre = NULL, *texte = NULL, *rectangle = NULL ;
 
-// Var local?
-SDL_Surface *rectangle = NULL ;
-
-// Variable locale?
 SDL_Rect position;
 
 TTF_Font *police = NULL;
+SDL_Color couleurNoire = {0, 0, 0};
 
-const SDL_Color couleurNoire = {0, 0, 0};
 
-
-// Initilise la SDL et charge les images et les fontes
-// TODO: Rework
+// Initilise la SDL et charge les images
 void initDisplay() {
-	SDL_Surface *texte = NULL ;
-
+	
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
-	fenetre = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-	fatal(fenetre, "launch SDL");
+	
+	fenetre = SDL_SetVideoMode(1110, 800, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_WM_SetCaption("ISTY - Yoté", NULL);
 
-	// Chargement de la police
+	/* Chargement de la police */
 	police = TTF_OpenFont("VCR_OSD_MONO_1.001.ttf", 45);
 	/* Écriture du texte dans la SDL_Surface texte en mode Blended (optimal) */
 	texte = TTF_RenderText_Blended(police, "Tour des Orcs", couleurNoire);
@@ -36,41 +29,35 @@ void initDisplay() {
 	// Allocation de la surface
 	rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 500, 180, 32, 0, 0, 0, 0);
 	SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
-
+	
 	//un fond jolie
 	position.x = 0; // Les coordonnées de la surface seront (0, 0)
 	position.y = 0;
-	sprites.spriteFond = SDL_LoadBMP("media/sprites/fondjeu.bmp");
-	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &position);
+	sprites.spritefond = SDL_LoadBMP("media/sprites/fondjeu.bmp");
+	SDL_BlitSurface(sprites.spritefond, NULL, fenetre, &position);
 
 
 
 	position.x = 310; // Les coordonnées de la surface seront (0, 0)
 	position.y = 5;
 	// Remplissage de la surface avec du blanc
-	//SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255));
+	//SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
 	//SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
-
+	
 	position.x = 310; // Les coordonnées de la surface seront (0, 0)
 	position.y = 3;
-	sprites.spriteNuage = SDL_LoadBMP("media/sprites/nuage.bmp");
-
-	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
+	sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
+	
+	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
 	position.x = 364;
 	position.y = 80;
 	SDL_BlitSurface(texte, NULL, fenetre, &position); /* Blit du texte */
+	
 
-
-	sprites.spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
-
-	sprites.spriteDemon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
-	sprites.spriteOrc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
-	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
-	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
+	fatal(fenetre, "launch SDL");
 }
 
-// Si le pointeur pt est NULL, afficher le message ms et l'erreur de la SDL et
-// arrête brutalement le programme. C'est une fonction utilitaire0.
+// Fatal if pt is NULL, print the message and the log of SDL
 void fatal(void* pt, char ms[]) {
 	if (pt == NULL) {
 		fprintf(stderr, "Error %s: %s\n", ms, SDL_GetError());
@@ -80,31 +67,30 @@ void fatal(void* pt, char ms[]) {
 
 // Affiche tout
 void display() {
-	SDL_Rect pos ;
-	// Fond et nuage
-	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
-	pos = (SDL_Rect){
-		x: 310,
-		y: 3,
-	};
-	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &pos);
+	sprites.spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
+	sprites.spriteDemon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
+	sprites.spriteOrc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
+	
+	
+	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
+	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
 
-	displayReserve(currentParty.reserveOrc, sprites.spriteOrc, ORIGINE_RESERVE_ORC);
-	displayReserve(currentParty.reserveDemon, sprites.spriteDemon, ORIGINE_RESERVE_DEAMON);
-	displayRace();
 	displayBoard(FALSE);
-
 	SDL_Flip(fenetre);
 }
 
-
-/* AFFICHAGE DU PLATEAU */
-
-// Affiche tout le plateau, si flip vaut vrai, alors la fenêtre est actualisée.
+// Affiche que le plateau, si flip est vrai, alors
+// le plateau est affiché.
 void displayBoard(bool flip) {
-	int x, y ;
-	for ( x = 0; x < LARGEUR; x++) {
-		for ( y = 0; y < HAUTEUR; y++) {
+	int x,y ;
+	for ( x = 4; x < 10; x++) {
+		for(y = 3; y < 8; y++) {
+			/* switch (board[x][y].status) {
+				// TODO: use the color format from the background
+				spriteCase SELECTED:   displayStatus(0x00FF00, x, y); break;
+				spriteCase ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
+				spriteCase CAPTURE:    displayStatus(0xFF0000, x, y); break;
+			} */
 			displayTile(x, y);
 		}
 	}
@@ -113,126 +99,46 @@ void displayBoard(bool flip) {
 	}
 }
 
-// Dessine une case du plateau (fond et pion), x et y sont les indices du
-// plateau de jeu correspondant à la case dessinée.
-void displayTile(int x, int y) {
-	switch (board[x][y].status) {
-		case SELECTED:   displayStatus(0x00FF00, x, y); break;
-		case ACCESSIBLE: displayStatus(0x0000FF, x, y); break;
-		case CAPTURE:    displayStatus(0xFF0000, x, y); break;
-		default:
-			displayPawn(sprites.spriteCase, x, y);
-	}
-	switch (board[x][y].race) {
-		case ORC:
-			displayPawn(sprites.spriteOrc, x, y);
-			break;
-		case DEMON:
-			displayPawn(sprites.spriteDemon, x, y);
-			break;
-		default:
-			;
-	}
-}
-
-// Rempli avec une certaine couleur la case du plateau correpondant aux indices
-// x et y. Cette fonction sert pour afficher le status de la case.
+// Dessin un fond différent selon le fond
 void displayStatus(Uint32 color, int x, int y) {
 	int r = SDL_FillRect(fenetre, &(SDL_Rect){
-		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
-		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y,
-		w: TAILLE_CASE,
-		h: TAILLE_CASE,
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE,
+		w: LARGEUR_CASE,
+		h: HAUTEUR_CASE,
 	}, color);
 	fatal(!r, "displayStatus()");
 }
 
-// Dessine une image (fond, pion) sur le plateau de jeu. x et y sont les
-// indices du plateau correspondant à la case dessinée.
-void displayPawn(SDL_Surface* img, int x, int y) {
-	int r = SDL_BlitSurface(img, NULL, fenetre, &(SDL_Rect){
-		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
-		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y,
+/* Dessine un pion sur le plateau de jeu
+	x et y sont les coordonnées du pion */
+void displayPawn(SDL_Surface* sprite, int x, int y) {
+	int r = SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE,
 	});
 	fatal(!r, "displayPawn()");
 	SDL_Flip(fenetre);
 }
 
-
-/* AFFICHAGE DES RÉSERVES */
-
-// Affiche la réserve d'un type de joueur. Prend la surface qui représente un
-// pion à afficher (orc ou deamon). L'origine de la réserve sera: en ascisse
-// l'agument x et en ordonée la macro constante ORIGINE_PLATEAU_Y.
-//
-// Si nbPion, le nombre de pion dans la réserve, est supérieur à 6, alors la
-// fonction se réapellera avec un décallage sur x pour créé une autre colone.
-void displayReserve(int nbPion, SDL_Surface* img, int x) {
-	int y = ORIGINE_PLATEAU_Y;
-	int r ;
-
-	if (nbPion > 6) {
-		displayReserve(nbPion-6, img, x+TAILLE_CASE);
-		nbPion = 5 ;
-	}
-
-	for(; nbPion > 0 ; nbPion--) {
-		SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
-			x: x ,
-			y: y ,
-		});
-		SDL_BlitSurface(img, NULL, fenetre, &(SDL_Rect){
-			x: x ,
-			y: y ,
-		});
-		y += TAILLE_CASE;
-	}
-}
-
-
-/* AFFICHAGE RACE JOUEUR */
-
-// Affiche la race du joueur et le nuage
-void displayRace() {
-	SDL_Surface * texte ;
-
-	switch (currentParty.joueur) {
-		case ORC:
-			displayRaceHead(sprites.spriteOrc, ORIGINE_RESERVE_ORC);
-			texte = TTF_RenderText_Solid(police, "ORC", couleurNoire);
-			break;
-		case DEMON:
-			displayRaceHead(sprites.spriteDemon, ORIGINE_RESERVE_DEAMON);
-			texte = TTF_RenderText_Solid(police, "DEMON", couleurNoire);
-			break;
-		default:;
-	}
-
-	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
-		x: (LARGEUR_FENETRE-texte->w)/2,
-		y: 75,
-	});
-	SDL_FreeSurface(texte);
-}
-
-// Affiche la tête coorespondant au joueur courant.
-// TODO: Grossir la tête.
-void displayRaceHead(SDL_Surface * img, int x) {
-	SDL_BlitSurface(img, NULL, fenetre, &(SDL_Rect){
-		x: x,
-		y: ORIGINE_RACE_HEAD_Y,
+/* Dessine une case sur le plateau de jeu
+	x et y sont les coordonnées de la case */
+void displayTile(int x, int y) {
+	SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
+		x: x * LARGEUR_CASE,
+		y: y * HAUTEUR_CASE
 	});
 }
-
-
-/* ZONE DE MENU */
 
 void displayTitle() {
 	SDL_Surface* spriteTitre = SDL_LoadBMP("media/sprites/spriteTitre.bmp");
 	fatal(spriteTitre, "load titleSprite");
+
 	SDL_BlitSurface(spriteTitre, NULL, fenetre, &(SDL_Rect){0,0});
+
 	SDL_Flip(fenetre);
 }
+
 
 // Affiche les boutons du menu du jeu
 void displayMenuButtons() {
@@ -278,6 +184,7 @@ void displayRules(char* regles) {
 	TTF_CloseFont(police);
 	TTF_Quit();
 }
+
 
 // Affiche les derniers scores
 void displayScores(char* scores) {
