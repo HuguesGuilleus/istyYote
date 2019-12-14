@@ -3,6 +3,13 @@
 
 #include "mod.h"
 
+void initPartie(void) {
+	initBoard();
+	currentParty.reserveOrc = 12 ;
+	currentParty.reserveDemon = 12 ;
+	currentParty.joueur = rand()%2 ? ORC : DEMON ;
+}
+
 // Initialise le plateau
 void initBoard() {
 	int x, y ;
@@ -30,4 +37,30 @@ void initDev() {
 	// currentParty.reserveDemon = 12;
 	currentParty.reserveOrc = 5 ;
 	currentParty.reserveDemon = 9 ;
+}
+
+
+/* GAMER SECTION */
+
+// Change de couleur de joueur entre blanc et noir.
+void gamerSwitch(void) {
+	currentParty.joueur = currentParty.joueur == ORC ? DEMON : ORC ;
+}
+
+// Affiche la couleur d'un joueur.
+void gamerPrint(raceJoueur race) {
+	switch (race) {
+		case VIDE: printf("VIDE\n"); break;
+		case ORC: printf("ORC\n"); break;
+		case DEMON: printf("DEMON\n"); break;
+	}
+}
+
+// Décrémente la réserve du joueur courant.
+void gamerDecreaseReserve(void) {
+	if (currentParty.joueur == ORC) {
+		currentParty.reserveOrc--;
+	} else {
+		currentParty.reserveDemon--;
+	}
 }

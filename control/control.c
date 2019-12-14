@@ -3,6 +3,69 @@
 
 #include "control.h"
 
+void partie2(void) {
+	typeHandlers h = {} ;
+	// Indique si l'utilisateur veut placer un pion.
+	bool reserve = FALSE ;
+	// Indique si une case est déjà séléctionnée.
+	bool selected = FALSE ;
+	// Le permier click
+	coord firstClick ;
+
+	// Le joueur courant séléctionne sa réserve pour poser un pion.
+	void activeReserve(SDL_Event click) {
+		reserve = TRUE ;
+		selected = FALSE ;
+		if (selected) {
+			board[firstClick.x][firstClick.y].status = DEFAULT ;
+			displayBoard(TRUE);
+		}
+	}
+	handlersAdd(&h, SDL_MOUSEBUTTONDOWN, &filterReserve, &activeReserve);
+
+	// Le joueur courant séléctionne un de ses pions pour un déplacement.
+	void selectPiece(SDL_Event click) {
+		reserve = FALSE ;
+		if (selected) {
+			board[firstClick.x][firstClick.y].status = DEFAULT ;
+		}
+		selected = TRUE ;
+		firstClick = clickToCoord(click);
+		board[firstClick.x][firstClick.y].status = SELECTED ;
+		displayBoard(TRUE);
+	}
+	handlersAdd(&h, SDL_MOUSEBUTTONDOWN, &filterTile, &selectPiece);
+
+	// Le joueur va déplacer un pion déjà présent ou bien poser un nouveau pion.
+	void cliquer(SDL_Event click) {
+		if (reserve) {
+			firstClick = clickToCoord(click);
+			board[firstClick.x][firstClick.y].race = currentParty.joueur ;
+			gamerDecreaseReserve();
+			gamerSwitch();
+			display();
+			reserve = FALSE ;
+		} else if (selected) {
+			board[firstClick.x][firstClick.y].race = VIDE ;
+			board[firstClick.x][firstClick.y].status = DEFAULT ;
+			firstClick = clickToCoord(click);
+			board[firstClick.x][firstClick.y].race = currentParty.joueur ;
+			gamerSwitch();
+			selected = FALSE ;
+			display();
+		}
+	}
+	handlersAdd(&h, SDL_MOUSEBUTTONDOWN, &filterTileEmpty, &cliquer);
+
+	handlersAdd(&h, SDL_QUIT, &filterTrue, &end);
+	initPartie();
+	display();
+	handlersRun(&h);
+	handlersFree(&h);
+}
+
+
+
 // Joue une partie
 void partie(void) {
 	SDL_Event event;
@@ -10,7 +73,7 @@ void partie(void) {
 	raceJoueur gamer ;
 
 	//gamerRand(&gamer);
-	
+
 	printf("Couleur premier joueur: ");
 	gamerPrint(gamer);
 
@@ -19,7 +82,7 @@ void partie(void) {
 	coord c1 = {};
 	int joueur=ORC;
 	int continuer=1;
-	while(continuer==1){ 
+	while(continuer==1){
 		//recuepere l'action de jeu a effectuer
 		int action;
 		coord CordPion;
@@ -27,7 +90,7 @@ void partie(void) {
 		printf("joueur:%d \n",joueur);
 
 		action=ActionJoueur(joueur,&c1,&continuer);
-		
+
 
 		//action : placement
 		if (action==RESERVE){
@@ -56,58 +119,57 @@ void partie(void) {
 	return;
 
 
-	display();
-	affiche_plateau();
-	printf("c'est cool\n");
-
-	while (TRUE) {
-		SDL_WaitEvent(&event);
-		switch (event.type) {
-			case SDL_QUIT:
-				return;
-			case SDL_MOUSEBUTTONDOWN:
-				// TODO: Faire un clic sur un bouton qui quitte la partie
-				// TODO: Faire un placement de nouveau pion
-				if (clickOnPiece(&event, &depart, gamer)) {
-					// board[depart.x][depart.y].race = gamer ;
-					board[depart.x][depart.y].status = SELECTED ;
-					displayBoard(TRUE);
-				}
-				break;
-		}
-	}
+	// display();
+	// affiche_plateau();
+	// printf("c'est cool\n");
+	//
+	// while (TRUE) {
+	// 	SDL_WaitEvent(&event);
+	// 	switch (event.type) {
+	// 		case SDL_QUIT:
+	// 			return;
+	// 		case SDL_MOUSEBUTTONDOWN:
+	// 			// TODO: Faire un clic sur un bouton qui quitte la partie
+	// 			// TODO: Faire un placement de nouveau pion
+	// 			if (clickOnPiece(&event, &depart, gamer)) {
+	// 				// board[depart.x][depart.y].race = gamer ;
+	// 				board[depart.x][depart.y].status = SELECTED ;
+	// 				displayBoard(TRUE);
+	// 			}
+	// 			break;
+	// 	}
+	// }
 }
 
 
+// // Converti les coordondées d'un clic en coordonées du tableau.
+// // Si le clic n'est pas dans le plateau, retourne FALSE.
+// bool clickToCoord(SDL_Event * click, coord * c) {
+// 	int x = click->button.x;
+// 	int y = click->button.y;
+//
+// 	if (x> LARGEUR * 50 || y > HAUTEUR * 50) {
+// 		return FALSE ;
+// 	} else {
+// 		c->x = x/50 ;
+// 		c->y = y/50 ;
+// 		return TRUE ;
+// 	}
+// }
 
-// Retourne TRUE si le click est sur un pion du joueur courant.
-// Si c'est le cas, la case sera enregistrée dans le pointeur de c.
-bool clickOnPiece(SDL_Event *click, coord * c, raceJoueur gamer) {
-	if (clickToCoord(click, c) == FALSE) {
-		return FALSE ;
-	}
-	if (board[c->x][c->y].race == gamer) {
-		return TRUE ;
-	} else {
-		return FALSE ;
-	}
-}
 
-
-// Converti les coordondées d'un clic en coordonées du tableau.
-// Si le clic n'est pas dans le plateau, retourne FALSE.
-bool clickToCoord(SDL_Event * click, coord * c) {
-	int x = click->button.x;
-	int y = click->button.y;
-
-	if (x> LARGEUR * 50 || y > HAUTEUR * 50) {
-		return FALSE ;
-	} else {
-		c->x = x/50 ;
-		c->y = y/50 ;
-		return TRUE ;
-	}
-}
+// // Retourne TRUE si le click est sur un pion du joueur courant.
+// // Si c'est le cas, la case sera enregistrée dans le pointeur de c.
+// bool clickOnPiece(SDL_Event *click, coord * c, raceJoueur gamer) {
+// 	if (clickToCoord(click, c) == FALSE) {
+// 		return FALSE ;
+// 	}
+// 	if (board[c->x][c->y].race == gamer) {
+// 		return TRUE ;
+// 	} else {
+// 		return FALSE ;
+// 	}
+// }
 
 // Affiche les coordonées dans la console d'un clic.
 void printCoord(coord * c) {
@@ -116,31 +178,7 @@ void printCoord(coord * c) {
 	} else {
 		printf("(%d,%d)\n", c->x, c->y);
 	}
-}	
-
-
-/* GAMER SECTION */
-
-// Tire aléatoirement un joueur blanc ou noir pour jouer.
-void gamerRand(raceJoueur * gamer) {
-	*gamer = rand()%2 ? ORC : DEMON ;
 }
-
-// Affiche la couleur d'un joueur.
-void gamerPrint(raceJoueur gamer) {
-	switch (gamer) {
-		case VIDE: printf("VIDE\n"); break;
-		case ORC: printf("ORC\n"); break;
-		case DEMON: printf("DEMON\n"); break;
-	}
-}
-
-// Change de couleur de joueur entre blanc et noir.
-void gamerSwitch(raceJoueur * gamer) {
-	* gamer = *gamer == ORC ? DEMON : ORC ;
-}
-
-
 
 //Détermine si le joueur veut placer un pion ou déplacer un pion en fonction du premier clic
 //Retourne l'action
@@ -195,12 +233,12 @@ int verifClic1 (int x, int y, raceJoueur joueur){
 			return RESERVE;
 		}
 	}
-	
+
 	if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race)==joueur){
 		printf("plateau\n");
 		return PLATEAU;
 	}
-	
+
 
 }
 
@@ -239,7 +277,7 @@ coord placement(raceJoueur joueur)
 					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-5,(event.button.y/TAILLE_CASE)-4);
 					c.x=event.button.x;
 					c.y=event.button.y;
-					
+
 					board[c.x/TAILLE_CASE-5][c.y/TAILLE_CASE-4].race=joueur;
 					return c;
 				}
@@ -249,7 +287,7 @@ coord placement(raceJoueur joueur)
 }
 
 bool verifClic2Deplacement(int x,int y,coord c1){
-	
+
 	int arriveX = x/TAILLE_CASE-5;
 	int arriveY = y/TAILLE_CASE-4;
 	int departX=  c1.x/TAILLE_CASE-5;
@@ -263,7 +301,7 @@ bool verifClic2Deplacement(int x,int y,coord c1){
 			printf("c'esr possible de se deplacer ! \n");
 			return TRUE;
 		}
-		
+
 	}
 	return FALSE;
 }
