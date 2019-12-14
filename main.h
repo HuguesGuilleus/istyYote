@@ -57,7 +57,7 @@
 	struct {
 		// Race du joueur courant
 		raceJoueur joueur;
-		// Nombre de pion dans une réserve pour chaque joueur
+		// Nombre de pion dans une réserve
 		int reserveOrc;
 		int reserveDemon;
 	} currentParty ;
@@ -66,10 +66,7 @@
 	// comme en SDL, SVG, canvas...
 	square board[LARGEUR][HAUTEUR] ;
 
-	void end(SDL_Event _);
-
 	#include "display/display.h"
 	#include "modele/mod.h"
-	#include "control/event.h"
 
 #endif

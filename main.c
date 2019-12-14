@@ -3,23 +3,23 @@
 
 #include "main.h"
 
-void sw(SDL_Event _) {
-	printf("switch joueur\n");
-	gamerSwitch();
-	display();
-}
-
 int main(int argc, char const *argv[]) {
 	srand(time(NULL));
 	initDisplay();
 
-	partie2();
+	initDev();
+	display();
+	// displayBoard(FALSE);
 
+	// Pour le développement
+	SDL_Event event;
+	do {
+		SDL_WaitEvent(&event);
+	} while(event.type != SDL_QUIT);
+
+	// partie();
+
+	// TODO: faire une fonction propre pour quiter la SDL.
 	SDL_Quit();
 	return 0;
-}
-
-void end(SDL_Event _) {
-	SDL_Quit();
-	exit(0);
 }

@@ -3,12 +3,15 @@
 
 	#include "../main.h"
 
-	void partie2(void);
 
 	void partie(void);
 	bool clickOnPiece(SDL_Event *click, coord * c, raceJoueur gamer);
-	// bool clickToCoord(SDL_Event * click, coord * c);
+	bool clickToCoord(SDL_Event * click, coord * c);
 	void printfCoord(coord * c);
+
+	void gamerRand(raceJoueur * gamer);
+	void gamerPrint(raceJoueur gamer);
+	void gamerSwitch(raceJoueur * gamer);
 
 	int ActionJoueur(raceJoueur joueur,coord *c,int *continuer);
 	int verifClic1 (int x, int y, raceJoueur joueur);
