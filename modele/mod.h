@@ -4,5 +4,6 @@
 	#include "../main.h"
 
 	void initBoard();
+	void initDev();
 
 #endif

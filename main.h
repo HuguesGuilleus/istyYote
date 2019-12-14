@@ -13,7 +13,6 @@
 	#include <unistd.h>
 
 	//suggestion
-	#define TAILLE_CASE 70
 	#define RESERVE 3
 	#define PLATEAU 4
 	#define JOUEUR1 1
@@ -24,15 +23,8 @@
 	#define TRUE (1)
 	#define FALSE (0)
 
-	#define LARGEUR 6
-	#define HAUTEUR 5
-
-	#define LARGEUR_FENETRE 980 //600
-	#define HAUTEUR_FENETRE 700//600
-
-	#define LARGEUR_CASE 80
-	#define HAUTEUR_CASE LARGEUR_CASE
-
+	#define LARGEUR 5
+	#define HAUTEUR 6
 
 	// Coordonées d'une case du plateau (board).
 	typedef struct {
@@ -47,7 +39,7 @@
 		DEMON,
 	} raceJoueur;
 
-	// L'état d'une case:
+	// Status d'une case:
 	typedef enum {
 		DEFAULT,
 		SELECTED, // une case séléctionné
@@ -61,22 +53,19 @@
 		typeStatus status ;
 	} square;
 
-	// Sprites
-	typedef struct {
-		SDL_Surface* spriteCase;
-		SDL_Surface* spriteDemon;
-		SDL_Surface* spriteOrc;
-		SDL_Surface* spritefond;
-		SDL_Surface* spritenuage;
-	} Sprites;
+	// La partie courante
+	struct {
+		// Race du joueur courant
+		raceJoueur joueur;
+		// Nombre de pion dans une réserve
+		int reserveOrc;
+		int reserveDemon;
+	} currentParty ;
 
 	// Le plateau, accès avec plateau[x][y] avec l'origine en haut à gauche
-	// comme en SDL, SVG, canvas
+	// comme en SDL, SVG, canvas...
 	square board[LARGEUR][HAUTEUR] ;
 
-	// Déclaration de la variable globale permettant d'utiliser les sprites
-	Sprites sprites;
-	
 	#include "display/display.h"
 	#include "modele/mod.h"
 
