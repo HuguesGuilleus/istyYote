@@ -63,10 +63,10 @@ void fatal(void* pt, char ms[]) {
 
 // Affiche tout
 void display() {
-	/* displayTitle();
-	displayMenuButtons(); */
-	displayRules();
-	//displayBoard(FALSE);
+	//displayTitle();
+	//displayMenuButtons();
+	//displayRules();
+	displayBoard(FALSE);
 
 	SDL_Flip(fenetre);
 }
