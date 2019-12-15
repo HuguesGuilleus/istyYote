@@ -46,6 +46,7 @@ void initDisplay() {
 	sprites.spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
 	sprites.spriteDemon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
 	sprites.spriteOrc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
+	sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
 	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
 	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
 
@@ -64,6 +65,7 @@ void fatal(void* pt, char ms[]) {
 void display() {
 	//displayTitle();
 	//displayMenuButtons();
+	//displayRules();
 	displayBoard(FALSE);
 
 	SDL_Flip(fenetre);
@@ -94,7 +96,7 @@ void displayRound(raceJoueur joueur) {
 
 	position.x = 310;
 	position.y = 3;
-	sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
+	//sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
 	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
 	
 	position.x = 364;
@@ -261,28 +263,47 @@ void displayMenuButtons() {
 	SDL_Flip(fenetre);
 }
 
+
 // Affiche les règles du jeu
-void displayRules(char* regles) {
-	int i = 0;
+void displayRules() {
+	SDL_Rect position; // Position des différents élements de la fenêtre
+	char texte[TAILLE_MAX_REGLES] = ""; // Tampon pour le fichier media/regles.txt
 
-	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 30);
+	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
+	SDL_Surface* affichageTexte = NULL;
+	FILE* fichierRegles = NULL;
+	
+	// Titre
+	position.x = 310;
+	position.y = 3;
+	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
+	
+	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
+	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
+	position.y = (sprites.spritenuage->h / 2) - (affichageTexte->h / 4);
+	SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
 
-	SDL_Surface* texte = NULL;
+	TTF_CloseFont(police);
 
-	char* separateur = "_";
-	// Découpe une chaîne de caractères en sous-chaînes, en fonction d'un ou plusieurs séparateurs
-	const char* ligne = strtok(regles, separateur);
+	// Affichage des règles
+	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
+	position.y = sprites.spritenuage->h + 50;
+	fichierRegles = fopen("media/regles.txt", "r");
 
-	while (ligne != NULL) {
-		texte = TTF_RenderUTF8_Shaded(police, ligne, (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){0, i});
-		i += 30;
-		ligne = strtok(NULL, separateur);
+	if (fichierRegles != NULL) {
+		while (fgets(texte, TAILLE_MAX_REGLES, fichierRegles) != NULL) {
+			texte[strlen(texte) - 1] = '\0'; // On supprime les "\n" en fin de lignes (permet aussi de supprimer les sauts de lignes);
+			affichageTexte = TTF_RenderUTF8_Blended(police, texte, couleurNoire); // Affichage du texte avec encodage UTF8, pour prendre en compte les accents
+			if (affichageTexte != 0) {
+				position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
+				SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+			}
+			position.y += 20;
+		}
+		fclose(fichierRegles);
 	}
 
 	SDL_Flip(fenetre);
-
-	// Clotûre de la police
 	TTF_CloseFont(police);
 }
 
