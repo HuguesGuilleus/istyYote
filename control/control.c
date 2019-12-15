@@ -142,7 +142,7 @@ int verifClic1 (int x, int y, Joueur joueur){
 
 bool verifClic2Placement(int x, int y)
 {
-	if((x>5*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
+	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
 		return TRUE;
 	}
 	else{
@@ -194,7 +194,7 @@ bool verifClic2Deplacement(int x,int y,coord c1){
 	printf("verifions que tu peux allez ici :    %d %d\n",arriveX,arriveY);
 	printf("tu etais ici :    %d %d\n", departX, departY);
 	//verifie que le clic est dans le plateau et que la case et vide
-	if((x>5*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
+	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
 		//verifie que la case est a une distance de 1 du pion
 		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY)) || ((arriveX==departX) && (arriveY==departY+1)) || ((arriveX==departX) && (arriveY==departY-1)) ){
 			printf("c'esr possible de se deplacer ! \n");
