@@ -46,6 +46,12 @@
 		DEMON,
 	} raceJoueur;
 
+	//joueur 
+	typedef struct {
+		raceJoueur race;
+		int reserve;
+	} Joueur;
+
 	// L'état d'une case:
 	typedef enum {
 		DEFAULT,
