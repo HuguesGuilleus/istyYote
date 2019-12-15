@@ -14,11 +14,15 @@
 	d'une réserve et le bord de la fenêtre */
 	#define MARGE_RESERVE 20
 
+	// Nombre maximum de caractère pour le fichier de règles
+	#define TAILLE_MAX_REGLES 1000
+
 	void initDisplay();
 	void fatal(void* pt, char ms[]);
 	void display();
 	void displayBoard();
 	void displayPawn(SDL_Surface* square, int x, int y);
 	void displayTile(int x, int y);
-	
+	void displayRules();
+
 #endif

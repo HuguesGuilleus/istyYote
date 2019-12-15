@@ -2,19 +2,22 @@ Le Yoté se joue à deux joueurs, sur un plateau de 6x5 cases.
 Chaque joueur possède 12 pions, blancs ou noirs.
 Le but du jeu est de capturer tous les pions ennemis.
 
-Au début de la partie, le plateau est vide, les pions sont rangés
-dans la réserve des joueurs.
+Au début de la partie, le plateau est vide, les pions sont
+rangés dans la réserve des joueurs.
 Le premier joueur est tiré au hasard.
 
-A chaque tour, les joueurs peuvent décider de prendre un pion de
-leur réserve pour le placer sur le plateau, ou bien de déplacer
-un pion qui y est déjà présent.
-Un pion ne peut être déplacé que d'une seule case, horizontalement
-ou verticalement.
+A chaque tour, les joueurs peuvent décider de prendre
+un pion de leur réserve pour le placer sur le plateau,
+ou bien de déplacer un pion qui y est déjà présent.
+Un pion ne peut être déplacé que d'une seule case,
+horizontalement ou verticalement.
 
-La capture d'un pion adverse se fait en sautant par-dessus celui-ci.
-La prise d'un pion entraîne la possiblité d'effectuer une seconde capture.
-Si aucun pion ennemi n'est placé sur le plateau, alors on prendra un
-pion dans sa réserve.
+La capture d'un pion adverse se fait en sautant par-dessus 
+celui-ci.
+La prise d'un pion entraîne la possiblité d'effectuer
+une seconde capture.
+Si aucun pion ennemi n'est placé sur le plateau, alors
+on prendra un pion dans sa réserve.
 
-Lors d'un tour, il est interdit de joueur le même coup qu'au tour précédent.
+Lors d'un tour, il est interdit de joueur le même coup
+qu'au tour précédent.
