@@ -5,10 +5,19 @@
 	#define DISPLAY_H
 	#include "../main.h"
 
+
+	// Coordonnées de l'origine du plateau
+	#define ORIGINE_PLATEAU_X 310
+	#define ORIGINE_PLATEAU_Y 240
+
+	/* Marge entre l'effigie du pion
+	d'une réserve et le bord de la fenêtre */
+	#define MARGE_RESERVE 20
+
 	void initDisplay();
 	void fatal(void* pt, char ms[]);
 	void display();
-	void displayBoard(bool flip);
+	void displayBoard();
 	void displayPawn(SDL_Surface* square, int x, int y);
 	void displayTile(int x, int y);
 	

@@ -13,7 +13,7 @@
 	#include <unistd.h>
 
 	//suggestion
-	#define TAILLE_CASE 70
+	#define TAILLE_CASE 80
 	#define RESERVE 3
 	#define PLATEAU 4
 	#define JOUEUR1 1
@@ -24,14 +24,13 @@
 	#define TRUE (1)
 	#define FALSE (0)
 
+	/* Largeur et hauteur du plateau
+	en terme de nombre de cases */
 	#define LARGEUR 6
 	#define HAUTEUR 5
 
-	#define LARGEUR_FENETRE 980 //600
-	#define HAUTEUR_FENETRE 700//600
-
-	#define LARGEUR_CASE 80
-	#define HAUTEUR_CASE LARGEUR_CASE
+	#define LARGEUR_FENETRE 1110 //600
+	#define HAUTEUR_FENETRE 800//600
 
 
 	// Coordonées d'une case du plateau (board).
