@@ -27,26 +27,24 @@ void partie(void) {
 		printf("joueur : %d \n",joueur.race);
 		//displayRound(joueur.race);
 		
-		if(joueur.race==ORC){
-				displayReserve(joueur.reserve,sprites.spriteOrc);
-			}
-			else{
-				displayReserve(joueur.reserve,sprites.spriteDemon);
-			}
-		printf("reserve : %d \n",joueur.reserve);
+		
 		action=ActionJoueur(&joueur,&c1,&continuer);
 
 		//action : placement
 		if (action==RESERVE){
 			printf("placement\n");
 			CordPion=placement(&joueur);
-			printf("reserve : %d \n",joueur.reserve);
-			printf("cord : %d %d \n",CordPion.x, CordPion.y);
 			if(joueur.race==ORC){
 				displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
+
+			printf("reserve : %d \n",joueur.reserve);
+				joueurOrc.reserve=joueur.reserve;
 			}
 			else{
 				displayPawn(sprites.spriteDemon,CordPion.x, CordPion.y);
+
+		printf("reserve : %d \n",joueur.reserve);
+				joueurDemon.reserve=joueur.reserve;
 			}
 		}
 		else if(action==PLATEAU){
@@ -61,14 +59,18 @@ void partie(void) {
 				displayPawn(sprites.spriteDemon,CordPion.x, CordPion.y);
 			}
 		}
-
+		//affichage de la reserve
+		if(joueur.race==ORC){
+				displayReserve(joueurOrc.reserve,sprites.spriteOrc);
+			}
+		else{
+			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
+		}
 		//changemlent de joueur
 		if(joueur.race==ORC){
-			joueurOrc.reserve=joueur.reserve;
 			joueur=joueurDemon;
 		}
 		else{
-			joueurDemon.reserve=joueur.reserve;
 			joueur=joueurOrc;
 		}
 		affiche_plateau();

@@ -179,6 +179,7 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 
 	// Clôture de la police
 	TTF_CloseFont(police);
+		SDL_Flip(fenetre);
 }
 
 
