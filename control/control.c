@@ -144,10 +144,6 @@ int verifClic1 (int x, int y, Joueur joueur){
 
 bool verifClic2Placement(int x, int y)
 {
-<<<<<<< HEAD
-=======
-
->>>>>>> 807e3afe20b1944dee8271db5383bd3d928407a4
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-3].race==VIDE)){
 		return TRUE;
 	}
