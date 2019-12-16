@@ -155,8 +155,17 @@ bool filterReserve(SDL_Event event) {
 		&& ORIGINE_PLATEAU_Y < y && y < ORIGINE_PLATEAU_Y+TAILLE_CASE*HAUTEUR ;
 }
 
+// Renvoie TRUE si le joueur clic sur sa réserve.
+bool filterReserveWithJoueur(SDL_Event event, raceJoueur joueur) {
+	int minX ;
+	if (joueur == ORC) {
+		minX = ORIGINE_RESERVE_ORC ;
+	} else {
+		minX = ORIGINE_RESERVE_DEAMON ;
+	}
 
-// Petit typeActuator pour
-void hello(SDL_Event _) {
-	printf("Hello!\n");
+	int x = event.button.x ;
+	int y = event.button.y ;
+	return minX < x && x < minX+TAILLE_CASE*2
+		&& ORIGINE_PLATEAU_Y < y && y < ORIGINE_PLATEAU_Y+TAILLE_CASE*HAUTEUR ;
 }

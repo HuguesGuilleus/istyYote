@@ -72,104 +72,50 @@ void partie(void) {
 	coord depart = {} ;
 	raceJoueur gamer ;
 
-	//gamerRand(&gamer);
+	// gamerRand(&gamer);
 
 	printf("Couleur premier joueur: ");
 	gamerPrint(gamer);
 
+	initPartie();
 	display();
 
 	coord c1 = {};
-	int joueur=ORC;
+	int joueur = ORC;
 	int continuer=1;
 	while(continuer==1){
-		//recuepere l'action de jeu a effectuer
+		// recupère l'action de jeu à effectuer
 		int action;
 		coord CordPion;
 
-		printf("joueur:%d \n",joueur);
+		printf("joueur:\n");
+		gamerPrint(joueur);
 
-		action=ActionJoueur(joueur,&c1,&continuer);
-
-
-		//action : placement
+		action = ActionJoueur(joueur, &c1, &continuer);
+		// action: placement
 		if (action==RESERVE){
 			printf("placement\n");
 			CordPion=placement(joueur);
-			displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
+			// displayPawn(sprites.spriteOrc, CordPion.x, CordPion.y);
 		}
 		else if(action==PLATEAU){
 			printf(" deplacement\n");
 			CordPion=deplacement(joueur,c1);
 		}
 
-		//changemlent de joueur
+		// changement de joueur
 		if(joueur==ORC){
-			joueur=DEMON;
-		}
-		else{
-			joueur=ORC;
+			joueur = DEMON;
+		} else{
+			joueur = ORC;
 		}
 
-		affiche_plateau();
+		displayBoard(TRUE);
 		printf("a l'autre\n");
-
 	}
 	printf("finiiii\n");
-	return;
-
-
-	// display();
-	// affiche_plateau();
-	// printf("c'est cool\n");
-	//
-	// while (TRUE) {
-	// 	SDL_WaitEvent(&event);
-	// 	switch (event.type) {
-	// 		case SDL_QUIT:
-	// 			return;
-	// 		case SDL_MOUSEBUTTONDOWN:
-	// 			// TODO: Faire un clic sur un bouton qui quitte la partie
-	// 			// TODO: Faire un placement de nouveau pion
-	// 			if (clickOnPiece(&event, &depart, gamer)) {
-	// 				// board[depart.x][depart.y].race = gamer ;
-	// 				board[depart.x][depart.y].status = SELECTED ;
-	// 				displayBoard(TRUE);
-	// 			}
-	// 			break;
-	// 	}
-	// }
+	return ;
 }
-
-
-// // Converti les coordondées d'un clic en coordonées du tableau.
-// // Si le clic n'est pas dans le plateau, retourne FALSE.
-// bool clickToCoord(SDL_Event * click, coord * c) {
-// 	int x = click->button.x;
-// 	int y = click->button.y;
-//
-// 	if (x> LARGEUR * 50 || y > HAUTEUR * 50) {
-// 		return FALSE ;
-// 	} else {
-// 		c->x = x/50 ;
-// 		c->y = y/50 ;
-// 		return TRUE ;
-// 	}
-// }
-
-
-// // Retourne TRUE si le click est sur un pion du joueur courant.
-// // Si c'est le cas, la case sera enregistrée dans le pointeur de c.
-// bool clickOnPiece(SDL_Event *click, coord * c, raceJoueur gamer) {
-// 	if (clickToCoord(click, c) == FALSE) {
-// 		return FALSE ;
-// 	}
-// 	if (board[c->x][c->y].race == gamer) {
-// 		return TRUE ;
-// 	} else {
-// 		return FALSE ;
-// 	}
-// }
 
 // Affiche les coordonées dans la console d'un clic.
 void printCoord(coord * c) {
@@ -182,103 +128,92 @@ void printCoord(coord * c) {
 
 //Détermine si le joueur veut placer un pion ou déplacer un pion en fonction du premier clic
 //Retourne l'action
-int ActionJoueur(raceJoueur joueur,coord *c,int *continuer){
-	int Clic1;
+int ActionJoueur(raceJoueur joueur, coord *c, int *continuer) {
+	int clic1;
 	SDL_Event event;
-	printf(" atoi %d\n",joueur);
-	while (*continuer)
-	{
-    	SDL_WaitEvent(&event);
-		switch(event.type)
-		{
+	printf(" à toi %d\n", joueur);
+	while (*continuer) {
+		SDL_WaitEvent(&event);
+		switch(event.type) {
 			case SDL_QUIT:
 				*continuer=0;
 				printf("fini");
 				break;
 			case SDL_MOUSEBUTTONUP:
-
-				//On regarde si le clic 1 est dans le plateau ou la reserve
-				printf(" atoi %d\n",joueur);
-				Clic1= verifClic1(event.button.x,event.button.y,joueur);
-				if (Clic1==RESERVE){
-					//renvoie l'action a faire qui est : placement d'un pion
+				// On regarde si le clic 1 est dans le plateau ou la reserve
+				printf(" à toi %d\n", joueur);
+				clic1 = verifClic1(event, joueur);
+				if (clic1==RESERVE){
+					//renvoie l'action à faire qui est: placement d'un pion
 					return RESERVE;
-				}
-				else if(Clic1==PLATEAU){
-					//renvoie l'action a faire qui est : deplacement ou capture
-					c->x=event.button.x;
-					c->y=event.button.y;
+				} else if(clic1==PLATEAU) {
+					//renvoie l'action à faire qui est: deplacement ou capture
+					*c = clickToCoord(event);
 					return PLATEAU;
 				}
 		}
 	}
 }
 
-//on verifie que le clic est autoriser
-//renvoie l'action qui sera effectuer au clic2 ( placement ou deplacement/capture)
-int verifClic1 (int x, int y, raceJoueur joueur){
-	printf("\n\n\n%d %d\n",x/TAILLE_CASE-5,y/TAILLE_CASE-4);
-	printf("tableua = %d   joeur == %d \n",board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race,joueur);
-	if(joueur==ORC){
-		//reserve du joueur orc
-		if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
-			printf("reserve J1\n");
-			return RESERVE;
+// On verifie que le clic est autorisée.
+// Renvoie l'action qui sera effectuer au clic2 ( placement ou deplacement/capture)
+int verifClic1(SDL_Event event, raceJoueur joueur) {
+	coord c ;
+	if (filterReserveWithJoueur(event, joueur)) {
+		return RESERVE ;
+	}
+	if (filterInBoard(event)) {
+		c = clickToCoord(event);
+		if (board[c.x][c.y].race == joueur) {
+			return PLATEAU;
 		}
 	}
-	else if(joueur==DEMON){
-		//reserve du joueur demon
-		if((x>13*TAILLE_CASE)&&(x<15*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
-			printf("reserve J2\n");
-			return RESERVE;
-		}
-	}
+	return NOTHING;
 
-	if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race)==joueur){
-		printf("plateau\n");
-		return PLATEAU;
-	}
-
-
+	// printf("\n\n\n%d %d\n",x/TAILLE_CASE-5,y/TAILLE_CASE-4);
+	// printf("tableua = %d   joeur == %d \n",board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race,joueur);
+	// if(joueur==ORC){
+	// 	//reserve du joueur orc
+	// 	if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+	// 		printf("reserve J1\n");
+	// 		return RESERVE;
+	// 	}
+	// }
+	// else if(joueur==DEMON){
+	// 	//reserve du joueur demon
+	// 	if((x>13*TAILLE_CASE)&&(x<15*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+	// 		printf("reserve J2\n");
+	// 		return RESERVE;
+	// 	}
+	// }
+	//
+	// if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race)==joueur){
+	// 	printf("plateau\n");
+	// 	return PLATEAU;
+	// }
 }
 
-bool verifClic2Placement(int x, int y)
-{
-	if((x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
-		return TRUE;
-	}
-	else{
-		return FALSE;
-	}
-}
-
-
-coord placement(raceJoueur joueur)
-{
+coord placement(raceJoueur joueur) {
 	coord c;
-	bool Clic2;
-	int continuer=1;
-
+	bool clic2;
+	bool continuer = TRUE ;
 	SDL_Event event;
-	while (continuer)
-	{
-    	SDL_WaitEvent(&event);
-		switch(event.type)
-		{
+
+	while (continuer) {
+		SDL_WaitEvent(&event);
+		switch(event.type) {
 			case SDL_QUIT:
-				continuer=0;
+				continuer = FALSE ;
 				printf("fini");
 				break;
 			case SDL_MOUSEBUTTONUP:
-
-				//On regarde si le clic 2 est bien dans le plateau
-				Clic2= verifClic2Placement(event.button.x,event.button.y);
-				if(Clic2==TRUE){
-					printf("je place le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-5,(event.button.y/TAILLE_CASE)-4);
-					c.x=event.button.x;
-					c.y=event.button.y;
-
-					board[c.x/TAILLE_CASE-5][c.y/TAILLE_CASE-4].race=joueur;
+				// On regarde si le clic 2 est bien dans le plateau
+				// clic2= verifClic2Placement(event.button.x,event.button.y);
+				clic2 = filterTileEmpty(event);
+				if(clic2==TRUE){
+					c = clickToCoord(event);
+					printf("je place le pion en %d, %d \n", c.x, c.y);
+					board[c.x][c.y].race = joueur;
 					return c;
 				}
 		}
@@ -286,57 +221,72 @@ coord placement(raceJoueur joueur)
 	return c;
 }
 
-bool verifClic2Deplacement(int x,int y,coord c1){
-
-	int arriveX = x/TAILLE_CASE-5;
-	int arriveY = y/TAILLE_CASE-4;
-	int departX=  c1.x/TAILLE_CASE-5;
-	int departY= c1.y/TAILLE_CASE-4;
-	printf("verifions que tu peux allez ici :    %d %d\n",arriveX,arriveY);
-	printf("tu etais ici :    %d %d\n", departX, departY);
-	//verifie que le clic est dans le plateau et que la case et vide
-	if(board[arriveX][arriveY].race==VIDE){
-		//verifie que la case est a une distance de 1 du pion
-		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY)) || ((arriveX==departX) && (arriveY==departY+1)) || ((arriveX==departX) && (arriveY==departY-1)) ){
-			printf("c'esr possible de se deplacer ! \n");
-			return TRUE;
-		}
-
+bool verifClic2Placement(int x, int y) {
+	if(
+		(x>5*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>4*TAILLE_CASE)
+		&&(y<9*TAILLE_CASE)
+		&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
+		return TRUE;
 	}
-	return FALSE;
+	else{
+		return FALSE;
+	}
 }
 
-coord deplacement(raceJoueur joueur,coord c1)
-{
+coord deplacement(raceJoueur joueur, coord c1) {
 	coord c2;
-	bool Clic2;
-	int continuer=1;
-
+	bool clic2;
+	bool continuer = TRUE;
 	SDL_Event event;
-	while (continuer)
-	{
-    	SDL_WaitEvent(&event);
-		switch(event.type)
-		{
+
+	while (continuer) {
+		SDL_WaitEvent(&event);
+		switch(event.type) {
 			case SDL_QUIT:
-				continuer=0;
+				continuer = FALSE ;
 				break;
 			case SDL_MOUSEBUTTONUP:
-
-				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
-				printf("tu dois te deplace\n");
-				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1);
-				if(Clic2==TRUE){
-					printf("je deplace le pion en %d, %d \n",(event.button.x/TAILLE_CASE)-5,(event.button.y/TAILLE_CASE)-4);
-					c2.x=event.button.x;
-					c2.y=event.button.y;
-					board[c1.x/TAILLE_CASE-5][c1.y/TAILLE_CASE-4].race=VIDE;
-					board[c2.x/TAILLE_CASE-5][c2.y/TAILLE_CASE-4].race=joueur;
+				if (!filterInBoard(event)) {
+					printf("Click hors du plateau\n");
+					break ;
+				}
+				c2 = clickToCoord(event);
+				//On regarde si le clic 2 est bien dans le plateau, a une case de distance 1 et vide
+				clic2=verifClic2Deplacement(c1, c2);
+				if(clic2==TRUE){
+					printf("je deplace le pion en (%d,%d)\n", c2.x, c2.y);
+					board[c1.x][c1.y].race = VIDE;
+					board[c2.x][c2.y].race = joueur;
 					return c2;
 				}
 		}
 	}
 	return c2;
+}
+
+// On regarde si le clic 2 est bien dans le plateau, a une case de distance 1
+// et vide.
+bool verifClic2Deplacement(coord c1, coord c2) {
+	int departX = c1.x ;
+	int departY = c1.y ;
+	int arriveX = c2.x ;
+	int arriveY = c2.y ;
+
+	printf("verifions que tu peux allez ici :    %d %d\n", arriveX, arriveY);
+	printf("tu etais ici :    %d %d\n", departX, departY);
+	// verifie que le clic est dans le plateau et que la case et vide
+	if(board[arriveX][arriveY].race==VIDE){
+		// verifie que la case est à une distance de 1 du pion
+		if( ((arriveX==departX+1) && (arriveY==departY))
+			|| ((arriveX==departX-1) && (arriveY==departY))
+			|| ((arriveX==departX) && (arriveY==departY+1))
+			|| ((arriveX==departX) && (arriveY==departY-1))
+		){
+			printf("c'est possible de se deplacer !\n");
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 void affiche_plateau(){
@@ -348,5 +298,5 @@ void affiche_plateau(){
 		}
 		printf("\n");
 	}
-printf("\n");
+	printf("\n");
 }

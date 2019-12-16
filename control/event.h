@@ -34,6 +34,6 @@
 	bool filterTrue(SDL_Event event);
 	coord clickToCoord(SDL_Event click);
 
-	void hello(SDL_Event _);
+	bool filterReserveWithJoueur(SDL_Event event, raceJoueur joueur);
 
 #endif

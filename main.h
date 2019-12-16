@@ -12,9 +12,12 @@
 	#include <SDL_ttf.h>
 	#include <unistd.h>
 
-	//suggestion
+	// Action
+	#define NOTHING 0
 	#define RESERVE 3
 	#define PLATEAU 4
+
+	//suggestion
 	#define JOUEUR1 1
 	#define JOUEUR2 2
 

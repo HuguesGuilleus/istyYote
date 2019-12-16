@@ -11,10 +11,11 @@
 	void printfCoord(coord * c);
 
 	int ActionJoueur(raceJoueur joueur,coord *c,int *continuer);
-	int verifClic1 (int x, int y, raceJoueur joueur);
+	int verifClic1 (SDL_Event event, raceJoueur joueur);
 	coord placement(raceJoueur joueur);
 	bool verifClic2Placement(int x, int y);
 	coord deplacement(raceJoueur joueur,coord c1);
-	bool verifClic2Deplacement(int x,int y,coord c1);
+	// bool verifClic2Deplacement(int x,int y,coord c1);
+	bool verifClic2Deplacement(coord c1, coord c2);
 
 #endif
