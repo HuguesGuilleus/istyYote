@@ -98,7 +98,9 @@ void displayRound(raceJoueur joueur) {
 	position.y = 3;
 	//sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
 	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
+	//ajout bleu sous ecriture
 	
+
 	position.x = 364;
 	position.y = 80;
 	SDL_BlitSurface(texte, NULL, fenetre, &position);
