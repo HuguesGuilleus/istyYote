@@ -140,13 +140,11 @@ int verifClic1 (int x, int y, Joueur joueur){
 		printf("plateau\n");
 		return PLATEAU;
 	}
-	
-
 }
 
 bool verifClic2Placement(int x, int y)
 {
-	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-4].race==VIDE)){
+	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-3].race==VIDE)){
 		return TRUE;
 	}
 	else{
