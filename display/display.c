@@ -173,7 +173,7 @@ void displayReserve(int nbPion, SDL_Surface* img, int x) {
 
 	if (nbPion > 6) {
 		displayReserve(nbPion-6, img, x+TAILLE_CASE);
-		nbPion = 5 ;
+		nbPion = 6 ;
 	}
 
 	for(; nbPion > 0 ; nbPion--) {
