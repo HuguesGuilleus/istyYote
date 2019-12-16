@@ -64,9 +64,11 @@ void partie(void) {
 
 		//changemlent de joueur
 		if(joueur.race==ORC){
+			joueurOrc.reserve=joueur.reserve;
 			joueur=joueurDemon;
 		}
 		else{
+			joueurDemon.reserve=joueur.reserve;
 			joueur=joueurOrc;
 		}
 		affiche_plateau();
