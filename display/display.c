@@ -23,17 +23,16 @@ void initDisplay() {
 
 	/* Chargement de la police */
 	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 45);
-	/* Écriture du texte dans la SDL_Surface texte en mode Blended (optimal) */
 
 	// Allocation de la surface
 	rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 500, 180, 32, 0, 0, 0, 0);
 	SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
 	
-	//un fond jolie
+	// Un fond joli
 	position.x = 0; // Les coordonnées de la surface seront (0, 0)
 	position.y = 0;
-	sprites.spritefond = SDL_LoadBMP("media/sprites/fondjeu.bmp");
-	SDL_BlitSurface(sprites.spritefond, NULL, fenetre, &position);
+	sprites.spriteFond = SDL_LoadBMP("media/sprites/fondjeu.bmp");
+	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &position);
 
 
 	//position.x = 310; // Les coordonnées de la surface seront (0, 0)
@@ -41,12 +40,14 @@ void initDisplay() {
 	// Remplissage de la surface avec du blanc
 	//SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
 	//SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
-		
+
 
 	sprites.spriteCase = SDL_LoadBMP("media/sprites/spriteCase.bmp");
 	sprites.spriteDemon = SDL_LoadBMP("media/sprites/pions/demon.bmp");
 	sprites.spriteOrc = SDL_LoadBMP("media/sprites/pions/orc.bmp");
-	sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
+	sprites.spriteNuage = SDL_LoadBMP("media/sprites/nuage.bmp");
+	sprites.spriteCarreBleu = SDL_LoadBMP("media/sprites/carre_bleu.bmp");
+	sprites.spriteCaisse = SDL_LoadBMP("media/sprites/caisse.bmp");
 	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
 	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
 
@@ -89,23 +90,32 @@ void displayBoard() {
 
 // Affiche le tour du joueur courant
 void displayRound(raceJoueur joueur) {
+	SDL_Rect position;
+	char* texteFinal;
 	char* texteTour = "Tour des ";
-	char* nomJoueur = joueur == ORC ? "Orcs" : "Demons";
-	strcat(texteTour, nomJoueur);
-	texte = TTF_RenderText_Blended(police, texteTour, couleurNoire);
+	const char* nomJoueur = joueur == ORC ? "Orcs" : "Demons";
+	
+	// On alloue texteFinal
+	texteFinal = (char*) malloc((strlen(texteTour) + strlen(nomJoueur) + 2));
+	
+	// On recopie la première partie de la chaîne dans texteFinal
+	strcpy(texteFinal, texteTour);
+	// On concatène texteFinal et nomJoueur
+	strcat(texteFinal, nomJoueur);
 
+	texte = TTF_RenderText_Blended(police, texteFinal, couleurNoire);
+	
 	position.x = 310;
 	position.y = 3;
-	//sprites.spritenuage = SDL_LoadBMP("media/sprites/nuage.bmp");
-	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
-	//ajout bleu sous ecriture
-	
+	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
 
 	position.x = 364;
 	position.y = 80;
 	SDL_BlitSurface(texte, NULL, fenetre, &position);
-
+	
 	SDL_Flip(fenetre);
+
+	free(texteFinal);
 }
 
 // Dessin un fond différent selon le fond
@@ -140,6 +150,7 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 	x et y sont les coordonnées de la case.
 	Permet également d'effacer un pion en redessinant la case par-dessus */
 void displayTile(int x, int y) {
+	// printf("AFFICHE CASE: %d\n", sprites.spriteCase);
 	SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
 		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
 		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y
@@ -159,21 +170,27 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 	// Ouverture de la police
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 30);
 	SDL_Surface* texte = TTF_RenderText_Blended(police, buffer, couleurNoire);
-	
+
 	if (sprite == sprites.spriteOrc) {
 		x = MARGE_RESERVE;
 		SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){x, y});
 
-		x += sprite->w + 20;
+		x += sprite->w + MARGE_RESERVE;
 		y += (sprite->h / 2) - (texte->h / 3);
+		// Carré bleu utilisé pour masquer le nombre précédent
+		SDL_BlitSurface(sprites.spriteCarreBleu, NULL, fenetre, &(SDL_Rect){x, y});
 		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){x, y});
 	}
 	else{
 		x = LARGEUR_FENETRE - sprite->w - MARGE_RESERVE;
 		SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){x, y});
 
-		x -= 30;
+		// Carré bleu utilisé pour masquer le nombre précédent
+		x -= sprites.spriteCarreBleu->w;
 		y += (sprite->h / 2) - (texte->h / 3);
+		SDL_BlitSurface(sprites.spriteCarreBleu, NULL, fenetre, &(SDL_Rect){x, y});
+
+		x += sprites.spriteCarreBleu->w - MARGE_RESERVE - texte->w;
 		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){x, y});
 	}
 
@@ -182,7 +199,21 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 		SDL_Flip(fenetre);
 }
 
+// Affiche le sprite de caisse dans les réserves
+void displayReserveBox() {
+	SDL_Rect position;
 
+	position.x = (sprites.spriteCaisse->w / 2);
+	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
+	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
+
+	position.x = LARGEUR_FENETRE - sprites.spriteCaisse->w - (sprites.spriteCaisse->w / 2);
+	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
+
+	SDL_Flip(fenetre);
+}
+
+// Affiche le titre du jeu
 void displayTitle() {
 	int x,y;
 
@@ -217,35 +248,35 @@ void displayMenuButtons() {
 	SDL_Surface* petitNuage = SDL_LoadBMP("media/sprites/petit_nuage.bmp");
 
 
-	// Bouton Play
+	// Bouton Jouer
 	position.x = (LARGEUR_FENETRE / 2) - petitNuage->w - 50;
 	position.y = ORIGINE_PLATEAU_Y;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 
-	texte = TTF_RenderText_Blended(police, "Play", couleurNoire);
+	texte = TTF_RenderText_Blended(police, "Jouer", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + texte->w,
 		y: position.y + texte->h + 5
 	});
 
 
-	// Bouton Quit
+	// Bouton Quitter
 	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 	
-	texte = TTF_RenderText_Blended(police, "Quit", couleurNoire);
+	texte = TTF_RenderText_Blended(police, "Quitter", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + texte->w,
 		y: position.y + texte->h + 5
 	});
 
 
-	// Bouton Help
+	// Bouton Aide
 	position.x = (LARGEUR_FENETRE / 2) + 50;
 	position.y = ORIGINE_PLATEAU_Y;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 
-	texte = TTF_RenderText_Blended(police, "Help", couleurNoire);
+	texte = TTF_RenderText_Blended(police, "Aide", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + texte->w,
 		y: position.y + texte->h + 5
@@ -279,18 +310,18 @@ void displayRules() {
 	// Titre
 	position.x = 310;
 	position.y = 3;
-	SDL_BlitSurface(sprites.spritenuage, NULL, fenetre, &position);
+	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
 	
 	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
 	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
-	position.y = (sprites.spritenuage->h / 2) - (affichageTexte->h / 4);
+	position.y = (sprites.spriteNuage->h / 2) - (affichageTexte->h / 4);
 	SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
 
 	TTF_CloseFont(police);
 
 	// Affichage des règles
 	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
-	position.y = sprites.spritenuage->h + 50;
+	position.y = sprites.spriteNuage->h + 50;
 	fichierRegles = fopen("media/regles.txt", "r");
 
 	if (fichierRegles != NULL) {

@@ -19,13 +19,14 @@ void partie(void) {
 	joueur=joueurOrc;
 	displayReserve(joueur.reserve,sprites.spriteOrc);
 	displayReserve(joueur.reserve,sprites.spriteDemon);
+	displayReserveBox();
 	while(continuer==1){ 
 		//recuepere l'action de jeu a effectuer
 		int action;
 		coord CordPion;
 
 		printf("joueur : %d \n",joueur.race);
-		//displayRound(joueur.race);
+		displayRound(joueur.race);
 		
 		
 		action=ActionJoueur(&joueur,&c1,&continuer);

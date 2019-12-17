@@ -23,6 +23,10 @@
 	void displayBoard();
 	void displayPawn(SDL_Surface* square, int x, int y);
 	void displayTile(int x, int y);
+	void displayTitle();
+	void displayMenuButtons();
 	void displayRules();
+	void displayReserve();
+	void displayReserveBox();
 
 #endif
