@@ -3,19 +3,13 @@
 
 #include "display.h"
 
-// La surface de la fenêtre.
-SDL_Surface * fenetre = NULL ;
-
 // Var local?
 SDL_Surface *rectangle = NULL ;
 
 // Variable locale?
 SDL_Rect position;
 
-TTF_Font *police = NULL;
-
 const SDL_Color couleurNoire = {0, 0, 0};
-
 
 // Initilise la SDL et charge les images et les fontes
 // TODO: Rework
@@ -27,6 +21,8 @@ void initDisplay() {
 	fenetre = SDL_SetVideoMode(LARGEUR_FENETRE, HAUTEUR_FENETRE, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	fatal(fenetre, "launch SDL");
 	SDL_WM_SetCaption("ISTY - Yoté", NULL);
+
+	// couleurNoire = (SDL_Color){0, 0, 0};
 
 	// Chargement de la police
 	police = TTF_OpenFont("VCR_OSD_MONO_1.001.ttf", 45);

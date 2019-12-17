@@ -34,6 +34,11 @@
 	// Déclaration de la variable globale permettant d'utiliser les sprites
 	typeSprites sprites;
 
+	// La surface de la fenêtre.
+	SDL_Surface * fenetre ;
+
+	TTF_Font *police ;
+
 	void initDisplay();
 	void fatal(void* pt, char ms[]);
 

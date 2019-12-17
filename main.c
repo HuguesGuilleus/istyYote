@@ -3,12 +3,6 @@
 
 #include "main.h"
 
-void sw(SDL_Event _) {
-	printf("switch joueur\n");
-	gamerSwitch();
-	display();
-}
-
 int main(int argc, char const *argv[]) {
 	srand(time(NULL));
 	initDisplay();

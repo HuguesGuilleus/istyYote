@@ -71,8 +71,11 @@
 
 	void end(SDL_Event _);
 
-	#include "display/display.h"
-	#include "modele/mod.h"
+	#include "control/control.h"
 	#include "control/event.h"
+	#include "control/score.h"
+	#include "display/display.h"
+	#include "display/displayScore.h"
+	#include "modele/mod.h"
 
 #endif

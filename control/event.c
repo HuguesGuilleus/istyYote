@@ -169,3 +169,16 @@ bool filterReserveWithJoueur(SDL_Event event, raceJoueur joueur) {
 	return minX < x && x < minX+TAILLE_CASE*2
 		&& ORIGINE_PLATEAU_Y < y && y < ORIGINE_PLATEAU_Y+TAILLE_CASE*HAUTEUR ;
 }
+
+/* FILTRE D'ÉVÈNEMENT DU CLAVIER */
+
+bool filterKeyReturn(SDL_Event key) {
+	return key.key.keysym.sym == SDLK_RETURN ;
+}
+bool filterKeyBackspace(SDL_Event key) {
+	return key.key.keysym.sym == SDLK_BACKSPACE ;
+}
+bool filterKeyLetter(SDL_Event key) {
+	char k = key.key.keysym.sym ;
+	return ('A' <= k && k <= 'Z') || ('a' <= k && k <= 'z');
+}

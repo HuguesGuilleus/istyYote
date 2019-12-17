@@ -36,4 +36,8 @@
 
 	bool filterReserveWithJoueur(SDL_Event event, raceJoueur joueur);
 
+	bool filterKeyReturn(SDL_Event key);
+	bool filterKeyBackspace(SDL_Event key);
+	bool filterKeyLetter(SDL_Event key);
+
 #endif
