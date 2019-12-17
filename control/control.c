@@ -124,14 +124,14 @@ int verifClic1 (int x, int y, Joueur joueur){
 	printf("tableua = %d   joeur == %d \n",board[x/TAILLE_CASE-5][y/TAILLE_CASE-4].race,joueur);
 	if(joueur.race==ORC){
 		//reserve du joueur orc
-		if((x>TAILLE_CASE)&&(x<3*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+		if((x>62)&&(x<187)&&(y>320)&&(y<445)){
 			printf("reserve J1\n");
 			return RESERVE;
 		}
 	}
 	else if(joueur.race==DEMON){
 		//reserve du joueur demon
-		if((x>12*TAILLE_CASE)&&(x<14*TAILLE_CASE)&&(y>4*TAILLE_CASE)&&(y<9*TAILLE_CASE)){
+		if((x>923)&&(x<1048)&&(y>320)&&(y<445)){
 			printf("reserve J2\n");
 			return RESERVE;
 		}
