@@ -94,6 +94,7 @@ void displayRound(raceJoueur joueur) {
 	char* texteFinal;
 	char* texteTour = "Tour des ";
 	const char* nomJoueur = joueur == ORC ? "Orcs" : "Demons";
+	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 40);
 	
 	// On alloue texteFinal
 	texteFinal = (char*) malloc((strlen(texteTour) + strlen(nomJoueur) + 2));
@@ -109,12 +110,14 @@ void displayRound(raceJoueur joueur) {
 	position.y = 3;
 	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
 
-	position.x = 364;
+	position.x = LARGEUR_FENETRE / 2 - (texte->w / 2);
 	position.y = 80;
 	SDL_BlitSurface(texte, NULL, fenetre, &position);
 	
 	SDL_Flip(fenetre);
+	TTF_CloseFont(police);
 
+	// On libère la mémoire occupée par texteFinal
 	free(texteFinal);
 }
 
@@ -150,7 +153,6 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 	x et y sont les coordonnées de la case.
 	Permet également d'effacer un pion en redessinant la case par-dessus */
 void displayTile(int x, int y) {
-	// printf("AFFICHE CASE: %d\n", sprites.spriteCase);
 	SDL_BlitSurface(sprites.spriteCase, NULL, fenetre, &(SDL_Rect){
 		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
 		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y
