@@ -5,7 +5,7 @@
 
 
 	void partie(void);
-	Joueur joueurAleatoir(Joueur joueur);
+	raceJoueur joueurAleatoir(raceJoueur race);
 
 	int ActionJoueur(Joueur* joueur,coord *c,int *continuer);
 
