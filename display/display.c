@@ -64,6 +64,7 @@ void fatal(void* pt, char ms[]) {
 
 // Affiche tout
 void display() {
+	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
 	//displayTitle();
 	//displayMenuButtons();
 	//displayRules();

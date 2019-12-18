@@ -14,3 +14,9 @@ int main(int argc, char const *argv[]) {
 	return 0;
 }
 
+// Termine le programme, utilie pour quitter le programme lorsqu'un joueur,
+// déclenche un évènement SDL_QUIT.
+void end(SDL_Event _) {
+	SDL_Quit();
+	exit(0);
+}
