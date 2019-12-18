@@ -346,6 +346,7 @@ void displayRules() {
 
 // Affiche les derniers scores
 void displayScores() {
+	int k;
 	SDL_Rect position;
 	// Fichiers des scores
 	FILE* fichierScores = NULL;
@@ -371,11 +372,11 @@ void displayScores() {
 	fichierScores = fopen("media/test_scores.txt", "r");
 	if (fichierScores != NULL) {
 		while(fgets(texte, TAILLE_MAX_SCORES, fichierScores) !=  NULL) {
-			texte[strlen(texte - 1) = '\0';
-			char* ligne = strtok(scores, separateurs);
+			texte[strlen(texte - 1)] = '\0';
+			char* ligne = strtok(texte, separateurs);
 
 			while (ligne != NULL) {
-				texte = TTF_RenderUTF8_Blended(police, ligne, couleurNoire);
+				affichageTexte = TTF_RenderUTF8_Blended(police, ligne, couleurNoire);
 
 				if (affichageTexte != 0) {
 					SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
