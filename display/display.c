@@ -67,7 +67,8 @@ void display() {
 	//displayTitle();
 	//displayMenuButtons();
 	//displayRules();
-	displayBoard(FALSE);
+	//displayScores();
+	displayBoard();
 
 	SDL_Flip(fenetre);
 }
@@ -198,7 +199,7 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 
 	// Clôture de la police
 	TTF_CloseFont(police);
-		SDL_Flip(fenetre);
+	SDL_Flip(fenetre);
 }
 
 // Affiche le sprite de caisse dans les réserves
@@ -324,7 +325,7 @@ void displayRules() {
 	// Affichage des règles
 	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
 	position.y = sprites.spriteNuage->h + 50;
-	fichierRegles = fopen("media/regles.txt", "r");
+	fichierRegles = fopen("texts/regles.txt", "r");
 
 	if (fichierRegles != NULL) {
 		while (fgets(texte, TAILLE_MAX_REGLES, fichierRegles) != NULL) {
@@ -344,21 +345,21 @@ void displayRules() {
 }
 
 
-// Affiche les derniers scores
+// Affiche les 15 derniers scores
 void displayScores() {
-	int k;
+	int k = 0; 	// Compteur servant à déduire la position à appliquer pour l'affichage en colonnes
 	SDL_Rect position;
-	// Fichiers des scores
-	FILE* fichierScores = NULL;
-	char texte[TAILLE_MAX_SCORES] = "";
+	FILE* fichierScores = NULL; // Fichiers des scores
 	SDL_Surface* affichageTexte = NULL;
+	char texte[TAILLE_MAX_SCORES] = "";
+	const char* separateur = "|";
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
 
-	// Titre
 	position.x = 310;
 	position.y = 3;
 	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
 
+	// Titre
 	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
 	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
 	position.y = (sprites.spriteNuage->h / 2) - (affichageTexte->h / 4);
@@ -367,32 +368,43 @@ void displayScores() {
 
 	// La police est ouverte une seconde fois car on l'ouvre avec une taille différente
 	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
-	const char* separateurs = "|";
+	position.y = sprites.spriteNuage->h + 50;
 
-	fichierScores = fopen("media/test_scores.txt", "r");
+	/* Dessine une ligne noire au milieu de la fenêtre
+	pour séparer les pseudos des joueurs */
+	SDL_FillRect(fenetre, &(SDL_Rect){
+		x: (LARGEUR_FENETRE / 2),
+		y: position.y,
+		w: 2,
+		h: 450
+	}, 0x00000);
+
+
+	fichierScores = fopen("texts/test_scores.txt", "r");
 	if (fichierScores != NULL) {
+		// On récupère une à une les lignes du fichier
 		while(fgets(texte, TAILLE_MAX_SCORES, fichierScores) !=  NULL) {
-			texte[strlen(texte - 1)] = '\0';
-			char* ligne = strtok(texte, separateurs);
+			texte[strlen(texte) - 1] = '\0';
+			char* ligne = strtok(texte, separateur); // On coupe la ligne à l'aide du séparateur
 
 			while (ligne != NULL) {
 				affichageTexte = TTF_RenderUTF8_Blended(police, ligne, couleurNoire);
 
+				/* k % 2 == 0 --> on écrit le score du joueur 1 (colonne de gauche)
+				Sinon on écrit celui du joueur 2 (colonne de droite) */
 				if (affichageTexte != 0) {
-					SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+					if (k % 2 == 0) {
+						position.x = (LARGEUR_FENETRE / 2) - affichageTexte->w - 15;
+						SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+					}
+					else {
+						position.x = (LARGEUR_FENETRE / 2) + 17;
+						SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+						position.y += 30;
+					}
+					k++;
 				}
-
-				// Si k % 2 = 0 alors on est en train d'écrire le score du premier joueur d'une partie
-				// Sinon on est en train d'écrire le score du 2e joueur
-				if (k % 2 == 0) {
-					position.x = 150;
-					position.y += 30;
-				}
-				else {
-					position.x = 250;
-				}
-
-				ligne = strtok(NULL, separateurs);
+				ligne = strtok(NULL, separateur);
 			}
 		}
 
@@ -401,6 +413,5 @@ void displayScores() {
 
 
 	SDL_Flip(fenetre);
-
 	TTF_CloseFont(police);
 }

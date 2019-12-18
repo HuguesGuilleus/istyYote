@@ -1,0 +1,15 @@
+Jambon: P|Beurre: G
+Abricot: P|Orange: P
+Haricot: A|Flute: Z
+Arbre: Z|Putois: 43
+Jambon: P|Beurre: G
+Abricot: P|Orange: P
+Haricot: A|Flute: Z
+Arbre: Z|Putois: 43
+Jambon: P|Beurre: G
+Abricot: P|Orange: P
+Haricot: A|Flute: Z
+Arbre: Z|Putois: 43
+Jambon: P|Beurre: G
+Abricot: P|Orange: P
+Haricot: A|Flute: Z
