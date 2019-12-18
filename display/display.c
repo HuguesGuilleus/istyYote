@@ -14,10 +14,10 @@ SDL_Color couleurNoire = {0, 0, 0};
 
 // Initilise la SDL et charge les images
 void initDisplay() {
-	
+
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
-	
+
 	fenetre = SDL_SetVideoMode(1110, 800, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	SDL_WM_SetCaption("ISTY - Yoté", NULL);
 
@@ -27,7 +27,7 @@ void initDisplay() {
 	// Allocation de la surface
 	rectangle = SDL_CreateRGBSurface(SDL_HWSURFACE, 500, 180, 32, 0, 0, 0, 0);
 	SDL_FillRect(fenetre, NULL, SDL_MapRGB(fenetre->format, 17, 206, 112));
-	
+
 	// Un fond joli
 	position.x = 0; // Les coordonnées de la surface seront (0, 0)
 	position.y = 0;
@@ -38,7 +38,7 @@ void initDisplay() {
 	//position.x = 310; // Les coordonnées de la surface seront (0, 0)
 	//position.y = 5;
 	// Remplissage de la surface avec du blanc
-	//SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255)); 
+	//SDL_FillRect(rectangle, NULL, SDL_MapRGB(fenetre->format, 255, 255, 255));
 	//SDL_BlitSurface(rectangle, NULL, fenetre, &position); // Collage de la surface sur l'écran
 
 
@@ -95,17 +95,17 @@ void displayRound(raceJoueur joueur) {
 	char* texteTour = "Tour des ";
 	const char* nomJoueur = joueur == ORC ? "Orcs" : "Demons";
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 40);
-	
+
 	// On alloue texteFinal
 	texteFinal = (char*) malloc((strlen(texteTour) + strlen(nomJoueur) + 2));
-	
+
 	// On recopie la première partie de la chaîne dans texteFinal
 	strcpy(texteFinal, texteTour);
 	// On concatène texteFinal et nomJoueur
 	strcat(texteFinal, nomJoueur);
 
 	texte = TTF_RenderText_Blended(police, texteFinal, couleurNoire);
-	
+
 	position.x = 310;
 	position.y = 3;
 	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
@@ -113,7 +113,7 @@ void displayRound(raceJoueur joueur) {
 	position.x = LARGEUR_FENETRE / 2 - (texte->w / 2);
 	position.y = 80;
 	SDL_BlitSurface(texte, NULL, fenetre, &position);
-	
+
 	SDL_Flip(fenetre);
 	TTF_CloseFont(police);
 
@@ -165,10 +165,10 @@ nombre de pions restant dans la réserve */
 void displayReserve(int nbPions, SDL_Surface* sprite) {
 	int x, y; // Coordonnées uitlisées pour dessiner la réserve
 	char buffer[5]; // Buffer permettant d'afficher le nombre de pions en chaîne de caractères
-	
+
 	y = ORIGINE_PLATEAU_Y;
 	sprintf(buffer, "%d", nbPions); // On met dans le buffer le nombre de pions de la réserve
-	
+
 	// Ouverture de la police
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 30);
 	SDL_Surface* texte = TTF_RenderText_Blended(police, buffer, couleurNoire);
@@ -221,7 +221,7 @@ void displayTitle() {
 
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 45);
 	SDL_Surface* texte;
-	
+
 	// Titre
 	texte = TTF_RenderText_Blended(police, "Yote", couleurNoire);
 	x = (LARGEUR_FENETRE / 2) - (texte->w / 2);
@@ -265,7 +265,7 @@ void displayMenuButtons() {
 	// Bouton Quitter
 	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-	
+
 	texte = TTF_RenderText_Blended(police, "Quitter", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + texte->w,
@@ -288,7 +288,7 @@ void displayMenuButtons() {
 	// Bouton Scores
 	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-	
+
 	texte = TTF_RenderText_Blended(police, "Scores", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + (texte->w / 2),
@@ -308,12 +308,12 @@ void displayRules() {
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
 	SDL_Surface* affichageTexte = NULL;
 	FILE* fichierRegles = NULL;
-	
+
 	// Titre
 	position.x = 310;
 	position.y = 3;
 	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
-	
+
 	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
 	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
 	position.y = (sprites.spriteNuage->h / 2) - (affichageTexte->h / 4);
@@ -345,48 +345,61 @@ void displayRules() {
 
 
 // Affiche les derniers scores
-void displayScores(char* scores) {
-	// Coordonnées x dans la fenêtre
-	int i = 150;
-	// Coordonnées y dans la fenêtre
-	int j = 100;
-	// Compteur
-	int k = 0;
+void displayScores() {
+	SDL_Rect position;
+	// Fichiers des scores
+	FILE* fichierScores = NULL;
+	char texte[TAILLE_MAX_SCORES] = "";
+	SDL_Surface* affichageTexte = NULL;
+	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
 
-	TTF_Init();
-	TTF_Font* police = NULL;
-	SDL_Surface* texte = NULL;
+	// Titre
+	position.x = 310;
+	position.y = 3;
+	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
 
-	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 25);
-	texte = TTF_RenderUTF8_Shaded(police, "REGLES DU JEU", (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){(LARGEUR_FENETRE - texte->w)/2, 30});
+	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
+	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
+	position.y = (sprites.spriteNuage->h / 2) - (affichageTexte->h / 4);
+	SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
 	TTF_CloseFont(police);
 
 	// La police est ouverte une seconde fois car on l'ouvre avec une taille différente
-	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 20);
-	const char* separateurs = "\n|";
-	char* ligne = strtok(scores, separateurs);
+	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
+	const char* separateurs = "|";
 
-	while (ligne != NULL) {
-		texte = TTF_RenderUTF8_Shaded(police, ligne, (SDL_Color){255, 255, 255}, (SDL_Color){0,0,0});
-		SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){i, j});
-		k++;
+	fichierScores = fopen("media/test_scores.txt", "r");
+	if (fichierScores != NULL) {
+		while(fgets(texte, TAILLE_MAX_SCORES, fichierScores) !=  NULL) {
+			texte[strlen(texte - 1) = '\0';
+			char* ligne = strtok(scores, separateurs);
 
-		// Si k % 2 = 0 alors on est en train d'écrire le score du premier joueur d'une partie
-		// Sinon on est en train d'écrire le score du 2e joueur
-		if (k % 2 == 0) {
-			i = 150;
-			j+= 30;
+			while (ligne != NULL) {
+				texte = TTF_RenderUTF8_Blended(police, ligne, couleurNoire);
+
+				if (affichageTexte != 0) {
+					SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+				}
+
+				// Si k % 2 = 0 alors on est en train d'écrire le score du premier joueur d'une partie
+				// Sinon on est en train d'écrire le score du 2e joueur
+				if (k % 2 == 0) {
+					position.x = 150;
+					position.y += 30;
+				}
+				else {
+					position.x = 250;
+				}
+
+				ligne = strtok(NULL, separateurs);
+			}
 		}
-		else {
-			i = 250;
-		}
 
-		ligne = strtok(NULL, separateurs);
+		fclose(fichierScores);
 	}
+
 
 	SDL_Flip(fenetre);
 
 	TTF_CloseFont(police);
-	TTF_Quit();
 }

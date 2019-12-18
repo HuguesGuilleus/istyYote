@@ -14,8 +14,9 @@
 	d'une réserve et le bord de la fenêtre */
 	#define MARGE_RESERVE 20
 
-	// Nombre maximum de caractère pour le fichier de règles
-	#define TAILLE_MAX_REGLES 1000
+	// Nombre maximum de caractère pour les fichiers de règles et de scores
+	#define TAILLE_MAX_REGLES 500
+	#define TAILLE_MAX_SCORES 500
 
 	void initDisplay();
 	void fatal(void* pt, char ms[]);
