@@ -5,7 +5,10 @@
 
 // Joue une partie
 void partie(void) {
-	
+	// Saisit le nom des joueur.
+	// À l'heure actuelle, cela ne sert à rien.
+	scoreParty infoJoueur = scoreInput();
+
 	//affichage de la fenetre de jeu
 	display();
 
@@ -37,27 +40,27 @@ void partie(void) {
 	//affichage des 2 caisses de rerve
 	displayReserveBox();
 
-	while(continuer==1){ 
+	while(continuer==1){
 
 		int action;
 		coord CordPion;
 
 		//affiche le joueur courant
 		displayRound(joueur.race);
-		
-		//recupère l'action de jeu à effectuer par le clic 
+
+		//recupère l'action de jeu à effectuer par le clic
 		action=ActionJoueur(&joueur,&c1,&continuer);
 
 		//action : placement
 		if (action==RESERVE){
 			CordPion=placement(&joueur);
-	
+
 			if(joueur.race==ORC){
 				//affiche pion orc et diminu de 1 la reserve
 				displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
 				joueurOrc.reserve=joueur.reserve;
 			}
-			
+
 			else{
 				//affiche pion demon et diminue de 1 la reserve
 				displayPawn(sprites.spriteDemon,CordPion.x, CordPion.y);
@@ -65,10 +68,10 @@ void partie(void) {
 			}
 		}
 
-		//action : déplacement 
+		//action : déplacement
 		else if(action==PLATEAU){
 			CordPion=deplacement(joueur,c1);
-			
+
 			//affiche une case a l'ancienne position du pion pour l'effacer
 			displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
 			if(joueur.race==ORC){
@@ -109,7 +112,7 @@ raceJoueur joueurAleatoir(raceJoueur race) {
 int ActionJoueur(Joueur* joueur,coord *c,int *continuer){
 	int Clic1;
 	SDL_Event event;
-	
+
 	while (*continuer)
 	{
     	SDL_WaitEvent(&event);
@@ -153,7 +156,7 @@ int verifClic1 (int x, int y, Joueur joueur){
 			return RESERVE;
 		}
 	}
-	
+
 	if((x>4*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-4][y/TAILLE_CASE-3].race)==joueur.race){
 		//test si le clic est sur une case avec un des pions du joueur dans le plateau
 		return PLATEAU;
@@ -194,7 +197,7 @@ coord placement(Joueur* joueur)
 				//On regarde si le clic 2 est bien dans le plateau
 				Clic2= verifClic2Placement(event.button.x,event.button.y);
 				if(Clic2==TRUE){
-					
+
 					c.x=(event.button.x/TAILLE_CASE)-4;
 					c.y=(event.button.y/TAILLE_CASE)-3;
 					// on place un pion dans la case selectionnée au clic 2
@@ -210,7 +213,7 @@ coord placement(Joueur* joueur)
 
 //verifie que le clic2 pour une action de deplacement est possible ou non
 bool verifClic2Deplacement(int x,int y,coord c1){
-	//variables des cases d'arrivée et de depart pour le deplacement 
+	//variables des cases d'arrivée et de depart pour le deplacement
 	//on convertit un clic en case du plateau
 	int arriveX = x/TAILLE_CASE-4;
 	int arriveY = y/TAILLE_CASE-3;
@@ -220,7 +223,7 @@ bool verifClic2Deplacement(int x,int y,coord c1){
 	//verifie que le clic est dans le plateau et que la case et vide
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
 		//verifie que la case est a une distance de 1 du pion
-		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY)) 
+		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY))
 		|| ((arriveX==departX) && (arriveY==departY+1)) || ((arriveX==departX) && (arriveY==departY-1)) ){
 			return TRUE;
 		}
@@ -249,7 +252,7 @@ coord deplacement(Joueur joueur,coord c1){
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1);
-				
+
 				if(Clic2==TRUE){
 					//convertit le clic en case du tableau
 					c2.x=event.button.x/TAILLE_CASE-4;
