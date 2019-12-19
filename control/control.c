@@ -252,7 +252,9 @@ coord deplacement(Joueur joueur,coord c1){
 				
 				if(Clic2==TRUE){
 					//convertit le clic en case du tableau
-					c2.x=ev			printf("reserve J2\n");2.x][c2.y].race=joueur.race;
+					c2.x=event.button.x/TAILLE_CASE-4;
+					c2.y=event.button.y/TAILLE_CASE-3;
+					board[c2.x][c2.y].race=joueur.race;
 					return c2;
 				}
 		}
