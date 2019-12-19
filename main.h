@@ -46,7 +46,7 @@
 		DEMON,
 	} raceJoueur;
 
-	//joueur 
+	//joueur
 	typedef struct {
 		raceJoueur race;
 		int reserve;
@@ -83,8 +83,14 @@
 
 	// Déclaration de la variable globale permettant d'utiliser les sprites
 	Sprites sprites;
-	
+
+	void end(SDL_Event _);
+
+	#include "control/event.h"
+	#include "control/score.h"
+	#include "control/control.h"
 	#include "display/display.h"
+	#include "display/displayScore.h"
 	#include "modele/mod.h"
 
 #endif
