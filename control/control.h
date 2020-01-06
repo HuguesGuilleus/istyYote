@@ -14,7 +14,7 @@
 	coord placement(Joueur * joueur);
 	bool verifClic2Placement(int x, int y);
 	
-	coord deplacement(Joueur joueur,coord c1);
+	coord deplacement(Joueur joueur,coord c1, coord cAnc);
 	bool verifClic2Deplacement(int x,int y,coord c1);
 
 	void affiche_plateau();

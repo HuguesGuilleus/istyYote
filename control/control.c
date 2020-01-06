@@ -43,7 +43,8 @@ void partie(void) {
 	while(continuer==1){
 
 		int action;
-		coord CordPion;
+		// CordPionNouv est les coord qu'on souhaite faire et CordPionAnc est les coord qu'on avait fait au tour precedent
+		coord CordPionNouv, CordPionAnc; 
 
 		//affiche le joueur courant
 		displayRound(joueur.race);
@@ -53,35 +54,36 @@ void partie(void) {
 
 		//action : placement
 		if (action==RESERVE){
-			CordPion=placement(&joueur);
+			CordPionNouv=placement(&joueur);
 
 			if(joueur.race==ORC){
 				//affiche pion orc et diminu de 1 la reserve
-				displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
+				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
 				joueurOrc.reserve=joueur.reserve;
 			}
 
 			else{
 				//affiche pion demon et diminue de 1 la reserve
-				displayPawn(sprites.spriteDemon,CordPion.x, CordPion.y);
+				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
 				joueurDemon.reserve=joueur.reserve;
 			}
 		}
 
 		//action : déplacement
 		else if(action==PLATEAU){
-			CordPion=deplacement(joueur,c1);
+			CordPionNouv=deplacement(joueur,c1,CordPionAnc);
 
 			//affiche une case a l'ancienne position du pion pour l'effacer
 			displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
 			if(joueur.race==ORC){
 				//affiche pion orc a la nouvelle position
-				displayPawn(sprites.spriteOrc,CordPion.x, CordPion.y);
+				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
 			}
 			else{
 				//affiche pion demon a la nouvelle position
-				displayPawn(sprites.spriteDemon,CordPion.x, CordPion.y);
+				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
 			}
+			CordPionAnc=CordPionNouv;
 		}
 		//affichage de la réserve
 		if(joueur.race==ORC){
@@ -233,7 +235,7 @@ bool verifClic2Deplacement(int x,int y,coord c1){
 
 //suite a un clic 1 de deplacement, on attend un second clic tant qu'il n'est pas valide ou
 //que l'utilisateur n'appuit pas sur la croix on attend un clic
-coord deplacement(Joueur joueur,coord c1){
+coord deplacement(Joueur joueur,coord c1, coord cAnc){
 	coord c2;
 	bool Clic2;
 	int continuer=1;
@@ -254,11 +256,13 @@ coord deplacement(Joueur joueur,coord c1){
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1);
 
 				if(Clic2==TRUE){
-					//convertit le clic en case du tableau
-					c2.x=event.button.x/TAILLE_CASE-4;
-					c2.y=event.button.y/TAILLE_CASE-3;
-					board[c2.x][c2.y].race=joueur.race;
-					return c2;
+					if((c2.x != cAnc.x)||(c2.y != cAnc.y)){
+						//convertit le clic en case du tableau
+						c2.x=event.button.x/TAILLE_CASE-4;
+						c2.y=event.button.y/TAILLE_CASE-3;
+						board[c2.x][c2.y].race=joueur.race;
+						return c2;
+					}
 				}
 		}
 	}
