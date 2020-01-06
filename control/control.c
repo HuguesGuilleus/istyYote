@@ -214,13 +214,22 @@ coord placement(Joueur* joueur)
 }
 
 //verifie que le clic2 pour une action de deplacement est possible ou non
-bool verifClic2Deplacement(int x,int y,coord c1){
+bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 	//variables des cases d'arrivée et de depart pour le deplacement
 	//on convertit un clic en case du plateau
 	int arriveX = x/TAILLE_CASE-4;
 	int arriveY = y/TAILLE_CASE-3;
 	int departX=  c1.x/TAILLE_CASE-4;
-	int departY= c1.y/TAILLE_CASE-3;
+	int departY
+	
+	
+	
+	
+	
+	
+	
+	
+	= c1.y/TAILLE_CASE-3;
 
 	//verifie que le clic est dans le plateau et que la case et vide
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
@@ -230,14 +239,19 @@ bool verifClic2Deplacement(int x,int y,coord c1){
 			return TRUE;
 		}
 	}
+	else if ((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race!=joueur.race)){
+		*capture =1;
+	}
 	return FALSE;
 }
+
 
 //suite a un clic 1 de deplacement, on attend un second clic tant qu'il n'est pas valide ou
 //que l'utilisateur n'appuit pas sur la croix on attend un clic
 coord deplacement(Joueur joueur,coord c1, coord cAnc){
-	coord c2;
+	coord c2,cPionCap;
 	bool Clic2;
+	int capture=0;
 	int continuer=1;
 
 	SDL_Event event;
@@ -252,8 +266,42 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc){
 			case SDL_MOUSEBUTTONUP:
 
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
+				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,&capture,joueur);
 
-				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1);
+				if (capture== 1){
+					c2.x=event.button.x/TAILLE_CASE-4;
+					c2.y=event.button.y/TAILLE_CASE-3;
+					cPionCap.x=event.button.x/TAILLE_CASE-4;
+					cPionCap.y=event.button.y/TAILLE_CASE-3;
+					if(c2.x==c1.x/TAILLE_CASE-4+1)
+					{
+						c2.x=c2.x+1;
+					}
+					else if(c2.x==c1.x/TAILLE_CASE-4-1)
+					{
+						c2.x=c2.x-1;
+					}
+					else if(c2.y==c1.y/TAILLE_CASE-3-1)
+					{
+						c2.y=c2.y-1;
+					}
+					else if ((c2.y==c1.y/TAILLE_CASE-3+1))
+					{
+						c2.y=c2.y+1;
+					}
+
+					//printf("c2 %d, %d \n",c2.x,c2.y);
+					//printf("cc %d, %d \n",cPionCap.x,cPionCap.y);
+					//printf("c1 %d, %d \n",c1.x/TAILLE_CASE-4,c1.y/TAILLE_CASE-3);
+					if(board[c2.x][c2.y].race==VIDE){
+						printf("tu capture\n") ;
+						board[cPionCap.x][cPionCap.y].race=VIDE;
+						displayTile(cPionCap.x, cPionCap.y);
+						//lancer capture pour que le joueur choisisse un autre pion du pkateau a degager
+						return c2;
+					}
+					printf("tu peux pas capturer un pion t'empêche de sauter par dessus\n") ;
+				}
 
 				if(Clic2==TRUE){
 					if((c2.x != cAnc.x)||(c2.y != cAnc.y)){
