@@ -49,7 +49,8 @@
 	//joueur
 	typedef struct {
 		raceJoueur race;
-		int reserve;
+		int reserve; //nb pion du joueur dans sa reserve
+		int plateau; // nb pion du joueur sur le plateau
 	} Joueur;
 
 	// L'état d'une case:

@@ -159,6 +159,7 @@ void displayTile(int x, int y) {
 		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
 		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y
 	});
+	SDL_Flip(fenetre);
 }
 
 

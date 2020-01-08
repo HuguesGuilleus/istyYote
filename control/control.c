@@ -8,25 +8,29 @@ void partie(void) {
 	// Saisit le nom des joueur.
 	// À l'heure actuelle, cela ne sert à rien.
 	scoreParty infoJoueur = scoreInput();
-
+	
 	//affichage de la fenetre de jeu
 	display();
 
 	//declaration des variables
 	coord c1 = {};
+	coord CordPion1Cap,CordPion2Cap;
 	raceJoueur raceDebut;
 	Joueur joueurOrc,joueurDemon,joueur;
 	int continuer=1;
+	int capture=0;
 
 	//initialisation des 2 joueurs
 	joueurOrc.race=ORC;
 	joueurOrc.reserve=12;
+	joueurOrc.plateau=0;
 	joueurDemon.race=DEMON;
 	joueurDemon.reserve=12;
+	joueurDemon.plateau=0;
 
 	raceDebut=joueurAleatoir(raceDebut);
 
-	if(joueur.race==ORC){
+	if(raceDebut==ORC){
 		joueur=joueurDemon;
 		}
 	else{
@@ -54,36 +58,84 @@ void partie(void) {
 
 		//action : placement
 		if (action==RESERVE){
-			CordPionNouv=placement(&joueur);
 
+			CordPionNouv=placement(&joueur);
+			joueur.plateau=joueur.plateau +1;
 			if(joueur.race==ORC){
 				//affiche pion orc et diminu de 1 la reserve
 				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+				
+				joueurOrc.plateau=joueur.plateau;
 				joueurOrc.reserve=joueur.reserve;
 			}
 
 			else{
 				//affiche pion demon et diminue de 1 la reserve
 				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+				joueurDemon.plateau=joueur.plateau;
 				joueurDemon.reserve=joueur.reserve;
 			}
+			printf("nb plateau : %d \n",joueur.plateau);
 		}
-
+		
 		//action : déplacement
 		else if(action==PLATEAU){
-			CordPionNouv=deplacement(joueur,c1,CordPionAnc);
 
-			//affiche une case a l'ancienne position du pion pour l'effacer
-			displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
-			if(joueur.race==ORC){
-				//affiche pion orc a la nouvelle position
-				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+			CordPionNouv=deplacement(joueur,c1,CordPionAnc,&capture);
+
+			printf(" capture : %d\n",capture);
+
+			if (capture==1){
+				
+				displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
+				
+				if(joueur.race==ORC){
+					//affiche pion orc a la nouvelle position
+					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+					joueurDemon.plateau=joueurDemon.plateau-1;
+					printf("nb plateau trtr : %d \n",joueurDemon.plateau);
+					if (joueurDemon.plateau==0)
+					{
+						joueurDemon.reserve=joueurDemon.reserve-1;
+						displayReserve(joueur.reserve,sprites.spriteDemon);
+					}
+					else{
+						CordPion2Cap=capture2(joueur);
+						displayTile(CordPion2Cap.x, CordPion2Cap.y);
+						joueurDemon.plateau=joueurDemon.plateau-1;
+					}
+				}
+				else{
+					//affiche pion demon a la nouvelle position
+					displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+					joueurOrc.plateau=joueurOrc.plateau-1;
+					if (joueurOrc.plateau==0)
+					{
+						joueurOrc.reserve=joueurOrc.reserve-1;
+						displayReserve(joueur.reserve,sprites.spriteOrc);
+					}
+					else{
+						CordPion2Cap=capture2(joueur);
+						displayTile(CordPion2Cap.x, CordPion2Cap.y);
+						joueurOrc.plateau=joueurOrc.plateau-1;
+					}
+				}
+				capture =0;
 			}
-			else{
-				//affiche pion demon a la nouvelle position
-				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+			else {
+					//affiche une case a l'ancienne position du pion pour l'effacer
+				displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
+				if(joueur.race==ORC){
+					//affiche pion orc a la nouvelle position
+					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+				}
+				else{
+					//affiche pion demon a la nouvelle position
+					displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+				}
+				CordPionAnc=CordPionNouv;
 			}
-			CordPionAnc=CordPionNouv;
+			
 		}
 		//affichage de la réserve
 		if(joueur.race==ORC){
@@ -100,7 +152,7 @@ void partie(void) {
 			joueur=joueurOrc;
 		}
 		//permet d'afficher le contenue du tableau du plateau dans le terminal
-		//affiche_plateau();
+		affiche_plateau();
 	}
 	return;
 }
@@ -220,16 +272,7 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 	int arriveX = x/TAILLE_CASE-4;
 	int arriveY = y/TAILLE_CASE-3;
 	int departX=  c1.x/TAILLE_CASE-4;
-	int departY
-	
-	
-	
-	
-	
-	
-	
-	
-	= c1.y/TAILLE_CASE-3;
+	int departY= c1.y/TAILLE_CASE-3;
 
 	//verifie que le clic est dans le plateau et que la case et vide
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
@@ -248,10 +291,9 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 
 //suite a un clic 1 de deplacement, on attend un second clic tant qu'il n'est pas valide ou
 //que l'utilisateur n'appuit pas sur la croix on attend un clic
-coord deplacement(Joueur joueur,coord c1, coord cAnc){
-	coord c2,cPionCap;
+coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
+	coord c2,cPionCap1;
 	bool Clic2;
-	int capture=0;
 	int continuer=1;
 
 	SDL_Event event;
@@ -266,13 +308,13 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc){
 			case SDL_MOUSEBUTTONUP:
 
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
-				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,&capture,joueur);
+				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
 
-				if (capture== 1){
+				if (*capture== 1){
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
-					cPionCap.x=event.button.x/TAILLE_CASE-4;
-					cPionCap.y=event.button.y/TAILLE_CASE-3;
+					cPionCap1.x=event.button.x/TAILLE_CASE-4;
+					cPionCap1.y=event.button.y/TAILLE_CASE-3;
 					if(c2.x==c1.x/TAILLE_CASE-4+1)
 					{
 						c2.x=c2.x+1;
@@ -295,12 +337,14 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc){
 					//printf("c1 %d, %d \n",c1.x/TAILLE_CASE-4,c1.y/TAILLE_CASE-3);
 					if(board[c2.x][c2.y].race==VIDE){
 						printf("tu capture\n") ;
-						board[cPionCap.x][cPionCap.y].race=VIDE;
-						displayTile(cPionCap.x, cPionCap.y);
-						//lancer capture pour que le joueur choisisse un autre pion du pkateau a degager
+						board[cPionCap1.x][cPionCap1.y].race=VIDE;
+						board[c2.x][c2.y].race=joueur.race;
+						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
+						displayTile(cPionCap1.x, cPionCap1.y);
+						
+						//lancer capture pour que le joueur choisisse un autre pion du plateau a degager
 						return c2;
 					}
-					printf("tu peux pas capturer un pion t'empêche de sauter par dessus\n") ;
 				}
 
 				if(Clic2==TRUE){
@@ -308,6 +352,7 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc){
 						//convertit le clic en case du tableau
 						c2.x=event.button.x/TAILLE_CASE-4;
 						c2.y=event.button.y/TAILLE_CASE-3;
+						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
 						board[c2.x][c2.y].race=joueur.race;
 						return c2;
 					}
@@ -315,6 +360,52 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc){
 		}
 	}
 	return c2;
+}
+
+
+//verifie que le clic est sur la case d'un pion advers pour le deuxieme pion capturer
+bool verifClicCapture2(int x, int y,Joueur joueur)
+{
+	// la case selectionner doit être une case vide du plateau
+	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-3].race!=joueur.race)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-3].race!=VIDE)){
+		return TRUE;
+	}
+	else{
+		return FALSE;
+	}
+}
+
+//suite a la cazpture d'un pion le joueur en prend un autre au choix sur le plateau 
+// precondition : il reste des pions au joueur adverse sur le plateau
+coord capture2(Joueur joueur)
+{
+	coord cCapturer;
+	bool Clic;
+	int continuer=1;
+
+	SDL_Event event;
+	while (continuer)
+	{
+    	SDL_WaitEvent(&event);
+		switch(event.type)
+		{
+			case SDL_QUIT:
+				continuer=0;
+				break;
+			case SDL_MOUSEBUTTONUP:
+
+				//On regarde si le clic est bien dans le plateau
+				Clic= verifClicCapture2(event.button.x,event.button.y,joueur);
+				if(Clic==TRUE){
+					cCapturer.x=(event.button.x/TAILLE_CASE)-4;
+					cCapturer.y=(event.button.y/TAILLE_CASE)-3;
+					// on supprime le pion
+					board[cCapturer.x][cCapturer.y].race=VIDE;
+					return cCapturer;
+				}
+		}
+	}
+	return cCapturer;
 }
 
 //fonction de test pour voir le plateau das le terminal ( 0 : VIDE, 1 : ORC, 2 : DEMON)
