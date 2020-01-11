@@ -13,8 +13,8 @@ void partie(void) {
 	// display();
 
 	initBoard();
-	displayBoard();
 	scoreParty infoJoueur = scoreInput();
+	displayBoard();
 
 	//declaration des variables
 	coord c1 = {};
@@ -44,7 +44,7 @@ void partie(void) {
 	//affichage des nombre de piosn contenue dans les reserves au debut de partie
 	displayReserve(joueur.reserve,sprites.spriteOrc);
 	displayReserve(joueur.reserve,sprites.spriteDemon);
-
+	
 	//affichage des 2 caisses de rerve
 	displayReserveBox();
 

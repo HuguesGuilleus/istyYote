@@ -74,6 +74,7 @@ void display() {
 
 // Affiche que le plateau
 void displayBoard() {
+	eraseWindow();
 	int x,y ;
 	for ( x = 0; x < LARGEUR; x++) {
 		for(y = 0; y < HAUTEUR; y++) {
