@@ -20,6 +20,8 @@
 	bool verifClicCapture2(int x, int y,Joueur joueur);
 	coord capture1(Joueur joueur,coord c2,coord c1);
 
+	void menuClick();
+	
 	void affiche_plateau();
 
 #endif

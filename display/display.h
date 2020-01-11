@@ -29,5 +29,6 @@
 	void displayRules();
 	void displayReserve();
 	void displayReserveBox();
-
+	void eraseWindow();
+	void displayBackButton();
 #endif

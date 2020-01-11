@@ -76,6 +76,7 @@
 		SDL_Surface* spriteNuage;
 		SDL_Surface* spriteCarreBleu;
 		SDL_Surface* spriteCaisse;
+		SDL_Surface* spriteBoutonRetour;
 	} Sprites;
 
 	// Le plateau, accès avec plateau[x][y] avec l'origine en haut à gauche

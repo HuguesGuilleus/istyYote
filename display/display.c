@@ -48,8 +48,10 @@ void initDisplay() {
 	sprites.spriteNuage = SDL_LoadBMP("media/sprites/nuage.bmp");
 	sprites.spriteCarreBleu = SDL_LoadBMP("media/sprites/carre_bleu.bmp");
 	sprites.spriteCaisse = SDL_LoadBMP("media/sprites/caisse.bmp");
+	sprites.spriteBoutonRetour = SDL_LoadBMP("media/sprites/bouton_retour.bmp");
 	SDL_SetColorKey(sprites.spriteDemon, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteDemon->format,255,0,255));
 	SDL_SetColorKey(sprites.spriteOrc, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
+	SDL_SetColorKey(sprites.spriteBoutonRetour, SDL_SRCCOLORKEY, SDL_MapRGB(sprites.spriteOrc->format,255,0,255));
 
 	fatal(fenetre, "launch SDL");
 }
@@ -64,13 +66,9 @@ void fatal(void* pt, char ms[]) {
 
 // Affiche tout
 void display() {
-	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
-	//displayTitle();
-	//displayMenuButtons();
-	//displayRules();
-	//displayScores();
-	displayBoard();
-
+	eraseWindow();
+	displayTitle();
+	displayMenuButtons();
 	SDL_Flip(fenetre);
 }
 
@@ -90,6 +88,10 @@ void displayBoard() {
 	}
 }
 
+// efface le contenu de la fenêtre pour afficher un autre menu/une autre interface
+void eraseWindow() {
+	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
+}
 // Affiche le tour du joueur courant
 void displayRound(raceJoueur joueur) {
 	SDL_Rect position;
@@ -256,11 +258,12 @@ void displayMenuButtons() {
 	// Bouton Jouer
 	position.x = (LARGEUR_FENETRE / 2) - petitNuage->w - 50;
 	position.y = ORIGINE_PLATEAU_Y;
+
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 
 	texte = TTF_RenderText_Blended(police, "Jouer", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
-		x: position.x + texte->w,
+		x: position.x + (petitNuage->w  / 3),
 		y: position.y + texte->h + 5
 	});
 
@@ -271,7 +274,7 @@ void displayMenuButtons() {
 
 	texte = TTF_RenderText_Blended(police, "Quitter", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
-		x: position.x + texte->w,
+		x: position.x + (petitNuage->w  / 4),	
 		y: position.y + texte->h + 5
 	});
 
@@ -279,6 +282,7 @@ void displayMenuButtons() {
 	// Bouton Aide
 	position.x = (LARGEUR_FENETRE / 2) + 50;
 	position.y = ORIGINE_PLATEAU_Y;
+	
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 
 	texte = TTF_RenderText_Blended(police, "Aide", couleurNoire);
@@ -291,7 +295,7 @@ void displayMenuButtons() {
 	// Bouton Scores
 	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-
+	
 	texte = TTF_RenderText_Blended(police, "Scores", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + (texte->w / 2),
@@ -305,6 +309,7 @@ void displayMenuButtons() {
 
 // Affiche les règles du jeu
 void displayRules() {
+	eraseWindow();
 	SDL_Rect position; // Position des différents élements de la fenêtre
 	char texte[TAILLE_MAX_REGLES] = ""; // Tampon pour le fichier media/regles.txt
 
@@ -342,6 +347,7 @@ void displayRules() {
 		fclose(fichierRegles);
 	}
 
+	displayBackButton();
 	SDL_Flip(fenetre);
 	TTF_CloseFont(police);
 }
@@ -349,6 +355,7 @@ void displayRules() {
 
 // Affiche les 15 derniers scores
 void displayScores() {
+	eraseWindow();
 	int k = 0; 	// Compteur servant à déduire la position à appliquer pour l'affichage en colonnes
 	SDL_Rect position;
 	FILE* fichierScores = NULL; // Fichiers des scores
@@ -413,7 +420,27 @@ void displayScores() {
 		fclose(fichierScores);
 	}
 
-
+	displayBackButton();
 	SDL_Flip(fenetre);
+	TTF_CloseFont(police);
+}
+
+// Affiche un bouton retour sur les pages de règles et de scores
+void displayBackButton() {
+	SDL_Rect position;
+	SDL_Surface* affichageTexte = NULL;
+	TTF_Font* police;
+
+	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 22);
+
+	position.x = 20;
+	position.y = HAUTEUR_FENETRE - 20 - sprites.spriteBoutonRetour->h;
+	SDL_BlitSurface(sprites.spriteBoutonRetour, NULL, fenetre, &position);
+	affichageTexte = TTF_RenderText_Blended(police, "Retour", couleurNoire);
+
+	position.x += (sprites.spriteBoutonRetour->w / 3);
+	position.y += (sprites.spriteBoutonRetour->h / 4);
+	SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
+
 	TTF_CloseFont(police);
 }

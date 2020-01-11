@@ -8,8 +8,10 @@
 int main(int argc, char const *argv[]) {
 	srand(time(NULL));
 	initDisplay();
-	initBoard();
-	partie();
+	display();
+	menuClick();
+	// initBoard();
+	// partie();
 	SDL_Quit();
 	return 0;
 }

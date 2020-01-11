@@ -7,10 +7,14 @@
 void partie(void) {
 	// Saisit le nom des joueur.
 	// À l'heure actuelle, cela ne sert à rien.
-	scoreParty infoJoueur = scoreInput();
+	//scoreParty infoJoueur = scoreInput();
 	
 	//affichage de la fenetre de jeu
-	display();
+	// display();
+
+	initBoard();
+	displayBoard();
+	scoreParty infoJoueur = scoreInput();
 
 	//declaration des variables
 	coord c1 = {};
@@ -406,6 +410,53 @@ coord capture2(Joueur joueur)
 		}
 	}
 	return cCapturer;
+}
+
+void menuClick() {
+	SDL_Event event;
+	int isMainMenuDisplayed = 1;
+
+	while(1) {
+		SDL_WaitEvent(&event);
+		switch(event.type) {
+			case SDL_MOUSEBUTTONUP:
+				
+				// Si le joueur est dans le menu principal
+				if (isMainMenuDisplayed) {
+					// Clic sur "Jouer"
+					if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 240 && event.button.y <= 337) {
+						isMainMenuDisplayed = !isMainMenuDisplayed;
+						partie();
+					}
+					// Clic sur "Quitter"
+					else if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 387 && event.button.y <= 484) {
+						end(event);
+					}
+					// Clic sur "Aide"
+					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 240 && event.button.y <= 337) {
+						isMainMenuDisplayed = !isMainMenuDisplayed;
+						displayRules();
+					}
+					// Clic sur "Scores"
+					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 387 && event.button.y <= 484) {
+						isMainMenuDisplayed = !isMainMenuDisplayed;
+						displayScores();
+					}
+				}
+				// Le joueur est dans une autre interface comportant un menu
+				else {
+					// Clic sur le bouton "Retour" pour retourner vers le menu principal
+					if (event.button.x >= 20 && event.button.x <= 148 && event.button.y >= 730 && event.button.y <= 780) {
+						isMainMenuDisplayed = !isMainMenuDisplayed;
+						display();
+					}
+				}
+				break;
+			case SDL_QUIT:
+				end(event);
+				break;
+		}
+	}
 }
 
 //fonction de test pour voir le plateau das le terminal ( 0 : VIDE, 1 : ORC, 2 : DEMON)
