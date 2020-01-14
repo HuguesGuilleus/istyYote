@@ -26,11 +26,16 @@ void partie(void) {
 
 	//initialisation des 2 joueurs
 	joueurOrc.race=ORC;
-	joueurOrc.reserve=4;
+	joueurOrc.reserve=12;
 	joueurOrc.plateau=0;
+	joueurOrc.cAnc.x=-1;
+	joueurOrc.cAnc.y=-1;
+	
 	joueurDemon.race=DEMON;
-	joueurDemon.reserve=4;
+	joueurDemon.reserve=12;
 	joueurDemon.plateau=0;
+	joueurDemon.cAnc.x=-1;
+	joueurDemon.cAnc.y=-1;
 
 	raceDebut=joueurAleatoir(raceDebut);
 
@@ -180,7 +185,8 @@ void partie(void) {
 			joueur=joueurOrc;
 		}
 		if((joueur.plateau==0) && (joueur.reserve==0)){
-			printf("\n\n\n JOUEUR %d A PERDU", joueur.race);
+			SDL_Delay(1000);
+			printf("\n\n\n JOUEUR %d A PERDU\n", joueur.race);
 			continuer=0;
 		}
 		
