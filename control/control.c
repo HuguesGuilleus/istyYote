@@ -26,10 +26,10 @@ void partie(void) {
 
 	//initialisation des 2 joueurs
 	joueurOrc.race=ORC;
-	joueurOrc.reserve=12;
+	joueurOrc.reserve=4;
 	joueurOrc.plateau=0;
 	joueurDemon.race=DEMON;
-	joueurDemon.reserve=12;
+	joueurDemon.reserve=4;
 	joueurDemon.plateau=0;
 
 	raceDebut=joueurAleatoir(raceDebut);
@@ -173,14 +173,22 @@ void partie(void) {
 		if(joueur.race==ORC){
 			joueurOrc.cAnc=joueur.cAnc;
 			joueur=joueurDemon;
+		
 		}
 		else{
 			joueurDemon.cAnc=joueur.cAnc;
 			joueur=joueurOrc;
 		}
+		if((joueur.plateau==0) && (joueur.reserve==0)){
+			printf("\n\n\n JOUEUR %d A PERDU", joueur.race);
+			continuer=0;
+		}
+		
 		//permet d'afficher le contenue du tableau du plateau dans le terminal
 		//affiche_plateau();
 	}
+	display();
+	menuClick();
 	return;
 }
 
