@@ -67,7 +67,7 @@ void partie(void) {
 
 		//recupère l'action de jeu à effectuer par le clic
 		action=ActionJoueur(&joueur,&c1,&continuer);
-		printf("debut de tour : anncienne position %d %d \n",joueur.cAnc.x,joueur.cAnc.y);
+		
 		//action : placement
 		if (action==RESERVE){
 

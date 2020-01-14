@@ -148,7 +148,7 @@ void displayPawn(SDL_Surface* sprite, int x, int y) {
 
 	// Pour les tests
 	char* pion = (sprite == sprites.spriteOrc) ? "orc" : "demon";
-	printf("Je dessine un %s en case (%d, %d)\n", pion, x, y);
+	//printf("Je dessine un %s en case (%d, %d)\n", pion, x, y);
 	fatal(!r, "displayPawn()");
 	SDL_Flip(fenetre);
 }
