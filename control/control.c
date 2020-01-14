@@ -40,6 +40,9 @@ void partie(void) {
 	else{
 		joueur=joueurOrc;
 	}
+	//initialisation a des valeur hors du plateau
+	joueur.cAnc.x=-1;
+	joueur.cAnc.y=-1;
 
 	//affichage des nombre de piosn contenue dans les reserves au debut de partie
 	displayReserve(joueur.reserve,sprites.spriteOrc);
@@ -59,7 +62,7 @@ void partie(void) {
 
 		//recupère l'action de jeu à effectuer par le clic
 		action=ActionJoueur(&joueur,&c1,&continuer);
-
+		printf("debut de tour : anncienne position %d %d \n",joueur.cAnc.x,joueur.cAnc.y);
 		//action : placement
 		if (action==RESERVE){
 
@@ -68,7 +71,7 @@ void partie(void) {
 			if(joueur.race==ORC){
 				//affiche pion orc et diminu de 1 la reserve
 				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
-				
+				// on met des valeur hors du plateau en ancien coup pour que quelque soit la case selectionné elle soit differente
 				joueurOrc.plateau=joueur.plateau;
 				joueurOrc.reserve=joueur.reserve;
 			}
@@ -76,39 +79,49 @@ void partie(void) {
 			else{
 				//affiche pion demon et diminue de 1 la reserve
 				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+				// on met des valeur hors du plateau en ancien coup pour que quelque soit la case selectionné elle soit differente
 				joueurDemon.plateau=joueur.plateau;
 				joueurDemon.reserve=joueur.reserve;
 			}
+			joueur.cAnc.x=-1;
+			joueur.cAnc.y=-1;
 			printf("nb plateau : %d \n",joueur.plateau);
 		}
 		
 		//action : déplacement
 		else if(action==PLATEAU){
 
-			CordPionNouv=deplacement(joueur,c1,CordPionAnc,&capture);
+			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture);
 
 			printf(" capture : %d\n",capture);
 
+			//si le joueur capture un pion dans son deplacement
 			if (capture==1){
 				
 				displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
-				
+				//si le joueur courant et un orc
 				if(joueur.race==ORC){
 					//affiche pion orc a la nouvelle position
 					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+					//on diminue de un le nb de pion sur le plateau du joeur adverse
 					joueurDemon.plateau=joueurDemon.plateau-1;
 					printf("nb plateau trtr : %d \n",joueurDemon.plateau);
+					//si le joueur a plus de pion sur le plateau un pion de la reserve et prix
 					if (joueurDemon.plateau==0)
 					{
 						joueurDemon.reserve=joueurDemon.reserve-1;
 						displayReserve(joueur.reserve,sprites.spriteDemon);
 					}
+					//sinon le joueur choisi un pion sur le plateau qui est capturer
 					else{
 						CordPion2Cap=capture2(joueur);
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurDemon.plateau=joueurDemon.plateau-1;
 					}
+					//sauvegarde de la position de départ avant le mouvement
+					//joueurOrc.cAnc=c1;
 				}
+				//si le joueur courant est un demon
 				else{
 					//affiche pion demon a la nouvelle position
 					displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
@@ -123,9 +136,13 @@ void partie(void) {
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurOrc.plateau=joueurOrc.plateau-1;
 					}
+					//sauvegarde de la position de départ avant le mouvement
+					//joueurDemon.cAnc=c1;
 				}
+				//la capture est fini on remet donc capture a FAUX (0)
 				capture =0;
 			}
+			//sinon deplacement normal
 			else {
 					//affiche une case a l'ancienne position du pion pour l'effacer
 				displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
@@ -137,26 +154,32 @@ void partie(void) {
 					//affiche pion demon a la nouvelle position
 					displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
 				}
-				CordPionAnc=CordPionNouv;
+				
 			}
-			
+			//on enregistre la position de depart pour que le joueur ne puisse pas faire un coup inverse a celui ci au prochain tour
+			joueur.cAnc.x=c1.x/TAILLE_CASE-4;
+			joueur.cAnc.y=c1.y/TAILLE_CASE-3;
 		}
+		printf("fin de tour : anncienne position orc   %d %d \n",joueurOrc.cAnc.x,joueurOrc.cAnc.y);
+		printf("fin de tour : anncienne position demon %d %d \n",joueurDemon.cAnc.x,joueurDemon.cAnc.y);
 		//affichage de la réserve
 		if(joueur.race==ORC){
-				displayReserve(joueurOrc.reserve,sprites.spriteOrc);
+			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
 			}
 		else{
 			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
 		}
 		//changement de joueur
 		if(joueur.race==ORC){
+			joueurOrc.cAnc=joueur.cAnc;
 			joueur=joueurDemon;
 		}
 		else{
+			joueurDemon.cAnc=joueur.cAnc;
 			joueur=joueurOrc;
 		}
 		//permet d'afficher le contenue du tableau du plateau dans le terminal
-		affiche_plateau();
+		//affiche_plateau();
 	}
 	return;
 }
@@ -314,7 +337,7 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
 
-				if (*capture== 1){
+				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y))){
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
 					cPionCap1.x=event.button.x/TAILLE_CASE-4;
@@ -350,9 +373,10 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
 						return c2;
 					}
 				}
-
+				printf("\nanncienne position   %d %d \n",joueur.cAnc.x,joueur.cAnc.y);
+				printf("nouvelle position    %d %d \n",event.button.x/TAILLE_CASE-4,event.button.y/TAILLE_CASE-3);
 				if(Clic2==TRUE){
-					if((c2.x != cAnc.x)||(c2.y != cAnc.y)){
+					if((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y)){
 						//convertit le clic en case du tableau
 						c2.x=event.button.x/TAILLE_CASE-4;
 						c2.y=event.button.y/TAILLE_CASE-3;

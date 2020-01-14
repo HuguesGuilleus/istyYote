@@ -51,6 +51,7 @@
 		raceJoueur race;
 		int reserve; //nb pion du joueur dans sa reserve
 		int plateau; // nb pion du joueur sur le plateau
+		coord cAnc // coordonnée de l'ancienne position ( sert pour que le joueur ne joue pas un tour inverse au precedent)
 	} Joueur;
 
 	// L'état d'une case:
