@@ -30,7 +30,7 @@ void partie(void) {
 	joueurOrc.plateau=0;
 	joueurOrc.cAnc.x=-1;
 	joueurOrc.cAnc.y=-1;
-	
+
 	joueurDemon.race=DEMON;
 	joueurDemon.reserve=12;
 	joueurDemon.plateau=0;
@@ -90,15 +90,13 @@ void partie(void) {
 			}
 			joueur.cAnc.x=-1;
 			joueur.cAnc.y=-1;
-			printf("nb plateau : %d \n",joueur.plateau);
+			
 		}
 		
 		//action : déplacement
 		else if(action==PLATEAU){
 
 			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture);
-
-			printf(" capture : %d\n",capture);
 
 			//si le joueur capture un pion dans son deplacement
 			if (capture==1){
@@ -110,7 +108,7 @@ void partie(void) {
 					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
 					//on diminue de un le nb de pion sur le plateau du joeur adverse
 					joueurDemon.plateau=joueurDemon.plateau-1;
-					printf("nb plateau trtr : %d \n",joueurDemon.plateau);
+					
 					//si le joueur a plus de pion sur le plateau un pion de la reserve et prix
 					if (joueurDemon.plateau==0)
 					{
@@ -119,6 +117,7 @@ void partie(void) {
 					}
 					//sinon le joueur choisi un pion sur le plateau qui est capturer
 					else{
+						printf("\n choisi un deuxime pion a capturer \n");
 						CordPion2Cap=capture2(joueur);
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurDemon.plateau=joueurDemon.plateau-1;
@@ -165,8 +164,7 @@ void partie(void) {
 			joueur.cAnc.x=c1.x/TAILLE_CASE-4;
 			joueur.cAnc.y=c1.y/TAILLE_CASE-3;
 		}
-		printf("fin de tour : anncienne position orc   %d %d \n",joueurOrc.cAnc.x,joueurOrc.cAnc.y);
-		printf("fin de tour : anncienne position demon %d %d \n",joueurDemon.cAnc.x,joueurDemon.cAnc.y);
+		
 		//affichage de la réserve
 		if(joueur.race==ORC){
 			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
@@ -184,9 +182,10 @@ void partie(void) {
 			joueurDemon.cAnc=joueur.cAnc;
 			joueur=joueurOrc;
 		}
+		//si le joueur a plus de pion c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			SDL_Delay(1000);
-			printf("\n\n\n JOUEUR %d A PERDU\n", joueur.race);
+			printf("\n\n\n\n\n JOUEUR %d A PERDU\n\n\n\n", joueur.race);
 			continuer=0;
 		}
 		
@@ -387,8 +386,7 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
 						return c2;
 					}
 				}
-				printf("\nanncienne position   %d %d \n",joueur.cAnc.x,joueur.cAnc.y);
-				printf("nouvelle position    %d %d \n",event.button.x/TAILLE_CASE-4,event.button.y/TAILLE_CASE-3);
+				
 				if(Clic2==TRUE){
 					if((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y)){
 						//convertit le clic en case du tableau
