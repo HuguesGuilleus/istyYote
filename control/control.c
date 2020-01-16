@@ -4,7 +4,7 @@
 #include "control.h"
 
 // Joue une partie
-void partie(void) {
+void partieJvsJ(void) {
 	// Saisit le nom des joueur.
 	// À l'heure actuelle, cela ne sert à rien.
 	//scoreParty infoJoueur = scoreInput();
@@ -96,11 +96,11 @@ void partie(void) {
 		//action : déplacement
 		else if(action==PLATEAU){
 
-			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture);
+			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture,&CordPion1Cap);
 
 			//si le joueur capture un pion dans son deplacement
 			if (capture==1){
-				
+				displayTile(CordPion1Cap.x, CordPion1Cap.y);
 				displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
 				//si le joueur courant et un orc
 				if(joueur.race==ORC){
@@ -197,8 +197,309 @@ void partie(void) {
 	return;
 }
 
+void partieJvsIA(void) {
+	// Saisit le nom des joueur.
+	// À l'heure actuelle, cela ne sert à rien.
+	//scoreParty infoJoueur = scoreInput();
+	
+	//affichage de la fenetre de jeu
+	// display();
+
+	initBoard();
+	scoreParty infoJoueur = scoreInput();
+	displayBoard();
+
+	//declaration des variables
+	srand(time(NULL));
+
+	coord c1 = {};
+	coord CordPion1Cap,CordPion2Cap;
+	int action;
+	// CordPionNouv est les coord qu'on souhaite faire et CordPionAnc est les coord qu'on avait fait au tour precedent
+	coord CordPionNouv, CordPionAnc; 
+	raceJoueur raceDebut;
+	Joueur joueurOrc,joueurDemon,joueur;
+	int continuer=1,i,j;
+	int capture=0,XDemon,YDemon,XOrc,YOrc;
+	coord TabPionIA[3];
+	//on initialise les position du plateau au coordonner (-1,-1) pour que cela soit une case hors du tableau
+	TabPionIA[0].x= -1; TabPionIA[0].y=-1;
+	TabPionIA[1].x= -1; TabPionIA[1].y=-1;
+	TabPionIA[2].x= -1; TabPionIA[2].y=-1;
+
+	//initialisation des 2 joueurs
+	joueurOrc.race=ORC;
+	joueurOrc.reserve=12;
+	joueurOrc.plateau=0;
+	joueurOrc.cAnc.x=-1;
+	joueurOrc.cAnc.y=-1;
+
+	joueurDemon.race=DEMON;
+	joueurDemon.reserve=12;
+	joueurDemon.plateau=0;
+	joueurDemon.cAnc.x=-1;
+	joueurDemon.cAnc.y=-1;
+
+	raceDebut=joueurAleatoir(raceDebut);
+
+	if(raceDebut==ORC){
+		joueur=joueurDemon;
+		}
+	else{
+		joueur=joueurOrc;
+	}
+	//initialisation a des valeur hors du plateau
+	joueur.cAnc.x=-1;
+	joueur.cAnc.y=-1;
+
+	//affichage des nombre de piosn contenue dans les reserves au debut de partie
+	displayReserve(joueur.reserve,sprites.spriteOrc);
+	displayReserve(joueur.reserve,sprites.spriteDemon);
+	
+	//affichage des 2 caisses de rerve
+	displayReserveBox();
+
+	while(continuer==1){
+
+		//affiche le joueur courant
+		displayRound(joueur.race);
+		printf("joueur : %d \n\n",joueur.race);
+		if(joueur.race==ORC) // le joueur humain joue les orcs
+		{
+			//recupère l'action de jeu à effectuer par le clic
+			action=ActionJoueur(&joueur,&c1,&continuer);
+
+			if (action==RESERVE){
+
+				CordPionNouv=placement(&joueur);
+				joueur.plateau=joueur.plateau +1;
+			
+				//affiche pion orc et diminu de 1 la reserve
+				displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+				
+				joueurOrc.plateau=joueur.plateau;
+				joueurOrc.reserve=joueur.reserve;
+				// on met des valeur hors du plateau en ancien coup pour que quelque soit la case selectionné elle soit differente
+				joueur.cAnc.x=-1;
+				joueur.cAnc.y=-1;
+			}
+			else if(action==PLATEAU){
+			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture,&CordPion1Cap);
+
+				//si le joueur capture un pion dans son deplacement
+				if (capture==1){
+					displayTile(CordPion1Cap.x, CordPion1Cap.y);
+					displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
+					for(i=0;i<3;i++){
+							if((CordPion1Cap.x==TabPionIA[i].x)&&(CordPion1Cap.y==TabPionIA[i].y)){
+								TabPionIA[i].x=-1;
+								TabPionIA[i].y=-1;
+							}
+						}
+					//affiche pion orc a la nouvelle position
+					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+					//on diminue de un le nb de pion sur le plateau du joeur adverse
+					joueurDemon.plateau=joueurDemon.plateau-1;
+					
+					//si le joueur a plus de pion sur le plateau un pion de la reserve est pris
+					if (joueurDemon.plateau==0)
+					{
+						joueurDemon.reserve=joueurDemon.reserve-1;
+						displayReserve(joueur.reserve,sprites.spriteDemon);
+					}
+					//sinon le joueur choisi un pion sur le plateau qui est capturer
+					else{
+						printf("\n choisi un deuxime pion a capturer \n");
+						CordPion2Cap=capture2(joueur);
+						displayTile(CordPion2Cap.x, CordPion2Cap.y);
+						joueurDemon.plateau=joueurDemon.plateau-1;
+						for(i=0;i<3;i++){
+							if((CordPion2Cap.x==TabPionIA[i].x)&&(CordPion2Cap.y==TabPionIA[i].y)){
+								TabPionIA[i].x=-1;
+								TabPionIA[i].y=-1;
+							}
+						}
+					}
+					//la capture est fini on remet donc capture a FAUX (0)
+					capture =0;
+				}
+				
+
+				//sinon deplacement normal
+				else {
+					//affiche une case a l'ancienne position du pion pour l'effacer
+					displayTile(c1.x/TAILLE_CASE-4, c1.y/TAILLE_CASE-3);
+				
+					//affiche pion orc a la nouvelle position
+					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
+				}
+				//on enregistre la position de depart pour que le joueur ne puisse pas faire un coup inverse a celui ci au prochain tour
+				joueur.cAnc.x=c1.x/TAILLE_CASE-4;
+				joueur.cAnc.y=c1.y/TAILLE_CASE-3;
+				
+			}
+		}
+		else if(joueur.race==DEMON){ // l'IA joue les Demons
+			//si l'IA peut manger un pion adverse
+			//alors l'IA mange un pion
+			printf("\n\nc'est a moi\n\n");
+			/*for(i=0;i<=2;i++){
+				printf("je veux te manger\n");
+				XDemon=TabPionIA[i].x;
+				XOrc=TabPionIA[i].x;
+				YDemon=TabPionIA[i].y;
+				YOrc=TabPionIA[i].y;
+				if((board[TabPionIA[i].x+1][TabPionIA[i].y].race == ORC)&&(board[TabPionIA[i].x+2][TabPionIA[i].y].race==VIDE)){
+					XDemon=XDemon+2;
+					XOrc=XOrc+1;
+					capture=1;
+				}
+				else if((board[TabPionIA[i].x-1][TabPionIA[i].y].race == ORC)&&(board[TabPionIA[i].x-2][TabPionIA[i].y].race==VIDE)){
+					XDemon=XDemon-2;
+					XOrc=XOrc-1;
+					capture=1;
+				}
+				else if((board[TabPionIA[i].x][TabPionIA[i].y+1].race == ORC)&&(board[TabPionIA[i].x][TabPionIA[i].y+2].race==VIDE)){
+					YDemon=YDemon+2;
+					YOrc=YOrc+1;
+					capture=1;
+				}
+				else if((board[TabPionIA[i].x][TabPionIA[i].y-1].race == ORC)&&(board[TabPionIA[i].x][TabPionIA[i].y-2].race==VIDE)){
+					YDemon=YDemon-2;
+					YOrc=YOrc-1;
+					capture=1;
+				}
+			}*/
+			if(capture==1){
+				//le pion de l'ia saute par dessus et on le dessine al'arriver
+				board[TabPionIA[i].x][TabPionIA[i].y].race=VIDE;
+				//on efface l'ancienne position du joueur
+				displayTile(TabPionIA[i].x,TabPionIA[i].y);
+				TabPionIA[i].x=XDemon;
+				TabPionIA[i].y=YDemon;
+				board[TabPionIA[i].x][TabPionIA[i].y].race=DEMON;
+				//on dessine a la nouvelle position du joueur
+				displayPawn(sprites.spriteDemon,CordPionNouv.x, CordPionNouv.y);
+				//on efface le le pion orc
+				board[XOrc][YOrc].race=VIDE;
+				displayTile(XOrc,YOrc);
+				//on retire un pion orc du compteur plateau du joueur orc
+				joueurOrc.plateau=joueurOrc.plateau-1;
+
+				//si il y a plus d'orc ur le plateau
+				//alors mange un pion de la reserve
+				if(joueurOrc.plateau==0){
+					joueurOrc.reserve =joueurOrc.reserve-1;
+				}
+				//sinon
+				//mange un pion orc au hasar sur le plateau
+				else{
+					i=0;
+					j=0;
+					do{
+						i++;
+						j++;
+					}while((i<6)&&(j<5)&&board[i][j].race!=ORC);
+					printf("je chope le 2 eme pion en i:%d j:%d \n",i,j);
+					board[i][j].race=VIDE;
+					joueurOrc.plateau=joueurOrc.plateau-1;
+					displayTile(i,j);
+				}
+				capture=0;
+			}
+			//si un pion de l'IA est menacer
+			//alors le pion fuit a l'opposer
+			
+			// a faire
+
+			//si le nombre de pion de l'IA est <=3
+			//alors placement aléatoire (au moins 1 case d'écart avec un pion adverse) 
+			else if((joueurDemon.plateau<3)&&(joueurDemon.reserve!=0)){
+				SDL_Delay(500);
+				do{
+					XDemon=aleatoire(0,6);
+					YDemon=aleatoire(0,5);
+					
+				}while(board[XDemon][YDemon].race!=VIDE);
+				printf("placement en :\ni=%dj=%d\n",XDemon,YDemon);
+				board[XDemon][YDemon].race=DEMON;
+				i=0;
+				while((TabPionIA[i].x!=-1)&&(TabPionIA[i].y!=-1)){
+					i++;
+				}
+				TabPionIA[i].x=XDemon;
+				TabPionIA[i].y=YDemon;
+				displayPawn(sprites.spriteDemon,XDemon,YDemon);
+				joueurDemon.plateau=joueurDemon.plateau+1;
+				joueurDemon.reserve=joueurDemon.reserve-1;
+			}
+			//sinon deplacelemnt aléatoire
+			else{
+				SDL_Delay(500);
+				i=aleatoire(0,3);
+				XDemon=TabPionIA[i].x;
+				YDemon=TabPionIA[i].y;
+				printf("le pion %d qui est en %d %d va se deplacer",i,XDemon,YDemon);
+				if((board[XDemon+1][YDemon].race==VIDE)&&(XDemon<5)){
+					XDemon=XDemon+1;
+				}
+				else if((board[XDemon-1][YDemon].race==VIDE)&&(XDemon>=0)){
+					XDemon=XDemon-1;
+				}
+				else if((board[XDemon][YDemon+1].race==VIDE)&&(YDemon<4)){
+					YDemon=YDemon+1;
+				}
+				else if((board[XDemon][YDemon-1].race==VIDE)&&(YDemon>=0))
+				{
+					YDemon=YDemon-1;
+				}
+				printf("je vais en %d %d\n\n",XDemon,YDemon);
+				displayTile(TabPionIA[i].x,TabPionIA[i].y);
+				board[TabPionIA[i].x][TabPionIA[i].y].race=VIDE;
+				TabPionIA[i].x=XDemon;
+				TabPionIA[i].y=YDemon;
+				board[TabPionIA[i].x][TabPionIA[i].y].race=DEMON;
+				displayPawn(sprites.spriteDemon,XDemon,YDemon);
+			}
+			printf("j'ai fini mon tour \n \n\n");
+		}
+		//affichage de la réserve
+		if(joueur.race==ORC){
+			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
+			}
+		else{
+			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
+		}
+		//changement de joueur
+		if(joueur.race==ORC){
+			joueurOrc.cAnc=joueur.cAnc;
+			joueur=joueurDemon;
+		}
+		else{
+			joueurDemon.cAnc=joueur.cAnc;
+			joueur=joueurOrc;
+		}
+		//si le joueur a plus de pion c'est qu'il a perdu
+		if((joueur.plateau==0) && (joueur.reserve==0)){
+			SDL_Delay(1000);
+			printf("\n\n\n\n\n JOUEUR %d A PERDU\n\n\n\n", joueur.race);
+			continuer=0;
+		}
+		
+		//permet d'afficher le contenue du tableau du plateau dans le terminal
+		affiche_plateau();
+	}
+	display();
+	menuClick();
+}
+
 raceJoueur joueurAleatoir(raceJoueur race) {
 	return rand()%2 ? DEMON : ORC ;
+}
+int aleatoire(int a,int b){
+	 
+	
+	return rand()%(b-a)+a;
 }
 
 //Détermine si le joueur veut placer un pion ou déplacer un pion en fonction du premier clic
@@ -260,11 +561,12 @@ int verifClic1 (int x, int y, Joueur joueur){
 //verifie que le clic 2 suite a un clic dans la reserve et correcte renvoie un booleen
 bool verifClic2Placement(int x, int y)
 {
+	printf("%d,%d\n",x,y);
 	// la case selectionner doit être une case vide du plateau
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[(x/TAILLE_CASE)-4][(y/TAILLE_CASE)-3].race==VIDE)){
 		return TRUE;
 	}
-	else{
+	else{	
 		return FALSE;
 	}
 }
@@ -331,8 +633,8 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 
 //suite a un clic 1 de deplacement, on attend un second clic tant qu'il n'est pas valide ou
 //que l'utilisateur n'appuit pas sur la croix on attend un clic
-coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
-	coord c2,cPionCap1;
+coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCap1){
+	coord c2;
 	bool Clic2;
 	int continuer=1;
 
@@ -346,15 +648,15 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
 				continuer=0;
 				break;
 			case SDL_MOUSEBUTTONUP:
-
+				
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
 
 				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y))){
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
-					cPionCap1.x=event.button.x/TAILLE_CASE-4;
-					cPionCap1.y=event.button.y/TAILLE_CASE-3;
+					cPionCap1->x=event.button.x/TAILLE_CASE-4;
+					cPionCap1->y=event.button.y/TAILLE_CASE-3;
 					if(c2.x==c1.x/TAILLE_CASE-4+1)
 					{
 						c2.x=c2.x+1;
@@ -377,16 +679,16 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture){
 					//printf("c1 %d, %d \n",c1.x/TAILLE_CASE-4,c1.y/TAILLE_CASE-3);
 					if(board[c2.x][c2.y].race==VIDE){
 						printf("tu capture\n") ;
-						board[cPionCap1.x][cPionCap1.y].race=VIDE;
+						board[cPionCap1->x][cPionCap1->y].race=VIDE;
 						board[c2.x][c2.y].race=joueur.race;
 						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
-						displayTile(cPionCap1.x, cPionCap1.y);
+						
 						
 						//lancer capture pour que le joueur choisisse un autre pion du plateau a degager
 						return c2;
 					}
 				}
-				
+				capture=0;
 				if(Clic2==TRUE){
 					if((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y)){
 						//convertit le clic en case du tableau
@@ -462,7 +764,7 @@ void menuClick() {
 					// Clic sur "Jouer"
 					if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 240 && event.button.y <= 337) {
 						isMainMenuDisplayed = !isMainMenuDisplayed;
-						partie();
+						partieJvsIA();
 					}
 					// Clic sur "Quitter"
 					else if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 387 && event.button.y <= 484) {
