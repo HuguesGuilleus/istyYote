@@ -194,7 +194,7 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 		SDL_BlitSurface(sprite, NULL, fenetre, &(SDL_Rect){x, y});
 
 		// Carré bleu utilisé pour masquer le nombre précédent
-		x -= sprites.spriteCarreBleu->w;
+		x -= sprites.spriteCarreBleu->w - 20;
 		y += (sprite->h / 2) - (texte->h / 3);
 		SDL_BlitSurface(sprites.spriteCarreBleu, NULL, fenetre, &(SDL_Rect){x, y});
 
