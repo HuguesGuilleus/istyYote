@@ -223,26 +223,17 @@ void displayReserveBox() {
 
 // Affiche le titre du jeu
 void displayTitle() {
-	int x,y;
+	SDL_Rect position;
 
-	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 45);
-	SDL_Surface* texte;
+	SDL_Surface* spriteTitre = SDL_LoadBMP("media/sprites/titre.bmp");
+	position.x = (LARGEUR_FENETRE / 2) - (spriteTitre->w / 2);
+	position.y = 20;
+	SDL_BlitSurface(spriteTitre, NULL, fenetre, &position);
 
-	// Titre
-	texte = TTF_RenderText_Blended(police, "Yote", couleurNoire);
-	x = (LARGEUR_FENETRE / 2) - (texte->w / 2);
-	y = 10;
-	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){x,y});
-	TTF_CloseFont(police);
-
-	// Sous-titre
-	y += 20 + texte->h; // On décale la coordonnées y pour écrire le sous-titre
-	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 35); // On réouvre la police avec une taille plus petite
-	texte = TTF_RenderText_Blended(police, "Orcs vs Demons", couleurNoire);
-	x = (LARGEUR_FENETRE / 2) - (texte->w / 2);
-	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){x,y});
-	TTF_CloseFont(police);
-
+	SDL_Surface* edition = SDL_LoadBMP("media/sprites/orcVSdemon.bmp");
+	position.x = (LARGEUR_FENETRE / 2) - (edition->w / 2);
+	position.y = spriteTitre->h + 25;
+	SDL_BlitSurface(edition, NULL, fenetre, &position);
 	SDL_Flip(fenetre);
 }
 
@@ -258,21 +249,29 @@ void displayMenuButtons() {
 
 	// Bouton Jouer
 	position.x = (LARGEUR_FENETRE / 2) - petitNuage->w - 50;
-	position.y = ORIGINE_PLATEAU_Y;
+	position.y = ORIGINE_PLATEAU_Y + 145;
 
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-
+	printf("Bouton 1\n");
+	printf("x1: %d\n", position.x);
+	printf("x2: %d\n", position.x + petitNuage->w);
+	printf("y1: %d\n", position.y);
+	printf("y2: %d\n", position.y + petitNuage->h);
 	texte = TTF_RenderText_Blended(police, "Jouer", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + (petitNuage->w  / 3),
 		y: position.y + texte->h + 5
 	});
 
-
+	
 	// Bouton Quitter
-	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
+	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 205;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-
+	printf("Bouton 2\n");
+	printf("x1: %d\n", position.x);
+	printf("x2: %d\n", position.x + petitNuage->w);
+	printf("y1: %d\n", position.y);
+	printf("y2: %d\n", position.y + petitNuage->h);
 	texte = TTF_RenderText_Blended(police, "Quitter", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + (petitNuage->w  / 4),	
@@ -282,10 +281,14 @@ void displayMenuButtons() {
 
 	// Bouton Aide
 	position.x = (LARGEUR_FENETRE / 2) + 50;
-	position.y = ORIGINE_PLATEAU_Y;
+	position.y = ORIGINE_PLATEAU_Y + 145;
 	
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-
+	printf("Bouton 3\n");
+	printf("x1: %d\n", position.x);
+	printf("x2: %d\n", position.x + petitNuage->w);
+	printf("y1: %d\n", position.y);
+	printf("y2: %d\n", position.y + petitNuage->h);
 	texte = TTF_RenderText_Blended(police, "Aide", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + texte->w,
@@ -294,9 +297,13 @@ void displayMenuButtons() {
 
 
 	// Bouton Scores
-	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 50;
+	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 205;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
-	
+	printf("Bouton 4\n");
+	printf("x1: %d\n", position.x);
+	printf("x2: %d\n", position.x + petitNuage->w);
+	printf("y1: %d\n", position.y);
+	printf("y2: %d\n", position.y + petitNuage->h);
 	texte = TTF_RenderText_Blended(police, "Scores", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
 		x: position.x + (texte->w / 2),

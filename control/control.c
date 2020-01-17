@@ -840,21 +840,21 @@ void menuClick() {
 				// Si le joueur est dans le menu principal
 				if (isMainMenuDisplayed) {
 					// Clic sur "Jouer"
-					if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 240 && event.button.y <= 337) {
+					if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 385 && event.button.y <= 482) {
 						isMainMenuDisplayed = !isMainMenuDisplayed;
 						partieJvsIA();
 					}
 					// Clic sur "Quitter"
-					else if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 387 && event.button.y <= 484) {
+					else if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 542 && event.button.y <= 639) {
 						end(event);
 					}
 					// Clic sur "Aide"
-					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 240 && event.button.y <= 337) {
+					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 385 && event.button.y <= 482) {
 						isMainMenuDisplayed = !isMainMenuDisplayed;
 						displayRules();
 					}
 					// Clic sur "Scores"
-					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 387 && event.button.y <= 484) {
+					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 542 && event.button.y <= 639) {
 						isMainMenuDisplayed = !isMainMenuDisplayed;
 						displayScores();
 					}
