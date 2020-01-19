@@ -830,7 +830,7 @@ coord capture2(Joueur joueur)
 
 void menuClick() {
 	SDL_Event event;
-	int isMainMenuDisplayed = 1;
+	typeMenu menu = HOME;
 
 	while(1) {
 		SDL_WaitEvent(&event);
@@ -838,32 +838,47 @@ void menuClick() {
 			case SDL_MOUSEBUTTONUP:
 				
 				// Si le joueur est dans le menu principal
-				if (isMainMenuDisplayed) {
+				if (menu == HOME) {
 					// Clic sur "Jouer"
 					if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 385 && event.button.y <= 482) {
-						isMainMenuDisplayed = !isMainMenuDisplayed;
-						partieJvsIA();
+						menu = GAMEMODE;
+						// On affiche le menu de choix de mode de jeu
+						displayGamemodeChoice();
 					}
 					// Clic sur "Quitter"
 					else if (event.button.x >= 255 && event.button.x <= 505 && event.button.y >= 542 && event.button.y <= 639) {
+						// On quitte le programme
 						end(event);
 					}
 					// Clic sur "Aide"
 					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 385 && event.button.y <= 482) {
-						isMainMenuDisplayed = !isMainMenuDisplayed;
+						menu = OTHER;
+						// Affichage des règles
 						displayRules();
 					}
 					// Clic sur "Scores"
 					else if (event.button.x >= 605 && event.button.x <= 855 && event.button.y >= 542 && event.button.y <= 639) {
-						isMainMenuDisplayed = !isMainMenuDisplayed;
+						menu = OTHER;
+						// Affchage des scores
 						displayScores();
 					}
 				}
-				// Le joueur est dans une autre interface comportant un menu
-				else {
-					// Clic sur le bouton "Retour" pour retourner vers le menu principal
+				else if (menu == GAMEMODE) {
+					if (event.button.x >= 152 && event.button.x <= 402) {
+						if (event.button.y >= 255 && event.button.y <= 352) {
+							partieJvsJ();
+						}
+						else if (event.button.y >= 545 && event.button.y <= 642) {
+						partieJvsIA();
+						}
+					}	
+				}
+				
+				// Si le menu affiché n'est pas le menu d'accueil
+				if (menu != HOME) {
+					// Clic sur le bouton retour en bas à gauche de l'écran
 					if (event.button.x >= 20 && event.button.x <= 148 && event.button.y >= 730 && event.button.y <= 780) {
-						isMainMenuDisplayed = !isMainMenuDisplayed;
+						menu = HOME;
 						display();
 					}
 				}

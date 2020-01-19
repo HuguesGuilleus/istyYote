@@ -62,6 +62,12 @@
 		CAPTURE, // un pion adverse qui peut être pris
 	} typeStatus;
 
+	typedef enum {
+		HOME, // Menu d'accueil du jeu
+		GAMEMODE, // Menu de choix de jeu
+		OTHER // Autre interface
+	} typeMenu;
+
 	// une case du plateau
 	typedef struct {
 		raceJoueur race;
