@@ -184,8 +184,17 @@ void partieJvsJ(void) {
 		}
 		//si le joueur a plus de pion c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
-			SDL_Delay(1000);
-			printf("\n\n\n\n\n JOUEUR %d A PERDU\n\n\n\n", joueur.race);
+			if (joueur.race==ORC){
+				displayWinner(DEMON);
+			}
+			else
+			{
+				displayWinner(ORC);
+			}
+
+				
+			SDL_Delay(4000);
+
 			continuer=0;
 		}
 		
