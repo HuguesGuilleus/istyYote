@@ -77,7 +77,7 @@ char* scoreInputOncePlayer(raceJoueur j) {
 void scoreSave(scorePartyList list) {
 	FILE* file = NULL ;
 	int i;
-	file = fopen("score.txt", "w");
+	file = fopen("scores.txt", "w");
 	if (file == NULL) {
 		printf("Erreur lors de la sauvegarde des scores\n");
 		return ;
@@ -127,7 +127,7 @@ scorePartyList scoreRecover(void) {
 	// La liste qui sera renvoyée.
 	scorePartyList list = {};
 
-	file = fopen("score.txt", "r");
+	file = fopen("scores.txt", "r");
 	if (file == NULL) {
 		printf("Erreur lors de l'ouverture du fichier score.txt\n");
 		return (scorePartyList){};

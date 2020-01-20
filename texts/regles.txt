@@ -1,5 +1,5 @@
 Le Yoté se joue à deux joueurs, sur un plateau de 6x5 cases.
-Chaque joueur possède 12 pions, blancs ou noirs.
+Chaque joueur possède 12 pions, orcs ou démons.
 Le but du jeu est de capturer tous les pions ennemis.
 
 Au début de la partie, le plateau est vide, les pions sont
