@@ -182,16 +182,15 @@ void partieJvsJ(void) {
 		//si le joueur a plus de pion c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
+				infoJoueur.status = PLAYER_LOSE ;
 				displayWinner(DEMON);
-			}
-			else
-			{
+			} else {
+				infoJoueur.status = PLAYER_WIN ;
 				displayWinner(ORC);
 			}
-
-
+			scoreAppend(&allScores, infoJoueur);
+			scoreSave(allScores);
 			SDL_Delay(4000);
-
 			continuer=0;
 		}
 
@@ -558,8 +557,16 @@ void partieJvsIA(void) {
 		}
 		//si le joueur a plus de pion c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
-			SDL_Delay(1000);
-			printf("\n\n\n\n\n JOUEUR %d A PERDU\n\n\n\n", joueur.race);
+			if (joueur.race==ORC){
+				infoJoueur.status = PLAYER_LOSE ;
+				displayWinner(DEMON);
+			} else {
+				infoJoueur.status = PLAYER_WIN ;
+				displayWinner(ORC);
+			}
+			scoreAppend(&allScores, infoJoueur);
+			scoreSave(allScores);
+			SDL_Delay(4000);
 			continuer=0;
 		}
 

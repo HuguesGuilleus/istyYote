@@ -8,6 +8,8 @@
 int main(int argc, char const *argv[]) {
 	srand(time(NULL));
 	initDisplay();
+	allScores = scoreRecover();
+
 	display();
 	menuClick();
 	// initBoard();

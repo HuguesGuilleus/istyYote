@@ -70,6 +70,7 @@ char* scoreInputOncePlayer(raceJoueur j) {
 	return cpStr(name);
 }
 
+
 /* SAUVEGARDE DES SCORES */
 
 // Sauvegarde les scores dans le fichier score.txt
@@ -110,6 +111,7 @@ char scoreSaveStatus2(scoreStatus status) {
 	}
 }
 
+
 /* RÉCUPÉRATION DES SCORES */
 
 // Lit le fichier score.txt
@@ -140,7 +142,6 @@ scorePartyList scoreRecover(void) {
 		}
 	}
 	fclose(file);
-	scorePrint(list);
 	return list;
 }
 
@@ -155,6 +156,7 @@ scoreStatus scoreParseStatus(char c) {
 			return PLAYER_NULL;
 	}
 }
+
 
 /* ZONE DE MANIPULATION MÉMOIRE */
 
@@ -206,7 +208,6 @@ void scorePrint(scorePartyList list) {
 	if (list.l == NULL) {
 		printf("  (NULL)\n");
 	} else {
-		printf("  yolo\n");
 		for (i = 0; i < list.len; i++) {
 			switch (list.l[i].status) {
 				case PLAYER_WIN:

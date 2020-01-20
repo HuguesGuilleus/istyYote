@@ -20,7 +20,7 @@
 		char * playerOrc ;
 		// Le nom du deuxième joueur.
 		char * playerDemon ;
-		// Le status du premier joueur.
+		// Le status du joueur Orc.
 		scoreStatus status ;
 	} scoreParty ;
 
@@ -32,6 +32,9 @@
 		// La capacité totale de la liste
 		int cap;
 	} scorePartyList ;
+
+	// La liste des scores
+	scorePartyList allScores ;
 
 	scoreParty scoreInputJvsJ(void);
 	scoreParty scoreInputJvsIA(void);
