@@ -9,4 +9,7 @@
 	void displayScoreInput(raceJoueur j);
 	void displayScoreInputText(char* str);
 
+	void displayScores(void);
+	void displayScoreAssets(void);
+
 #endif

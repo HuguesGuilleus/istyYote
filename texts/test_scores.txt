@@ -1,15 +1,29 @@
-Jambon: P|Beurre: G
-Abricot: P|Orange: P
-Haricot: A|Flute: Z
-Arbre: Z|Putois: 43
-Jambon: P|Beurre: G
-Abricot: P|Orange: P
-Haricot: A|Flute: Z
-Arbre: Z|Putois: 43
-Jambon: P|Beurre: G
-Abricot: P|Orange: P
-Haricot: A|Flute: Z
-Arbre: Z|Putois: 43
-Jambon: P|Beurre: G
-Abricot: P|Orange: P
-Haricot: A|Flute: Z
+Alice G | bob P
+bob P | bob G
+poivre P | curry G
+ender P | IA G
+Alice G | bob P
+bob P | bob G
+poivre P | curry G
+ender P | IA G
+Alice G | bob P
+Jambon P | Beurre G
+Abricot P | Orange P
+Haricot N | Flute N
+Arbre N | Putois N
+Jambon P | Beurre G
+Abricot P | Orange P
+Haricot N | Flute N
+Arbre N | Putois N
+Jambon P | Beurre G
+Abricot P | Orange P
+Haricot N | Flute N
+Arbre N | Putois 43
+Jambon P | Beurre G
+Abricot P | Orange P
+Haricot N | Flute N
+Alice G | bob P
+bob P | bob G
+poivre P | curry G
+ender P | IA G
+yolo N | swag N

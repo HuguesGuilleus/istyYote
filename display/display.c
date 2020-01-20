@@ -9,11 +9,9 @@ SDL_Rect position;
 
 TTF_Font *police = NULL;
 
-SDL_Color couleurNoire = {0, 0, 0};
-
-
 // Initilise la SDL et charge les images
 void initDisplay() {
+	couleurNoire = (SDL_Color){0, 0, 0};
 
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
@@ -257,13 +255,13 @@ void displayMenuButtons() {
 		y: position.y + texte->h + 5
 	});
 
-	
+
 	// Bouton Quitter
 	position.y = ORIGINE_PLATEAU_Y + petitNuage->h + 205;
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 	texte = TTF_RenderText_Blended(police, "Quitter", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
-		x: position.x + (petitNuage->w  / 4),	
+		x: position.x + (petitNuage->w  / 4),
 		y: position.y + texte->h + 5
 	});
 
@@ -271,7 +269,7 @@ void displayMenuButtons() {
 	// Bouton Aide
 	position.x = (LARGEUR_FENETRE / 2) + 50;
 	position.y = ORIGINE_PLATEAU_Y + 145;
-	
+
 	SDL_BlitSurface(petitNuage, NULL, fenetre, &position);
 	texte = TTF_RenderText_Blended(police, "Aide", couleurNoire);
 	SDL_BlitSurface(texte, NULL, fenetre, &(SDL_Rect){
@@ -339,79 +337,6 @@ void displayRules() {
 	TTF_CloseFont(police);
 }
 
-
-// Affiche les 15 derniers scores
-void displayScores() {
-	eraseWindow();
-	int k = 0; 	// Compteur servant à déduire la position à appliquer pour l'affichage en colonnes
-	SDL_Rect position;
-	FILE* fichierScores = NULL; // Fichiers des scores
-	SDL_Surface* affichageTexte = NULL;
-	char texte[TAILLE_MAX_SCORES] = "";
-	const char* separateur = "|";
-	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
-
-	position.x = 310;
-	position.y = 3;
-	SDL_BlitSurface(sprites.spriteNuage, NULL, fenetre, &position);
-
-	// Titre
-	affichageTexte = TTF_RenderUTF8_Blended(police, "Règles", couleurNoire);
-	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
-	position.y = (sprites.spriteNuage->h / 2) - (affichageTexte->h / 4);
-	SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
-	TTF_CloseFont(police);
-
-	// La police est ouverte une seconde fois car on l'ouvre avec une taille différente
-	police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 18);
-	position.y = sprites.spriteNuage->h + 50;
-
-	/* Dessine une ligne noire au milieu de la fenêtre
-	pour séparer les pseudos des joueurs */
-	SDL_FillRect(fenetre, &(SDL_Rect){
-		x: (LARGEUR_FENETRE / 2),
-		y: position.y,
-		w: 2,
-		h: 450
-	}, 0x00000);
-
-
-	fichierScores = fopen("texts/test_scores.txt", "r");
-	if (fichierScores != NULL) {
-		// On récupère une à une les lignes du fichier
-		while(fgets(texte, TAILLE_MAX_SCORES, fichierScores) !=  NULL) {
-			texte[strlen(texte) - 1] = '\0';
-			char* ligne = strtok(texte, separateur); // On coupe la ligne à l'aide du séparateur
-
-			while (ligne != NULL) {
-				affichageTexte = TTF_RenderUTF8_Blended(police, ligne, couleurNoire);
-
-				/* k % 2 == 0 --> on écrit le score du joueur 1 (colonne de gauche)
-				Sinon on écrit celui du joueur 2 (colonne de droite) */
-				if (affichageTexte != 0) {
-					if (k % 2 == 0) {
-						position.x = (LARGEUR_FENETRE / 2) - affichageTexte->w - 15;
-						SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
-					}
-					else {
-						position.x = (LARGEUR_FENETRE / 2) + 17;
-						SDL_BlitSurface(affichageTexte, NULL, fenetre, &position);
-						position.y += 30;
-					}
-					k++;
-				}
-				ligne = strtok(NULL, separateur);
-			}
-		}
-
-		fclose(fichierScores);
-	}
-
-	displayBackButton();
-	SDL_Flip(fenetre);
-	TTF_CloseFont(police);
-}
-
 // Affiche un bouton retour sur les pages de règles et de scores
 void displayBackButton() {
 	SDL_Rect position;
@@ -468,7 +393,7 @@ void displayGamemodeChoice() {
 		x: position.x + 200,
 		y: position.y
 	});
-	
+
 	// Texte bouton 2
 	affichageTexte = TTF_RenderUTF8_Blended(police, "2", couleurNoire);
 	position.y = (HAUTEUR_FENETRE / 2) + (int)(1.5 * petitNuage->h) + (petitNuage->h / 2) - 5;
@@ -493,7 +418,7 @@ void displayWinner(raceJoueur race) {
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 40);
 	SDL_Surface* affichageTexte = TTF_RenderUTF8_Blended(police, texte, couleurNoire);
 	SDL_Surface* sprite = race == ORC ? sprites.spriteOrc : sprites.spriteDemon;
-	
+
 
 	position.x = (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2);
 	position.y = (HAUTEUR_FENETRE / 3) - (affichageTexte->h / 2);

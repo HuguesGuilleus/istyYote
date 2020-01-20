@@ -5,7 +5,6 @@
 	#define DISPLAY_H
 	#include "../main.h"
 
-
 	// Coordonnées de l'origine du plateau
 	#define ORIGINE_PLATEAU_X 310
 	#define ORIGINE_PLATEAU_Y 240
@@ -17,6 +16,8 @@
 	// Nombre maximum de caractère pour les fichiers de règles et de scores
 	#define TAILLE_MAX_REGLES 500
 	#define TAILLE_MAX_SCORES 500
+
+	SDL_Color couleurNoire ;
 
 	void initDisplay();
 	void fatal(void* pt, char ms[]);

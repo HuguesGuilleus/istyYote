@@ -132,14 +132,12 @@ scorePartyList scoreRecover(void) {
 		printf("Erreur lors de l'ouverture du fichier score.txt\n");
 		return (scorePartyList){};
 	}
-	for (i = 0; i < 15; i++) {
-		if (4 == fscanf(file, "%s %c | %s %c\n", playerOrc, &status, playerDemon, &_ )) {
-			scoreAppend(&list, (scoreParty){
-				playerOrc: cpStr(playerOrc),
-				playerDemon: cpStr(playerDemon),
-				status: scoreParseStatus(status),
-			});
-		}
+	while (4 == fscanf(file, "%s %c | %s %c\n", playerOrc, &status, playerDemon, &_ )) {
+		scoreAppend(&list, (scoreParty){
+			playerOrc: cpStr(playerOrc),
+			playerDemon: cpStr(playerDemon),
+			status: scoreParseStatus(status),
+		});
 	}
 	fclose(file);
 	return list;
