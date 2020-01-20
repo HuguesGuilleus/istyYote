@@ -163,12 +163,12 @@ void partieJvsJ(void) {
 		}
 
 		//affichage de la réserve
-		if(joueur.race==ORC){
+		
 			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
-			}
-		else{
+		
 			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
-		}
+		
+		printf("reserve orc %d demon %d\n",joueurOrc.reserve,joueurDemon.reserve);
 		//changement de joueur
 		if(joueur.race==ORC){
 			joueurOrc.cAnc=joueur.cAnc;
