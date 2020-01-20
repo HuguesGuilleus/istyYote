@@ -12,9 +12,9 @@ void displayScoreInput(raceJoueur j) {
 	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
 
 	if (j == ORC) {
-		text = TTF_RenderText_Solid(police, "Orc", (SDL_Color){0,0,0});
+		text = TTF_RenderUTF8_Solid (police, "Orc", (SDL_Color){0,0,0});
 	} else {
-		text = TTF_RenderText_Solid(police, "Demon", (SDL_Color){0,0,0});
+		text = TTF_RenderUTF8_Solid (police, "Démon", (SDL_Color){0,0,0});
 	}
 	SDL_BlitSurface(text, NULL, fenetre, &(SDL_Rect){
 		x: (LARGEUR_FENETRE-text->w)/2,

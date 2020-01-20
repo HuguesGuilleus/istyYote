@@ -96,7 +96,7 @@ void displayRound(raceJoueur joueur) {
 	SDL_Rect position;
 	char* texteFinal;
 	char* texteTour = "Tour des ";
-	const char* nomJoueur = joueur == ORC ? "Orcs" : "Demons";
+	const char* nomJoueur = joueur == ORC ? "Orcs" : "Démons";
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 40);
 
 	// On alloue texteFinal
@@ -107,7 +107,7 @@ void displayRound(raceJoueur joueur) {
 	// On concatène texteFinal et nomJoueur
 	strcat(texteFinal, nomJoueur);
 
-	texte = TTF_RenderText_Blended(police, texteFinal, couleurNoire);
+	texte = TTF_RenderUTF8_Blended(police, texteFinal, couleurNoire);
 
 	position.x = 310;
 	position.y = 3;
