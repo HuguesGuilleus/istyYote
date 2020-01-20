@@ -3,18 +3,16 @@
 
 #include "event.h"
 
-// L'objectif du système ci-dessous est de facilier une approche évènemencielle
-// des évènements générer par les joueurs.
-
+// L'objectif du système ci-dessous est de facilier une approche évènemencielle.
 // L'idée est de récupérer les évènements, de les filtrer puis d'éxécuter des
 // fonctions qui leur correpondent; ces fonctions se noment CallBack ou fonction
-// de rappel. Cela est réalisé par la fonction handlersRun()
+// de rappel. Cela est réalisé par la fonction handlersRun().
 
 // Le filtrage: on fait un filtre par rapport au type de l'évènement
 // (par exemple: SDL_MOUSEBUTTONDOWN) puis de manière plus précise grâce à une
-// fonction de filtre (par exemple filterInBoard), ces fonction prennent en
+// fonction de filtre (par exemple filterInBoard), ces fonctions prennent en
 // paramètre un évènement SDL puis renvoie un booléen: vrai si le callBack final
-// doit être apellé avec cet évènement, sinon faux.
+// doit être appellé avec cet évènement, sinon faux.
 
 // On ajoute des callbacks à un typeHandlers* (en gros c'est un tableau
 // dynamique) avec handlersAdd; puis on lance notre liste de callBack avec

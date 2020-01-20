@@ -191,7 +191,7 @@ void scoreFree(scorePartyList list) {
 }
 
 // Copie la chaîne de caractère src vers un espace mémoire alloué.
-// La chaîne devra être désoulée par la suite.
+// La chaîne devra être désalouée par la suite.
 char *cpStr(char * src) {
 	int len = strlen(src)+1 ;
 	char * out = (char*)malloc(len*sizeof(char));
