@@ -8,11 +8,15 @@ SDL_Surface *fenetre ;
 
 TTF_Font *police ;
 
-void displayScoreInput(void) {
+void displayScoreInput(raceJoueur j) {
 	SDL_Surface * text = NULL ;
 	SDL_BlitSurface(sprites.spriteFond, NULL, fenetre, &(SDL_Rect){x:0,y:0});
 
-	text = TTF_RenderText_Solid(police, "Nom du joueur", (SDL_Color){0,0,0});
+	if (j == ORC) {
+		text = TTF_RenderText_Solid(police, "Orc", (SDL_Color){0,0,0});
+	} else {
+		text = TTF_RenderText_Solid(police, "Demon", (SDL_Color){0,0,0});
+	}
 	SDL_BlitSurface(text, NULL, fenetre, &(SDL_Rect){
 		x: (LARGEUR_FENETRE-text->w)/2,
 		y: 100,

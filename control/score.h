@@ -33,7 +33,8 @@
 		int cap;
 	} scorePartyList ;
 
-	scoreParty scoreInput(void);
+	scoreParty scoreInputJvsJ(void);
+	scoreParty scoreInputJvsIA(void);
 	char* scoreInputOncePlayer(raceJoueur j);
 	void scoreSave(scorePartyList list);
 	char scoreSaveStatus1(scoreStatus status);

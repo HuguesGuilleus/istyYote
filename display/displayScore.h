@@ -6,7 +6,7 @@
 
 	#include "../main.h"
 
-	void displayScoreInput(void);
+	void displayScoreInput(raceJoueur j);
 	void displayScoreInputText(char* str);
 
 #endif

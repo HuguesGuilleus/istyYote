@@ -5,11 +5,19 @@
 
 /* SAISIT DES SCORES PAR LES JOUEUR */
 
-// Saisit le nom des deux joueurs.
-scoreParty scoreInput(void) {
+// Saisit le nom des deux joueurs humain.
+scoreParty scoreInputJvsJ(void) {
 	return (scoreParty){
 		playerOrc: scoreInputOncePlayer(ORC),
 		playerDemon: scoreInputOncePlayer(DEMON),
+	};
+}
+
+// Saisit le nom d'un joueur humain et de l'IA.
+scoreParty scoreInputJvsIA(void) {
+	return (scoreParty){
+		playerOrc: scoreInputOncePlayer(ORC),
+		playerDemon: cpStr("IA"),
 	};
 }
 
@@ -19,7 +27,7 @@ char* scoreInputOncePlayer(raceJoueur j) {
 	char name[STRING_BUFFER] = "";
 	int len = 0;
 
-	displayScoreInput();
+	displayScoreInput(j);
 	displayScoreInputText("<Entrez votre nom de joueur>");
 
 	// Fin de la saisit par retour ou clic sur un bouton.
@@ -183,7 +191,7 @@ void scoreFree(scorePartyList list) {
 }
 
 // Copie la chaîne de caractère src vers un espace mémoire alloué.
-// La chaîne devra être désoulé par la suite.
+// La chaîne devra être désoulée par la suite.
 char *cpStr(char * src) {
 	int len = strlen(src)+1 ;
 	char * out = (char*)malloc(len*sizeof(char));
