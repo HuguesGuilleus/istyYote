@@ -477,6 +477,35 @@ void surbrillanceCaisse2(void) {
 	SDL_Flip(fenetre);
 }
 
+void displayFocus(int x, int y){
+	
+	SDL_FillRect(fenetre, &(SDL_Rect){
+		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
+		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y,
+		w:sprites.spriteCase->w,
+		h:sprites.spriteCase->h,
+	}, SDL_MapRGB(fenetre->format, 17, 206, 112));
+	
+	SDL_BlitSurface(sprites.spriteCase, &(SDL_Rect){
+		x: 5,
+		y: 5,
+		w:sprites.spriteCase->w-10,
+		h:sprites.spriteCase->h-10,		
+	}, fenetre, &(SDL_Rect){
+		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X+5,
+		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y+5,
+	});
+
+	
+	switch(board[x][y].race){
+		case ORC : displayPawn(sprites.spriteOrc,x,y); break;
+		case DEMON : displayPawn(sprites.spriteDemon,x,y); break;
+		default : SDL_Flip(fenetre);		
+	}		
+}
+
+
+
 void displayWinner(raceJoueur race) {
 	eraseWindow();
 

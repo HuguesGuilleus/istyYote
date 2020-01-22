@@ -35,4 +35,5 @@
 	void surbrillanceCaisse2(void);
 	void surbrillanceCaisse1(void);
 	void surbrillanceCaisse(raceJoueur race);
+	void displayFocus(int x, int y);
 #endif

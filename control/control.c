@@ -612,6 +612,7 @@ int verifClic1 (int x, int y, Joueur joueur){
 
 	if((x>4*TAILLE_CASE)&&(x<11*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<9*TAILLE_CASE)&&(board[x/TAILLE_CASE-4][y/TAILLE_CASE-3].race)==joueur.race){
 		//test si le clic est sur une case avec un des pions du joueur dans le plateau
+		displayFocus(x/TAILLE_CASE-4, y/TAILLE_CASE-3);
 		return PLATEAU;
 	}
 }
