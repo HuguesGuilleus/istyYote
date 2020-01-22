@@ -114,7 +114,7 @@ void partieJvsJ(void) {
 					}
 					//sinon le joueur choisi un pion sur le plateau qui est capturer
 					else{
-						
+
 						CordPion2Cap=capture2(joueur);
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurDemon.plateau=joueurDemon.plateau-1;
@@ -163,11 +163,11 @@ void partieJvsJ(void) {
 		}
 
 		//affichage de la réserve
-		
+
 			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
-		
+
 			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
-		
+
 		printf("reserve orc %d demon %d\n",joueurOrc.reserve,joueurDemon.reserve);
 		//changement de joueur
 		if(joueur.race==ORC){
@@ -311,7 +311,7 @@ void partieJvsIA(void) {
 					}
 					//sinon le joueur choisi un pion sur le plateau qui est capturer
 					else{
-						
+
 						CordPion2Cap=capture2(joueur);
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurDemon.plateau=joueurDemon.plateau-1;
@@ -347,12 +347,12 @@ void partieJvsIA(void) {
 			i=-1;
 			do{
 				i++;
-				
+
 				XDemon=TabPionIA[i].x;
 				XOrc=TabPionIA[i].x;
 				YDemon=TabPionIA[i].y;
 				YOrc=TabPionIA[i].y;
-				
+
 				if((board[XDemon+1][YDemon].race == ORC)&&(board[XDemon+2][YDemon].race==VIDE)&&(XDemon+2<6)){
 					XDemon=XDemon+2;
 					XOrc=XOrc+1;
@@ -863,47 +863,6 @@ void menuClick() {
 		}
 	}
 }
-
-/*void Surbrillance(){
-	
-	SDL_Event event;
-
-	while(1) {
-	
-		SDL_WaitEvent(&event);
-		switch(event.type) {
-			
-			case SDL_MOUSEBUTTONUP:
-				
-					// Clic sur la Reserve1
-					if (event.button.x >= 62 && event.button.x <= 187 && event.button.y >= 320 && event.button.y <= 445) {
-					    printf("ddddddd");
-						SurbrillanceCaisse1();
-						//displayStatus(0x00FF00, event.button.x, event.button.y);
-					}
-					// Clic sur Reserve2
-					else if (event.button.x >= 923 && event.button.x <= 1048 && event.button.y >= 320 && event.button.y <= 445) {
-						printf("dhhhhhd");
-					     SurbrillanceCaisse2();
-						//displayStatus(0x00FF00, event.button.x, event.button.y );
-						
-						
-					}
-					// Clic sur les cases du plateau
-					else if (board[event.button.x][event.button.y].status= SELECTED){
-						printf("ddddddd");
-						displayStatus(0x00FF00, event.button.x, event.button.y );
-					}
-					
-				break;
-			case SDL_QUIT:
-				end(event);
-				break;
-		}
-		
-	}
-	
-}*/
 
 //fonction de test pour voir le plateau das le terminal ( 0 : VIDE, 1 : ORC, 2 : DEMON)
 void affiche_plateau(){
