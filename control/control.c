@@ -580,7 +580,7 @@ int ActionJoueur(Joueur* joueur,coord *c,int *continuer){
 				Clic1= verifClic1(event.button.x,event.button.y,*joueur);
 				if ((Clic1==RESERVE)&&(joueur->reserve!=0)){
 					//renvoie l'action a faire qui est : placement d'un pion
-
+                    surbrillanceCaisse(joueur->race);
 					return RESERVE;
 				}
 				else if(Clic1==PLATEAU){
@@ -863,6 +863,47 @@ void menuClick() {
 		}
 	}
 }
+
+/*void Surbrillance(){
+	
+	SDL_Event event;
+
+	while(1) {
+	
+		SDL_WaitEvent(&event);
+		switch(event.type) {
+			
+			case SDL_MOUSEBUTTONUP:
+				
+					// Clic sur la Reserve1
+					if (event.button.x >= 62 && event.button.x <= 187 && event.button.y >= 320 && event.button.y <= 445) {
+					    printf("ddddddd");
+						SurbrillanceCaisse1();
+						//displayStatus(0x00FF00, event.button.x, event.button.y);
+					}
+					// Clic sur Reserve2
+					else if (event.button.x >= 923 && event.button.x <= 1048 && event.button.y >= 320 && event.button.y <= 445) {
+						printf("dhhhhhd");
+					     SurbrillanceCaisse2();
+						//displayStatus(0x00FF00, event.button.x, event.button.y );
+						
+						
+					}
+					// Clic sur les cases du plateau
+					else if (board[event.button.x][event.button.y].status= SELECTED){
+						printf("ddddddd");
+						displayStatus(0x00FF00, event.button.x, event.button.y );
+					}
+					
+				break;
+			case SDL_QUIT:
+				end(event);
+				break;
+		}
+		
+	}
+	
+}*/
 
 //fonction de test pour voir le plateau das le terminal ( 0 : VIDE, 1 : ORC, 2 : DEMON)
 void affiche_plateau(){

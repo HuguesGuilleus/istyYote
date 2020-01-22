@@ -169,6 +169,8 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 	int x, y; // Coordonnées uitlisées pour dessiner la réserve
 	char buffer[5]; // Buffer permettant d'afficher le nombre de pions en chaîne de caractères
 
+	displayReserveBox();
+    
 	y = ORIGINE_PLATEAU_Y;
 	sprintf(buffer, "%d", nbPions); // On met dans le buffer le nombre de pions de la réserve
 
@@ -207,7 +209,21 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 // Affiche le sprite de caisse dans les réserves
 void displayReserveBox() {
 	SDL_Rect position;
-
+	
+    SDL_FillRect(fenetre, &(SDL_Rect){
+		x: (sprites.spriteCaisse->w / 2)-5,
+		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
+		w: 5*2+(sprites.spriteCaisse->w),
+		h: 5*2+(sprites.spriteCaisse->h),
+	}, SDL_MapRGB(fenetre->format, 148, 172, 206));
+	
+	SDL_FillRect(fenetre, &(SDL_Rect){
+		x: LARGEUR_FENETRE - sprites.spriteCaisse->w - (sprites.spriteCaisse->w / 2) -5,
+		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
+		w: 5*2+(sprites.spriteCaisse->w),
+		h: 5*2+(sprites.spriteCaisse->h),
+	}, SDL_MapRGB(fenetre->format, 148, 172, 206));
+	
 	position.x = (sprites.spriteCaisse->w / 2);
 	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
 	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
@@ -407,6 +423,57 @@ void displayGamemodeChoice() {
 
 	TTF_CloseFont(police);
 	displayBackButton();
+	SDL_Flip(fenetre);
+}
+
+void surbrillanceCaisse(raceJoueur race){	
+	if(race== DEMON)
+	{		
+		surbrillanceCaisse2();	
+	}
+	else
+	{
+		surbrillanceCaisse1();
+    }
+}
+
+void surbrillanceCaisse1()
+{
+	SDL_Rect position;
+
+	position.x = (sprites.spriteCaisse->w / 2);
+		
+
+    SDL_FillRect(fenetre, &(SDL_Rect){
+		x: (sprites.spriteCaisse->w / 2)-5,
+		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
+		w: 5*2+(sprites.spriteCaisse->w),
+		h: 5*2+(sprites.spriteCaisse->h),
+	}, SDL_MapRGB(fenetre->format, 17, 206, 112));
+	
+	
+	position.x = (sprites.spriteCaisse->w / 2);
+	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
+	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
+
+
+	SDL_Flip(fenetre);
+}
+
+void surbrillanceCaisse2(void) {
+	SDL_Rect position;
+
+	SDL_FillRect(fenetre, &(SDL_Rect){
+		x: LARGEUR_FENETRE - sprites.spriteCaisse->w - (sprites.spriteCaisse->w / 2) -5,
+		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
+		w: 5*2+(sprites.spriteCaisse->w),
+		h: 5*2+(sprites.spriteCaisse->h),
+	}, SDL_MapRGB(fenetre->format, 17, 206, 112));
+
+	position.x = LARGEUR_FENETRE - sprites.spriteCaisse->w - (sprites.spriteCaisse->w / 2);
+	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
+	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
+
 	SDL_Flip(fenetre);
 }
 
