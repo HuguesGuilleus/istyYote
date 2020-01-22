@@ -33,9 +33,10 @@ void displayScoreInputText(char* str) {
 
 	pos.h = TTF_FontHeight(police) ;
 	pos.y = (HAUTEUR_FENETRE-pos.h)/2 ;
-	pos.x = 0;
-	pos.w = LARGEUR_FENETRE ;
-	SDL_FillRect(fenetre, &pos, 0xD00000);
+	pos.x = 100;
+	pos.w = LARGEUR_FENETRE - 2 * pos.x;
+
+	SDL_FillRect(fenetre, &pos, SDL_MapRGB(fenetre->format, 203, 203, 203));
 
 	text = TTF_RenderText_Solid(police, str, (SDL_Color){0,0,0});
 	if (text != NULL) {
