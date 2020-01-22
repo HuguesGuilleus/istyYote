@@ -168,7 +168,6 @@ void partieJvsJ(void) {
 
 			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
 
-		printf("reserve orc %d demon %d\n",joueurOrc.reserve,joueurDemon.reserve);
 		//changement de joueur
 		if(joueur.race==ORC){
 			joueurOrc.cAnc=joueur.cAnc;
@@ -190,12 +189,11 @@ void partieJvsJ(void) {
 			}
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
-			SDL_Delay(4000);
+			SDL_Delay(3000);
 			continuer=0;
 		}
 
-		//permet d'afficher le contenue du tableau du plateau dans le terminal
-		//affiche_plateau();
+
 	}
 	display();
 	menuClick();
@@ -429,10 +427,6 @@ void partieJvsIA(void) {
 				}
 				capture=0;
 			}
-			//si un pion de l'IA est menacer
-			//alors le pion fuit a l'opposer
-
-			// a faire
 
 			//si le nombre de pion de l'IA est <=3
 			//alors placement aléatoire (au moins 1 case d'écart avec un pion adverse)
@@ -512,12 +506,10 @@ void partieJvsIA(void) {
 			}
 		}
 		//affichage de la réserve
-		if(joueur.race==ORC){
+
 			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
-			}
-		else{
 			displayReserve(joueurDemon.reserve,sprites.spriteDemon);
-		}
+
 		//changement de joueur
 		if(joueur.race==ORC){
 			joueurOrc.cAnc=joueur.cAnc;
@@ -538,12 +530,10 @@ void partieJvsIA(void) {
 			}
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
-			SDL_Delay(4000);
+			SDL_Delay(3000);
 			continuer=0;
 		}
 
-		//permet d'afficher le contenue du tableau du plateau dans le terminal
-		affiche_plateau();
 	}
 	initBoard();
 	display();
@@ -710,7 +700,7 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
 
-				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)&&(event.button.y/TAILLE_CASE-3 != cAnc.y))){
+				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)||(event.button.y/TAILLE_CASE-3 != cAnc.y))){
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
 					cPionCap1->x=event.button.x/TAILLE_CASE-4;
