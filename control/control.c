@@ -855,15 +855,4 @@ void menuClick() {
 	}
 }
 
-//fonction de test pour voir le plateau das le terminal ( 0 : VIDE, 1 : ORC, 2 : DEMON)
-void affiche_plateau(){
-	int i,j;
-	printf("\n");
-	for(i=0;i<5;i++){
-		for(j=0;j<6;j++){
-			printf(" %d ",board[j][i].race);
-		}
-		printf("\n");
-	}
-printf("\n");
-}
+

@@ -19,11 +19,9 @@
 	bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur);
 	coord capture2(Joueur joueur);
 	bool verifClicCapture2(int x, int y,Joueur joueur);
-	coord capture1(Joueur joueur,coord c2,coord c1);
 
 	void menuClick();
 	
-	void affiche_plateau();
 	int aleatoire(int a,int b);
 
 #endif
