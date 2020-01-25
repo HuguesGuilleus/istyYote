@@ -735,12 +735,12 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 						c2.y=c2.y+1;
 					}
 					if((board[c2.x][c2.y].race==VIDE)&&(c2.x<6)&&(c2.x>=0)&&(c2.y>=0)&&(c2.y<5)){
+						// la case du pion capturer devient vide
 						board[cPionCap1->x][cPionCap1->y].race=VIDE;
+						// la case d'atterissage du pion qui capture est rempli
 						board[c2.x][c2.y].race=joueur.race;
+						// la case ou se trouvait le piosn avant de capturer un pion devient vide
 						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
-
-
-						//lancer capture pour que le joueur choisisse un autre pion du plateau a degager
 						return c2;
 					}
 
@@ -792,7 +792,6 @@ coord capture2(Joueur joueur)
     	SDL_WaitEvent(&event);
 		switch(event.type)
 		{
-		
 			case SDL_QUIT:
 				// si la croix rouge est appuyez
 				continuer=0;
