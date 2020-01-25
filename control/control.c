@@ -3,13 +3,11 @@
 
 #include "control.h"
 
-// Joue une partie
+// Jouer une partie joueur contre joueur
 void partieJvsJ(void) {
 	scoreParty infoJoueur = scoreInputJvsJ();
 
 	//affichage de la fenetre de jeu
-	// display();
-
 	initBoard();
 	displayBoard();
 
@@ -34,6 +32,7 @@ void partieJvsJ(void) {
 	joueurDemon.cAnc.x=-1;
 	joueurDemon.cAnc.y=-1;
 
+	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
 
 	if(raceDebut==ORC){
@@ -138,7 +137,7 @@ void partieJvsJ(void) {
 						joueurOrc.plateau=joueurOrc.plateau-1;
 					}
 					//sauvegarde de la position de départ avant le mouvement
-					//joueurDemon.cAnc=c1;
+
 				}
 				//la capture est fini on remet donc capture a FAUX (0)
 				capture =0;
@@ -200,12 +199,11 @@ void partieJvsJ(void) {
 	return;
 }
 
+// jouer une partie joueur contre IA
 void partieJvsIA(void) {
 	scoreParty infoJoueur = scoreInputJvsIA();
 
 	//affichage de la fenetre de jeu
-	// display();
-
 	initBoard();
 	displayBoard();
 
@@ -241,6 +239,7 @@ void partieJvsIA(void) {
 	joueurDemon.cAnc.x=-1;
 	joueurDemon.cAnc.y=-1;
 
+	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
 
 	if(raceDebut==ORC){
@@ -541,12 +540,12 @@ void partieJvsIA(void) {
 
 }
 
+//fonction qui choisi aleéatoirement uen des 2 races
 raceJoueur joueurAleatoir(raceJoueur race) {
 	return rand()%2 ? DEMON : ORC ;
 }
+//fonction qui renvoie un chiffre aléatoire entre a et b 
 int aleatoire(int a,int b){
-
-
 	return rand()%(b-a)+a;
 }
 
