@@ -35,6 +35,7 @@ void partieJvsJ(void) {
 	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
 
+	//la race du joueur courant est initialiser a la race choisi aléatoirement
 	if(raceDebut==ORC){
 		joueur=joueurDemon;
 		}
@@ -49,7 +50,7 @@ void partieJvsJ(void) {
 	displayReserve(joueur.reserve,sprites.spriteOrc);
 	displayReserve(joueur.reserve,sprites.spriteDemon);
 
-	//affichage des 2 caisses de rerve
+	//affichage des 2 sprite de caisses de la reserve
 	displayReserveBox();
 
 	while(continuer==1){
@@ -118,8 +119,7 @@ void partieJvsJ(void) {
 						displayTile(CordPion2Cap.x, CordPion2Cap.y);
 						joueurDemon.plateau=joueurDemon.plateau-1;
 					}
-					//sauvegarde de la position de départ avant le mouvement
-					//joueurOrc.cAnc=c1;
+
 				}
 				//si le joueur courant est un demon
 				else{
@@ -161,7 +161,7 @@ void partieJvsJ(void) {
 			joueur.cAnc.y=c1.y/TAILLE_CASE-3;
 		}
 
-		//affichage de la réserve
+		//affichage de la réserve des 2 joueur
 
 			displayReserve(joueurOrc.reserve,sprites.spriteOrc);
 
@@ -177,7 +177,7 @@ void partieJvsJ(void) {
 			joueurDemon.cAnc=joueur.cAnc;
 			joueur=joueurOrc;
 		}
-		//si le joueur a plus de pion c'est qu'il a perdu
+		//si le joueur a plus de pion sur le plateau et dans sa reserve c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
 				infoJoueur.status = PLAYER_LOSE ;
@@ -186,8 +186,10 @@ void partieJvsJ(void) {
 				infoJoueur.status = PLAYER_WIN ;
 				displayWinner(ORC);
 			}
+			//sauvegarde des scores
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
+			//pause de 3 sec sur l'ecran qui affiche le nom du gagnant
 			SDL_Delay(3000);
 			continuer=0;
 		}
@@ -242,6 +244,7 @@ void partieJvsIA(void) {
 	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
 
+	//la race du joueur courant est initialiser a la race choisi aléatoirement
 	if(raceDebut==ORC){
 		joueur=joueurDemon;
 		}
@@ -256,7 +259,7 @@ void partieJvsIA(void) {
 	displayReserve(joueur.reserve,sprites.spriteOrc);
 	displayReserve(joueur.reserve,sprites.spriteDemon);
 
-	//affichage des 2 caisses de rerve
+	//affichage des 2 sprite de caisses de la reserve
 	displayReserveBox();
 
 	while(continuer==1){
@@ -518,7 +521,7 @@ void partieJvsIA(void) {
 
 			joueur=joueurOrc;
 		}
-		//si le joueur a plus de pion c'est qu'il a perdu
+		//si le joueur a plus de pion sur le plateau et dans sa reserve c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
 				infoJoueur.status = PLAYER_LOSE ;
@@ -527,8 +530,10 @@ void partieJvsIA(void) {
 				infoJoueur.status = PLAYER_WIN ;
 				displayWinner(ORC);
 			}
+			//sauvegarde des scores
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
+			//pause de 3 sec sur l'ecran qui affiche le nom du gagnant
 			SDL_Delay(3000);
 			continuer=0;
 		}
@@ -557,10 +562,13 @@ int ActionJoueur(Joueur* joueur,coord *c,int *continuer){
 
 	while (*continuer)
 	{
+		//on attend un clic de l'utilisateur
     	SDL_WaitEvent(&event);
 		switch(event.type)
 		{
+
 			case SDL_QUIT:
+				// si la croix rouge est appuyez
 				*continuer=0;
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -625,7 +633,7 @@ coord placement(Joueur* joueur)
 	coord c;
 	bool Clic2;
 	int continuer=1;
-
+	//on attend un clic de l'utilisateur
 	SDL_Event event;
 	while (continuer)
 	{
@@ -633,6 +641,7 @@ coord placement(Joueur* joueur)
 		switch(event.type)
 		{
 			case SDL_QUIT:
+				// si la croix rouge est appuyez
 				continuer=0;
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -640,7 +649,7 @@ coord placement(Joueur* joueur)
 				//On regarde si le clic 2 est bien dans le plateau
 				Clic2= verifClic2Placement(event.button.x,event.button.y);
 				if(Clic2==TRUE){
-
+					// on transforme le clic en indice du tableau
 					c.x=(event.button.x/TAILLE_CASE)-4;
 					c.y=(event.button.y/TAILLE_CASE)-3;
 					// on place un pion dans la case selectionnée au clic 2
@@ -658,6 +667,7 @@ coord placement(Joueur* joueur)
 bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 	//variables des cases d'arrivée et de depart pour le deplacement
 	//on convertit un clic en case du plateau
+	// on transforme les clics en indice du tableau
 	int arriveX = x/TAILLE_CASE-4;
 	int arriveY = y/TAILLE_CASE-3;
 	int departX=  c1.x/TAILLE_CASE-4;
@@ -672,6 +682,7 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 		}
 	}
 	else if ((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race!=joueur.race)){
+		//action de capture engager
 		*capture =1;
 	}
 	return FALSE;
@@ -692,18 +703,21 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 		switch(event.type)
 		{
 			case SDL_QUIT:
+				// si la croix rouge est appuyez
 				continuer=0;
 				break;
 			case SDL_MOUSEBUTTONUP:
 
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
-
+				// si action de capture engager et que la case est pas l'ancienne emplacement on regarde si la capture est possible
 				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)||(event.button.y/TAILLE_CASE-3 != cAnc.y))){
+					// on transforme les clics en indice du tableau
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
 					cPionCap1->x=event.button.x/TAILLE_CASE-4;
 					cPionCap1->y=event.button.y/TAILLE_CASE-3;
+					// on verifie que le pion qui saute atterie sur une case vide. Si ellest pas vide la capture ne se fera pas
 					if(c2.x==c1.x/TAILLE_CASE-4+1)
 					{
 						c2.x=c2.x+1;
@@ -729,14 +743,18 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 						//lancer capture pour que le joueur choisisse un autre pion du plateau a degager
 						return c2;
 					}
+
 				}
+				//si la capture n'a pas ete possible on remet a faux la variable capture
 				*capture=0;
 				if(Clic2==TRUE){
 					if((event.button.x/TAILLE_CASE-4 != cAnc.x)||(event.button.y/TAILLE_CASE-3 != cAnc.y)){
 						//convertit le clic en case du tableau
 						c2.x=event.button.x/TAILLE_CASE-4;
 						c2.y=event.button.y/TAILLE_CASE-3;
+						// on met la caes de l'ancinne position a case vide
 						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
+						// on met la case de la nouvelle position a la race du joueur
 						board[c2.x][c2.y].race=joueur.race;
 						return c2;
 					}
@@ -770,10 +788,13 @@ coord capture2(Joueur joueur)
 	SDL_Event event;
 	while (continuer)
 	{
+		//on atten dun clic du joueur
     	SDL_WaitEvent(&event);
 		switch(event.type)
 		{
+		
 			case SDL_QUIT:
+				// si la croix rouge est appuyez
 				continuer=0;
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -781,6 +802,7 @@ coord capture2(Joueur joueur)
 				//On regarde si le clic est bien dans le plateau
 				Clic= verifClicCapture2(event.button.x,event.button.y,joueur);
 				if(Clic==TRUE){
+					//on converti le clic en indice du plateau
 					cCapturer.x=(event.button.x/TAILLE_CASE)-4;
 					cCapturer.y=(event.button.y/TAILLE_CASE)-3;
 					// on supprime le pion
