@@ -345,6 +345,7 @@ void partieJvsIA(void) {
 			//si l'IA peut manger un pion adverse
 			//alors l'IA mange un pion
 			i=-1;
+			//on test pour chaque pion de l'IA si ils ont un orc a capturer
 			do{
 				i++;
 
@@ -352,7 +353,7 @@ void partieJvsIA(void) {
 				XOrc=TabPionIA[i].x;
 				YDemon=TabPionIA[i].y;
 				YOrc=TabPionIA[i].y;
-
+				
 				if((board[XDemon+1][YDemon].race == ORC)&&(board[XDemon+2][YDemon].race==VIDE)&&(XDemon+2<6)){
 					XDemon=XDemon+2;
 					XOrc=XOrc+1;
@@ -373,9 +374,13 @@ void partieJvsIA(void) {
 					YOrc=YOrc-1;
 					capture=1;
 				}
-
+			
 			}while((capture!=1)&&(i!=2));
+
+			//si elle peut en capturer un elle le fait
 			if(capture==1){
+				//pour rendre sont deplacement plus "realiste" on met des delay court 
+				//qui permete de decouper son tour lors des affichage
 				SDL_Delay(500);
 				//le pion de l'ia saute par dessus et on le dessine al'arriver
 				board[TabPionIA[i].x][TabPionIA[i].y].race=VIDE;
@@ -411,6 +416,7 @@ void partieJvsIA(void) {
 					i=-1;
 					j=-1;
 					verif=0;
+					//on ballaye le plaeatu jusqu a tomber sur un pion orc
 					do{
 						i++;
 						do{
@@ -423,6 +429,7 @@ void partieJvsIA(void) {
 							j=-1;
 						}
 					}while((i<5)&&(verif!=1));
+					//le pion orc trouver en position (i,j) est alors capturer
 					board[i][j].race=VIDE;
 					joueurOrc.plateau=joueurOrc.plateau-1;
 					displayTile(i,j);
@@ -431,24 +438,33 @@ void partieJvsIA(void) {
 			}
 
 			//si le nombre de pion de l'IA est <=3
-			//alors placement aléatoire (au moins 1 case d'écart avec un pion adverse)
+			//alors placement aléatoire 
 			else if((joueurDemon.plateau<3)&&(joueurDemon.reserve!=0)){
 				SDL_Delay(500);
+				// l'IA tente de se placer de maniere aleatoire sur le plateau on cherhe des coordonner 
+				// tant que la case correspondante est pas vide
 				do{
 					XDemon=aleatoire(0,6);
 					YDemon=aleatoire(0,5);
 
 				}while(board[XDemon][YDemon].race!=VIDE);
+				//on place le pion ans le plateau
 				board[XDemon][YDemon].race=DEMON;
 				i=0;
+				//pour remplir le tableau contenant ses coordoner on cherche une case qui ne contenait
+				//pas encore de coordoner (elles sont initialiser a (-1,-1) si pas de coordoner sauvegarder)
 				while((TabPionIA[i].x!=-1)&&(TabPionIA[i].y!=-1)){
 					i++;
 				}
+				// on remplit le tableau des coordoner des piosn de l'IA
 				TabPionIA[i].x=XDemon;
 				TabPionIA[i].y=YDemon;
+				// on affiche un demon a cette position
 				displayPawn(sprites.spriteDemon,XDemon,YDemon);
+				// on augement son compteur de pion sur le plateau et diminue celui de la reserve
 				joueurDemon.plateau=joueurDemon.plateau+1;
 				joueurDemon.reserve=joueurDemon.reserve-1;
+				// on enregistre sont ancienne position a une case hors du plateau
 				joueurDemon.cAnc.x=-1;
 				joueurDemon.cAnc.y=-1;
 			}
@@ -459,7 +475,7 @@ void partieJvsIA(void) {
 					i=aleatoire(0,3);
 					XDemon=TabPionIA[i].x;
 					YDemon=TabPionIA[i].y;
-
+					// test si le pion peut se deplacer
 					if((board[XDemon+1][YDemon].race==VIDE)&&(XDemon+1<6)&&(joueurDemon.cAnc.x!=XDemon+1)){
 						joueurDemon.cAnc.x=XDemon;
 						joueurDemon.cAnc.y=YDemon;
@@ -490,19 +506,17 @@ void partieJvsIA(void) {
 						YDemon=YDemon-1;
 						verif=TRUE;
 					}
+					//on recommence jusqu a ce qu'un de ses pions puisse bouger
 				}while (verif!=TRUE);
-
+				//on reinistialise verif a faux
 				verif=FALSE;
-
-
-
 				displayTile(TabPionIA[i].x,TabPionIA[i].y);
-
+				//la case ou se trouvait le pion de l'IA devient vide
 				board[TabPionIA[i].x][TabPionIA[i].y].race=VIDE;
-
+				// on rempli le tableau contenant les coordonner des pion de l'ia
 				TabPionIA[i].x=XDemon;
 				TabPionIA[i].y=YDemon;
-
+				//la case ou le pion de l'IA s'est deplacer est remplir
 				board[TabPionIA[i].x][TabPionIA[i].y].race=DEMON;
 				displayPawn(sprites.spriteDemon,XDemon,YDemon);
 			}
