@@ -768,7 +768,7 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 	int departX=  c1.x/TAILLE_CASE-4;
 	int departY= c1.y/TAILLE_CASE-3;
 
-	//verifie que le clic est dans le plateau et que la case et vide
+	//verifie que le clic est dans le plateau et que la case est vide
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
 		//verifie que la case est a une distance de 1 du pion
 		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY))
@@ -849,7 +849,7 @@ coord deplacement(Joueur joueur,coord c1, coord c1Anc, coord c2Anc,int *capture,
 						//convertit le clic en case du tableau
 						c2.x=event.button.x/TAILLE_CASE-4;
 						c2.y=event.button.y/TAILLE_CASE-3;
-						// on met la caes de l'ancienne position a case vide
+						// on met la case de l'ancienne position a case vide
 						board[c1.x/TAILLE_CASE-4][c1.y/TAILLE_CASE-3].race=VIDE;
 						// on met la case de la nouvelle position a la race du joueur
 						board[c2.x][c2.y].race=joueur.race;
