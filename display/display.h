@@ -36,4 +36,6 @@
 	void surbrillanceCaisse1(void);
 	void surbrillanceCaisse(raceJoueur race);
 	void displayFocus(int x, int y);
+	void displayWinner(raceJoueur race);
+	void displayEquity();
 #endif

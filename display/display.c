@@ -312,7 +312,7 @@ void displayMenuButtons() {
 void displayRules() {
 	eraseWindow();
 	SDL_Rect position; // Position des différents élements de la fenêtre
-	char texte[TAILLE_MAX_REGLES] = ""; // Tampon pour le fichier media/regles.txt
+	char texte[TAILLE_MAX_REGLES] = ""; // Tampon pour le fichier texts/regles.txt
 
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 50);
 	SDL_Surface* affichageTexte = NULL;
@@ -505,7 +505,7 @@ void displayFocus(int x, int y){
 }
 
 
-
+// Affichage de la race gagnante
 void displayWinner(raceJoueur race) {
 	eraseWindow();
 
@@ -528,6 +528,7 @@ void displayWinner(raceJoueur race) {
 	SDL_Flip(fenetre);
 }
 
+// Affichage en cas d'égalité
 void displayEquity() {
 	eraseWindow();
 
