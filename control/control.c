@@ -600,7 +600,7 @@ void partieJvsIA(void) {
 			
 		}
 		
-		//si le joueur n'a plus de pion sur le plateau et dans sa reserve c'est qu'il a perdu
+		//si le joueur n'a plus de pion sur le plateau ni dans sa reserve c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
 				infoJoueur.status = PLAYER_LOSE ;
@@ -768,7 +768,7 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 	int departX=  c1.x/TAILLE_CASE-4;
 	int departY= c1.y/TAILLE_CASE-3;
 
-	//verifie que le clic est dans le plateau et que la case et vide
+	//verifie que le clic est dans le plateau et que la case est vide
 	if((x>4*TAILLE_CASE)&&(x<10*TAILLE_CASE)&&(y>3*TAILLE_CASE)&&(y<8*TAILLE_CASE)&&(board[arriveX][arriveY].race==VIDE)){
 		//verifie que la case est a une distance de 1 du pion
 		if( ((arriveX==departX+1) && (arriveY==departY)) || ((arriveX==departX-1) && (arriveY==departY))
