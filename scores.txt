@@ -3,3 +3,6 @@ a G | a P
 d G | d P
 g G | f P
 fr G | IA P
+re N | te N
+re N | re N
+re N | re N

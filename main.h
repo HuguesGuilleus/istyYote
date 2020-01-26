@@ -12,12 +12,7 @@
 	#include <SDL_ttf.h>
 	#include <unistd.h>
 
-	//suggestion
-	#define TAILLE_CASE 80
-	#define RESERVE 3
-	#define PLATEAU 4
-	#define JOUEUR1 1
-	#define JOUEUR2 2
+	
 
 	// Type booléen
 	typedef int bool;
@@ -29,9 +24,10 @@
 	#define LARGEUR 6
 	#define HAUTEUR 5
 
-	#define LARGEUR_FENETRE 1110 //600
-	#define HAUTEUR_FENETRE 800//600
+	#define LARGEUR_FENETRE 1110
+	#define HAUTEUR_FENETRE 800
 
+	#define TAILLE_CASE 80
 
 	// Coordonées d'une case du plateau (board).
 	typedef struct {
@@ -47,11 +43,12 @@
 	} raceJoueur;
 
 	//joueur
-	typedef struct {
+	typedef struct {  
 		raceJoueur race;
 		int reserve; //nb pion du joueur dans sa reserve
 		int plateau; // nb pion du joueur sur le plateau
-		coord cAnc; // coordonnée de l'ancienne position ( sert pour que le joueur ne joue pas un tour inverse au precedent)
+		coord c1Anc; // coordonnée de l'ancienne position c1 ( sert pour que le joueur ne joue pas un tour inverse au precedent)
+		coord c2Anc; // coordonnée de l'ancienne position c2 ( sert pour que le joueur ne joue pas un tour inverse au precedent)
 	} Joueur;
 
 	// L'état d'une case:
