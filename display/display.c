@@ -532,7 +532,7 @@ void displayEquity() {
 	eraseWindow();
 
 	TTF_Font* police = TTF_OpenFont("fonts/VCR_OSD_MONO_1.001.ttf", 40);
-	SDL_Surface* affichageTexte = TTF_RenderUTF8_Blended(police, "Égalité, couleurNoire);
+	SDL_Surface* affichageTexte = TTF_RenderUTF8_Blended(police, "Égalité", couleurNoire);
 
 	SDL_BlitSurface(affichageTexte, NULL, fenetre, &(SDL_Rect){
 		x: (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2),
