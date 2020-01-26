@@ -17,7 +17,9 @@ void partieJvsJ(void) {
 	raceJoueur raceDebut;
 	Joueur joueurOrc,joueurDemon,joueur;
 	int continuer=1;
+	int compteur=0;
 	int capture=0;
+	
 
 	//initialisation des 2 joueurs
 	joueurOrc.race=ORC;
@@ -177,6 +179,13 @@ void partieJvsJ(void) {
 			joueurDemon.cAnc=joueur.cAnc;
 			joueur=joueurOrc;
 		}
+		
+		//On fait la condition lorsqu'il reste plus que 2 pions chacun
+		if((joueurDemon.plateau==2) && ( joueurDemon.reserve==0) && (joueurOrc.plateau==2) && (joueurOrc.reserve==0)){
+			
+			compteur++;
+		}
+		
 		//si le joueur n'a plus de pion sur le plateau et dans sa reserve il perd la partie
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
@@ -192,6 +201,19 @@ void partieJvsJ(void) {
 			//pause de 3 sec sur l'ecran qui affiche le nom du gagnant
 			SDL_Delay(3000);
 			continuer=0;
+		}
+		//Si 10 tours se sont écoulés depuis la condition d'égalité, il y a égalité
+		else if(compteur==10)
+		{	//La partie est nulle
+			infoJoueur.status = PLAYER_NULL;
+			//On ajoute le score à la liste et on enregistre dans le fichier
+			scoreAppend(&allScores, infoJoueur);
+			scoreSave(allScores);
+			
+			
+			SDL_Delay(3000);
+			continuer=0;
+			
 		}
 
 
@@ -219,7 +241,7 @@ void partieJvsIA(void) {
 	coord CordPionNouv, CordPionAnc;
 	raceJoueur raceDebut;
 	Joueur joueurOrc,joueurDemon,joueur;
-	int continuer=1,i=0,j=0;
+	int continuer=1,i=0,j=0, compteur=0;
 	int capture=0,XDemon=-1,YDemon=-1,XOrc=-1,YOrc=-1;
 	coord TabPionIA[3];
 	bool verif=FALSE;
@@ -534,7 +556,16 @@ void partieJvsIA(void) {
 		else{
 
 			joueur=joueurOrc;
+			
+			
 		}
+		//On fait la condition lorsqu'il reste plus que 2 pions chacun
+		if((joueurDemon.plateau==2) && ( joueurDemon.reserve==0) && (joueurOrc.plateau==2) && (joueurOrc.reserve==0)){
+			
+			compteur++;
+			
+		}
+		
 		//si le joueur n'a plus de pion sur le plateau et dans sa reserve c'est qu'il a perdu
 		if((joueur.plateau==0) && (joueur.reserve==0)){
 			if (joueur.race==ORC){
@@ -550,6 +581,22 @@ void partieJvsIA(void) {
 			//pause de 3 sec sur l'ecran qui affiche le nom du gagnant
 			SDL_Delay(3000);
 			continuer=0;
+		}
+		
+		else if((compteur==10))
+		{
+			
+			//La partie est nulle
+			infoJoueur.status = PLAYER_NULL;
+			//On ajoute le score à la liste et on enregistre dans le fichier
+			scoreAppend(&allScores, infoJoueur);
+			scoreSave(allScores);
+			
+			
+			
+			SDL_Delay(3000);
+			continuer=0;
+			
 		}
 
 	}
