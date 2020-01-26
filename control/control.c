@@ -25,15 +25,18 @@ void partieJvsJ(void) {
 	joueurOrc.race=ORC;
 	joueurOrc.reserve=12;
 	joueurOrc.plateau=0;
-	joueurOrc.cAnc.x=-1;
-	joueurOrc.cAnc.y=-1;
+	joueurOrc.c1Anc.x=-1;
+	joueurOrc.c1Anc.y=-1;
+	joueurOrc.c2Anc.x=-1;
+	joueurOrc.c2Anc.y=-1;
 
 	joueurDemon.race=DEMON;
 	joueurDemon.reserve=12;
 	joueurDemon.plateau=0;
-	joueurDemon.cAnc.x=-1;
-	joueurDemon.cAnc.y=-1;
-
+	joueurDemon.c1Anc.x=-1;
+	joueurDemon.c1Anc.y=-1;
+	joueurDemon.c2Anc.x=-1;
+	joueurDemon.c2Anc.y=-1;
 	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
 
@@ -45,8 +48,10 @@ void partieJvsJ(void) {
 		joueur=joueurOrc;
 	}
 	//initialisation a des valeurs hors du plateau
-	joueur.cAnc.x=-1;
-	joueur.cAnc.y=-1;
+	joueur.c1Anc.x=-1;
+	joueur.c1Anc.y=-1;
+	joueur.c2Anc.x=-1;
+	joueur.c2Anc.y=-1;
 
 	//affichage du nombre de pions contenus dans les reserves au debut de partie
 	displayReserve(joueur.reserve,sprites.spriteOrc);
@@ -87,15 +92,16 @@ void partieJvsJ(void) {
 				joueurDemon.plateau=joueur.plateau;
 				joueurDemon.reserve=joueur.reserve;
 			}
-			joueur.cAnc.x=-1;
-			joueur.cAnc.y=-1;
-
+			joueur.c1Anc.x=-1;
+			joueur.c1Anc.y=-1;
+			joueur.c2Anc.x=-1;
+			joueur.c2Anc.y=-1;
 		}
 
 		//action : déplacement
 		else if(action==PLATEAU){
 
-			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture,&CordPion1Cap);
+			CordPionNouv=deplacement(joueur,c1,joueur.c1Anc,joueur.c2Anc,&capture,&CordPion1Cap);
 
 			//si le joueur capture un pion dans son deplacement
 			if (capture==1){
@@ -159,8 +165,9 @@ void partieJvsJ(void) {
 
 			}
 			//on enregistre la position de depart pour que le joueur ne puisse pas faire un coup inverse a celui ci au prochain tour
-			joueur.cAnc.x=c1.x/TAILLE_CASE-4;
-			joueur.cAnc.y=c1.y/TAILLE_CASE-3;
+			joueur.c1Anc.x=c1.x/TAILLE_CASE-4;
+			joueur.c1Anc.y=c1.y/TAILLE_CASE-3;
+			joueur.c2Anc=CordPionNouv;
 		}
 
 		//affichage de la réserve des 2 joueurs
@@ -171,12 +178,14 @@ void partieJvsJ(void) {
 
 		//changement de joueur
 		if(joueur.race==ORC){
-			joueurOrc.cAnc=joueur.cAnc;
+			joueurOrc.c1Anc=joueur.c1Anc;
+			joueurOrc.c2Anc=joueur.c2Anc;
 			joueur=joueurDemon;
 
 		}
 		else{
-			joueurDemon.cAnc=joueur.cAnc;
+			joueurDemon.c1Anc=joueur.c1Anc;
+			joueurDemon.c2Anc=joueur.c2Anc;
 			joueur=joueurOrc;
 		}
 		
@@ -203,13 +212,13 @@ void partieJvsJ(void) {
 			continuer=0;
 		}
 		//Si 10 tours se sont écoulés depuis la condition d'égalité, il y a égalité
-		else if(compteur==10)
+		else if(compteur==11)
 		{	//La partie est nulle
 			infoJoueur.status = PLAYER_NULL;
 			//On ajoute le score à la liste et on enregistre dans le fichier
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
-			
+			displayEquity();
 			
 			SDL_Delay(3000);
 			continuer=0;
@@ -254,14 +263,18 @@ void partieJvsIA(void) {
 	joueurOrc.race=ORC;
 	joueurOrc.reserve=12;
 	joueurOrc.plateau=0;
-	joueurOrc.cAnc.x=-1;
-	joueurOrc.cAnc.y=-1;
+	joueurOrc.c1Anc.x=-1;
+	joueurOrc.c1Anc.y=-1;
+	joueurOrc.c2Anc.x=-1;
+	joueurOrc.c2Anc.y=-1;
 
 	joueurDemon.race=DEMON;
 	joueurDemon.reserve=12;
 	joueurDemon.plateau=0;
-	joueurDemon.cAnc.x=-1;
-	joueurDemon.cAnc.y=-1;
+	joueurDemon.c1Anc.x=-1;
+	joueurDemon.c1Anc.y=-1;
+	joueurDemon.c2Anc.x=-1;
+	joueurDemon.c2Anc.y=-1;
 
 	//choix aléatoire du joueur qui commence
 	raceDebut=joueurAleatoir(raceDebut);
@@ -274,8 +287,10 @@ void partieJvsIA(void) {
 		joueur=joueurOrc;
 	}
 	//initialisation a des valeurs hors du plateau
-	joueur.cAnc.x=-1;
-	joueur.cAnc.y=-1;
+	joueur.c1Anc.x=-1;
+	joueur.c1Anc.y=-1;
+	joueur.c2Anc.x=-1;
+	joueur.c2Anc.y=-1;
 
 	//affichage des nombres de pions contenus dans les reserves au debut de partie
 	displayReserve(joueur.reserve,sprites.spriteOrc);
@@ -304,11 +319,13 @@ void partieJvsIA(void) {
 				joueurOrc.plateau=joueur.plateau;
 				joueurOrc.reserve=joueur.reserve;
 				// on met des valeur hors du plateau en ancien coup pour que quelque soit la case selectionnée elle soit differente
-				joueur.cAnc.x=-1;
-				joueur.cAnc.y=-1;
+				joueur.c1Anc.x=-1;
+				joueur.c1Anc.y=-1;
+				joueur.c2Anc.x=-1;
+				joueur.c2Anc.y=-1;
 			}
 			else if(action==PLATEAU){
-			CordPionNouv=deplacement(joueur,c1,joueur.cAnc,&capture,&CordPion1Cap);
+			CordPionNouv=deplacement(joueur,c1,joueur.c1Anc,joueur.c2Anc,&capture,&CordPion1Cap);
 
 				//si le joueur capture un pion dans son deplacement
 				if (capture==1){
@@ -358,9 +375,9 @@ void partieJvsIA(void) {
 					displayPawn(sprites.spriteOrc,CordPionNouv.x, CordPionNouv.y);
 				}
 				//on enregistre la position de depart pour que le joueur ne puisse pas faire un coup inverse a celui ci au prochain tour
-				joueur.cAnc.x=c1.x/TAILLE_CASE-4;
-				joueur.cAnc.y=c1.y/TAILLE_CASE-3;
-
+				joueur.c1Anc.x=c1.x/TAILLE_CASE-4;
+				joueur.c1Anc.y=c1.y/TAILLE_CASE-3;
+				joueur.c2Anc=CordPionNouv;
 			}
 		}
 		else if(joueur.race==DEMON){ // l'IA joue les Demons
@@ -487,8 +504,10 @@ void partieJvsIA(void) {
 				joueurDemon.plateau=joueurDemon.plateau+1;
 				joueurDemon.reserve=joueurDemon.reserve-1;
 				// on enregistre son ancienne position a une case hors du plateau
-				joueurDemon.cAnc.x=-1;
-				joueurDemon.cAnc.y=-1;
+				joueurDemon.c1Anc.x=-1;
+				joueurDemon.c1Anc.y=-1;
+				joueurDemon.c2Anc.x=-1;
+				joueurDemon.c2Anc.y=-1;
 			}
 			//sinon deplacement aléatoire
 			else{
@@ -498,34 +517,48 @@ void partieJvsIA(void) {
 					XDemon=TabPionIA[i].x;
 					YDemon=TabPionIA[i].y;
 					// test si le pion peut se deplacer
-					if((board[XDemon+1][YDemon].race==VIDE)&&(XDemon+1<6)&&(joueurDemon.cAnc.x!=XDemon+1)){
-						joueurDemon.cAnc.x=XDemon;
-						joueurDemon.cAnc.y=YDemon;
+					if((board[XDemon+1][YDemon].race==VIDE)&&(XDemon+1<6)&&(joueurDemon.c1Anc.x!=XDemon+1)){
+						joueurDemon.c1Anc.x=XDemon;
+						joueurDemon.c1Anc.y=YDemon;
+
 						XDemon=XDemon+1;
+
+						joueurDemon.c2Anc.x=XDemon;
+						joueurDemon.c2Anc.y=YDemon;
 						verif=TRUE;
 					}
 
-					else if((board[XDemon-1][YDemon].race==VIDE)&&(XDemon-1>=0)&&(joueurDemon.cAnc.x!=XDemon-1)){
-						joueurDemon.cAnc.x=XDemon;
-						joueurDemon.cAnc.y=YDemon;
+					else if((board[XDemon-1][YDemon].race==VIDE)&&(XDemon-1>=0)&&(joueurDemon.c1Anc.x!=XDemon-1)){
+						joueurDemon.c1Anc.x=XDemon;
+						joueurDemon.c1Anc.y=YDemon;
+						
 						XDemon=XDemon-1;
 
-					joueurDemon.cAnc.y=YDemon;
+						joueurDemon.c2Anc.x=XDemon;
+						joueurDemon.c2Anc.y=YDemon;
 						verif=TRUE;
 					}
 
-					else if((board[XDemon][YDemon+1].race==VIDE)&&(YDemon+1<5)&&(joueurDemon.cAnc.y!=YDemon+1)){
-						joueurDemon.cAnc.x=XDemon;
-						joueurDemon.cAnc.y=YDemon;
+					else if((board[XDemon][YDemon+1].race==VIDE)&&(YDemon+1<5)&&(joueurDemon.c1Anc.y!=YDemon+1)){
+						joueurDemon.c1Anc.x=XDemon;
+						joueurDemon.c1Anc.y=YDemon;
+
 						YDemon=YDemon+1;
+						
+						joueurDemon.c2Anc.x=XDemon;
+						joueurDemon.c2Anc.y=YDemon;
 						verif=TRUE;
 					}
 
-					else if((board[XDemon][YDemon-1].race==VIDE)&&(YDemon-1>=0)&&(joueurDemon.cAnc.y!=YDemon-1))
+					else if((board[XDemon][YDemon-1].race==VIDE)&&(YDemon-1>=0)&&(joueurDemon.c1Anc.y!=YDemon-1))
 					{
-						joueurDemon.cAnc.x=XDemon;
-						joueurDemon.cAnc.y=YDemon;
+						joueurDemon.c1Anc.x=XDemon;
+						joueurDemon.c1Anc.y=YDemon;
+
 						YDemon=YDemon-1;
+
+						joueurDemon.c2Anc.x=XDemon;
+						joueurDemon.c2Anc.y=YDemon;
 						verif=TRUE;
 					}
 					//on recommence jusqu a ce qu'un de ses pions puisse bouger
@@ -550,7 +583,8 @@ void partieJvsIA(void) {
 
 		//changement de joueur
 		if(joueur.race==ORC){
-			joueurOrc.cAnc=joueur.cAnc;
+			joueurOrc.c1Anc=joueur.c1Anc;
+			joueurOrc.c2Anc=joueur.c2Anc;
 			joueur=joueurDemon;
 		}
 		else{
@@ -583,7 +617,7 @@ void partieJvsIA(void) {
 			continuer=0;
 		}
 		
-		else if((compteur==10))
+		else if((compteur==11))
 		{
 			
 			//La partie est nulle
@@ -592,7 +626,7 @@ void partieJvsIA(void) {
 			scoreAppend(&allScores, infoJoueur);
 			scoreSave(allScores);
 			
-			
+			displayEquity();
 			
 			SDL_Delay(3000);
 			continuer=0;
@@ -752,7 +786,7 @@ bool verifClic2Deplacement(int x,int y,coord c1,int * capture, Joueur joueur){
 
 //suite a un clic 1 de deplacement, on attend un second clic tant qu'il n'est pas valide ou
 //que l'utilisateur n'appuit pas sur la croix on attend un clic
-coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCap1){
+coord deplacement(Joueur joueur,coord c1, coord c1Anc, coord c2Anc,int *capture,coord *cPionCap1){
 	coord c2;
 	bool Clic2;
 	int continuer=1;
@@ -771,8 +805,8 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 
 				//On regarde si le clic 2 est bien dans le plateau et a une case de distance 1 et vide
 				Clic2=verifClic2Deplacement(event.button.x,event.button.y,c1,capture,joueur);
-				// si action de capture engagée et que la case est pas l'ancienne emplacement on regarde si la capture est possible
-				if ((*capture== 1)&&((event.button.x/TAILLE_CASE-4 != cAnc.x)||(event.button.y/TAILLE_CASE-3 != cAnc.y))){
+				// si capture vrai ET (le pion selectionner est le meme qu'au tour precedent ET le clic 2 est different de l'ancienne case de depart ) OU ( le pion selectionner n'est pas le meme qu'au tour precedent  )
+				if ((*capture== 1)&&( ( ((c1.x/TAILLE_CASE-4 == c2Anc.x)&&(c1.y/TAILLE_CASE-3 == c2Anc.y)) && ((event.button.x/TAILLE_CASE-4 != c1Anc.x)||(event.button.y/TAILLE_CASE-3 != c1Anc.y)) ) || ((c1.x/TAILLE_CASE-4 != c2Anc.x)||(c1.y/TAILLE_CASE-3 != c2Anc.y)) )){
 					// on transforme les clics en indice du tableau
 					c2.x=event.button.x/TAILLE_CASE-4;
 					c2.y=event.button.y/TAILLE_CASE-3;
@@ -809,7 +843,9 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 				//si la capture n'a pas ete possible on reinitialise a faux la variable capture
 				*capture=0;
 				if(Clic2==TRUE){
-					if((event.button.x/TAILLE_CASE-4 != cAnc.x)||(event.button.y/TAILLE_CASE-3 != cAnc.y)){
+					// si (le pion selectionner est le meme qu'au tour precedent ET le clic 2 est different de l'ancienne case de depart ) OU ( le pion selectionner n'est pas le meme qu'au tour precedent  )
+					// 
+					if ( ( ((c1.x/TAILLE_CASE-4 == c2Anc.x)&&(c1.y/TAILLE_CASE-3 == c2Anc.y)) && ((event.button.x/TAILLE_CASE-4 != c1Anc.x)||(event.button.y/TAILLE_CASE-3 != c1Anc.y)) ) || ((c1.x/TAILLE_CASE-4 != c2Anc.x)||(c1.y/TAILLE_CASE-3 != c2Anc.y)) ){
 						//convertit le clic en case du tableau
 						c2.x=event.button.x/TAILLE_CASE-4;
 						c2.y=event.button.y/TAILLE_CASE-3;
@@ -819,6 +855,7 @@ coord deplacement(Joueur joueur,coord c1, coord cAnc,int *capture,coord *cPionCa
 						board[c2.x][c2.y].race=joueur.race;
 						return c2;
 					}
+			
 				}
 		}
 	}
