@@ -124,18 +124,6 @@ void displayRound(raceJoueur joueur) {
 	free(texteFinal);
 }
 
-// Dessin un fond différent selon le fond
-void displayStatus(Uint32 color, int x, int y) {
-	int r = SDL_FillRect(fenetre, &(SDL_Rect){
-		x: x * TAILLE_CASE,
-		y: y * TAILLE_CASE,
-		w: TAILLE_CASE,
-		h: TAILLE_CASE,
-	}, color);
-	fatal(!r, "displayStatus()");
-}
-
-
 /* Dessine un pion sur le plateau de jeu
 	x et y sont les coordonnées du pion */
 void displayPawn(SDL_Surface* sprite, int x, int y) {
@@ -170,7 +158,7 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 	char buffer[5]; // Buffer permettant d'afficher le nombre de pions en chaîne de caractères
 
 	displayReserveBox();
-    
+
 	y = ORIGINE_PLATEAU_Y;
 	sprintf(buffer, "%d", nbPions); // On met dans le buffer le nombre de pions de la réserve
 
@@ -209,21 +197,21 @@ void displayReserve(int nbPions, SDL_Surface* sprite) {
 // Affiche le sprite de caisse dans les réserves
 void displayReserveBox() {
 	SDL_Rect position;
-	
-    SDL_FillRect(fenetre, &(SDL_Rect){
+
+	SDL_FillRect(fenetre, &(SDL_Rect){
 		x: (sprites.spriteCaisse->w / 2)-5,
 		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
 		w: 5*2+(sprites.spriteCaisse->w),
 		h: 5*2+(sprites.spriteCaisse->h),
 	}, SDL_MapRGB(fenetre->format, 148, 172, 206));
-	
+
 	SDL_FillRect(fenetre, &(SDL_Rect){
 		x: LARGEUR_FENETRE - sprites.spriteCaisse->w - (sprites.spriteCaisse->w / 2) -5,
 		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
 		w: 5*2+(sprites.spriteCaisse->w),
 		h: 5*2+(sprites.spriteCaisse->h),
 	}, SDL_MapRGB(fenetre->format, 148, 172, 206));
-	
+
 	position.x = (sprites.spriteCaisse->w / 2);
 	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
 	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
@@ -426,41 +414,37 @@ void displayGamemodeChoice() {
 	SDL_Flip(fenetre);
 }
 
-void surbrillanceCaisse(raceJoueur race){	
-	if(race== DEMON)
-	{		
-		surbrillanceCaisse2();	
+// Surbrillance de la caisse du joueur indiqué par race.
+void surbrillanceCaisse(raceJoueur race) {
+	if(race == DEMON){
+		surbrillanceCaisseDemon();
+	} else {
+		surbrillanceCaisseOrc();
 	}
-	else
-	{
-		surbrillanceCaisse1();
-    }
 }
 
-void surbrillanceCaisse1()
-{
+// Surbrillance de la caisse du joueur Orc.
+void surbrillanceCaisseOrc() {
 	SDL_Rect position;
 
 	position.x = (sprites.spriteCaisse->w / 2);
-		
 
-    SDL_FillRect(fenetre, &(SDL_Rect){
+	SDL_FillRect(fenetre, &(SDL_Rect){
 		x: (sprites.spriteCaisse->w / 2)-5,
 		y: ORIGINE_PLATEAU_Y + TAILLE_CASE -5,
 		w: 5*2+(sprites.spriteCaisse->w),
 		h: 5*2+(sprites.spriteCaisse->h),
 	}, SDL_MapRGB(fenetre->format, 17, 206, 112));
-	
-	
+
 	position.x = (sprites.spriteCaisse->w / 2);
 	position.y = ORIGINE_PLATEAU_Y + TAILLE_CASE;
 	SDL_BlitSurface(sprites.spriteCaisse, NULL, fenetre, &position);
 
-
 	SDL_Flip(fenetre);
 }
 
-void surbrillanceCaisse2(void) {
+// Surbrillance de la caisse avec le joueur Démon.
+void surbrillanceCaisseDemon(void) {
 	SDL_Rect position;
 
 	SDL_FillRect(fenetre, &(SDL_Rect){
@@ -477,31 +461,33 @@ void surbrillanceCaisse2(void) {
 	SDL_Flip(fenetre);
 }
 
-void displayFocus(int x, int y){
-	
+// Affiche un liseret pour une case séléctionnée.
+void displayFocus(int x, int y) {
+	// Affiche le liserer.
 	SDL_FillRect(fenetre, &(SDL_Rect){
 		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X,
 		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y,
 		w:sprites.spriteCase->w,
 		h:sprites.spriteCase->h,
 	}, SDL_MapRGB(fenetre->format, 17, 206, 112));
-	
+
+	// Affiche le fond de la case.
 	SDL_BlitSurface(sprites.spriteCase, &(SDL_Rect){
 		x: 5,
 		y: 5,
 		w:sprites.spriteCase->w-10,
-		h:sprites.spriteCase->h-10,		
+		h:sprites.spriteCase->h-10,
 	}, fenetre, &(SDL_Rect){
 		x: x * TAILLE_CASE + ORIGINE_PLATEAU_X+5,
 		y: y * TAILLE_CASE + ORIGINE_PLATEAU_Y+5,
 	});
 
-	
+	// Affiche la pièce sur la case.
 	switch(board[x][y].race){
 		case ORC : displayPawn(sprites.spriteOrc,x,y); break;
 		case DEMON : displayPawn(sprites.spriteDemon,x,y); break;
-		default : SDL_Flip(fenetre);		
-	}		
+		default : SDL_Flip(fenetre);
+	}
 }
 
 
@@ -537,7 +523,7 @@ void displayEquity() {
 
 	SDL_BlitSurface(affichageTexte, NULL, fenetre, &(SDL_Rect){
 		x: (LARGEUR_FENETRE / 2) - (affichageTexte->w / 2),
-		y: (HAUTEUR_FENETRE / 2) - (affichageTexte->h / 2) 
+		y: (HAUTEUR_FENETRE / 2) - (affichageTexte->h / 2)
 	});
 
 	TTF_CloseFont(police);

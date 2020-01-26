@@ -32,8 +32,8 @@
 	void displayReserveBox();
 	void eraseWindow();
 	void displayBackButton();
-	void surbrillanceCaisse2(void);
-	void surbrillanceCaisse1(void);
+	void surbrillanceCaisseDemon(void);
+	void surbrillanceCaisseOrc(void);
 	void surbrillanceCaisse(raceJoueur race);
 	void displayFocus(int x, int y);
 	void displayWinner(raceJoueur race);
